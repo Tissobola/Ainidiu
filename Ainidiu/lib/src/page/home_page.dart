@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: Icon(Icons.add_comment),
       ),
     );
   }
