@@ -1,3 +1,5 @@
+import import 'package:Ainidiu/lib/src/page'
+
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
 
@@ -7,36 +9,71 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   
-  final _pageController = PageController();
+  int bottomSelectedIndex = 0;
   
+  String namePage(bottomSelectedIndex){
+    
+    String name;
+    
+    if(bottomSelectedIndex == 0){
+      name = 'Mensagens';
+    }else if(bottomSelectedIndex == 1){
+      name = 'Ainidiu';
+    }else{
+      name = 'Perfil';
+    }
+    return name;
+  }
+  
+  PageController pageController = PageController(
+    initialPage: 0,
+    keepPage: true,
+  );
+  
+  Widget buildPageView() {
+    return PageView(
+      controller: pageController,
+      onPageChanged: (index) {
+        pageChanged(index);
+      },
+      children: <Widget>[
+        MessagesPage(),
+        PrincipalPage(),
+        PerfilPage(),
+      ],
+    );
+  }
+
+  void pageChanged(int index) {
+    setState(() {
+      bottomSelectedIndex = index;
+    });
+  }
+  
+  void bottomTapped(int index) {
+    setState(() {
+      bottomSelectedIndex = index;
+      pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Ainidiu')),
+      appBar: AppBar(title: Text(namePage(bottomSelectedIndex))),
       drawer: Drawer(),
-      bottomNavigationBar: BottomNavigationBar(items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-        icon: Icon(Icons.message),
-        title: Text('Chat')
-        ),
-        BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        title: Text('Home')
-        ),
-        BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        title: Text('Perfil')
-        )
-      ]),
-      body: PageView(
-        controller: _pageController,
-        
-        children: <Widget>[
-          Container(color: Colors.red,),
-          Container(color: Colors.brown),
-          Container(color: Colors.green)
-        ]
-      ),
+      bottomNavigationBar:
+          BottomNavigationBar(currentIndex: bottomSelectedIndex, items: const <
+              BottomNavigationBarItem>[
+        BottomNavigationBarItem(icon: Icon(Icons.message), title: Text('Chat')),
+        BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
+        BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('Perfil'))
+      ],
+        onTap: (index) {
+          bottomTapped(index);
+        },
+                             ),
+      body: buildPageView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         tooltip: 'Increment',
