@@ -17,8 +17,10 @@ class _EscreverState extends State<Escrever> {
       child: TextField(
         maxLines: maxLines,
         decoration: InputDecoration(
-          hintText: "Enter a message",
-          fillColor: Colors.grey[300],
+          border: OutlineInputBorder(),
+          hintText: "Diga o que está sentindo...",
+          hintStyle: TextStyle(color: Colors.grey[300]),
+          fillColor: Colors.white,
           filled: true,
         ),
       ),
@@ -39,10 +41,7 @@ class _EscreverState extends State<Escrever> {
                 child: Icon(Icons.forward),
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(30.0)),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Escrever()));
-                },
+                onPressed: () {},
               ))
         ])));
   }
