@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class PrincipalPage extends StatefulWidget {
   PrincipalPage({Key key}) : super(key: key);
 
@@ -9,7 +11,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-       color: Colors.yellow,
+      color: Colors.yellow,
     );
   }
 }

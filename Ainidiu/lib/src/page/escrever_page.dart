@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Escrever extends StatefulWidget {
   Escrever({Key key}) : super(key: key);
 
@@ -31,19 +33,17 @@ class _EscreverState extends State<Escrever> {
             child: Stack(children: <Widget>[
           _buildTextField(),
           Positioned(
-            top: 175,
-            left: 193,
+              top: 175,
+              left: 193,
               child: RaisedButton(
-            child: Icon(Icons.forward),
-            shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)),
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Escrever()));
-            },
-          )
-          
-          )
+                child: Icon(Icons.forward),
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(30.0)),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Escrever()));
+                },
+              ))
         ])));
   }
 }
