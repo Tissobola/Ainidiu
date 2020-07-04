@@ -8,7 +8,6 @@ class PerfilPage extends StatefulWidget {
 }
 
 class _PerfilPageState extends State<PerfilPage> {
-  String bio = "bio";
   String apelido = "Apelido";
   @override
   Widget build(BuildContext context) {
@@ -29,15 +28,6 @@ class _PerfilPageState extends State<PerfilPage> {
               child: Center(
                   child: Text(apelido,
                       style: TextStyle(fontWeight: FontWeight.bold))))),
-      Padding(
-          padding: EdgeInsets.only(top: 10.0),
-          child: Container(
-              width: 200,
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.black)),
-              child: Center(
-                  child: Text(bio,
-                      style: TextStyle(fontWeight: FontWeight.bold)))))
     ]));
   }
 }

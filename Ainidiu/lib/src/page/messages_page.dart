@@ -10,8 +10,9 @@ class MessagesPage extends StatefulWidget {
 class _MessagesPageState extends State<MessagesPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
+    return Scaffold(
+        ///Usando o componente ListViewPostCard, passando como parâmetro a fonte de dados
+        body: Container(color: Colors.white,)    
     );
   }
 }

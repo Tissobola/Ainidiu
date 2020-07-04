@@ -1,4 +1,3 @@
-import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/page/messages_page.dart';
 import 'package:ainidiu/src/page/perfil_page.dart';
 import 'package:ainidiu/src/page/principal_page.dart';
@@ -79,14 +78,6 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       body: buildPageView(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Escrever()));
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add_comment),
-      ),
     );
   }
 }
