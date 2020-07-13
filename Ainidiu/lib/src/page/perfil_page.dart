@@ -1,3 +1,4 @@
+import 'package:ainidiu/src/page/configuracoes_page.dart';
 import 'package:flutter/material.dart';
 
 class PerfilPage extends StatefulWidget {
@@ -16,7 +17,10 @@ class _PerfilPageState extends State<PerfilPage> {
       Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
         Padding(
             padding: EdgeInsets.only(top: 5.0, right: 5.0),
-            child: Icon(Icons.settings, size: 40.0))
+            child: IconButton(icon: Icon(Icons.settings), iconSize: 40, onPressed: () {
+              Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Configuracoes()));
+            }))
       ]),
       CircleAvatar(minRadius: 40.0, child: Icon(Icons.person, size: 50.0)),
       Padding(
