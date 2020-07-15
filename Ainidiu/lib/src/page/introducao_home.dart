@@ -1,126 +1,91 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:introduction_screen/introduction_screen.dart';
+import 'package:intro_slider/intro_slider.dart';
 
-class OnBoardingPage extends StatefulWidget {
+class asd extends StatefulWidget {
   @override
-  _OnBoardingPageState createState() => _OnBoardingPageState();
+  _asdState createState() => _asdState();
 }
 
-class _OnBoardingPageState extends State<OnBoardingPage> {
-  final introKey = GlobalKey<IntroductionScreenState>();
-
-  void _onIntroEnd(context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => HomePage()),
-    );
-  }
-
-  Widget _buildImage(String assetName) {
-    return Align(
-      child: Image.asset('assets/$assetName.jpg', width: 350.0),
-      alignment: Alignment.bottomCenter,
-    );
-  }
-
+class _asdState extends State<asd> {
   @override
   Widget build(BuildContext context) {
-    const bodyStyle = TextStyle(fontSize: 19.0);
-    const pageDecoration = const PageDecoration(
-      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-      bodyTextStyle: bodyStyle(),
-      descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-      pageColor: Colors.white,
-      imagePadding: EdgeInsets.zero,
+    return Container(
+      
     );
+  }
+}
 
-    return IntroductionScreen(
-      key: introKey,
-      pages: [
-        PageViewModel(
-          title: "",
-          
-          bodyWidget: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text("AINIDIU", style: TextStyle(fontSize: 30),),
-            ],
-          ),
-          image: const Center(child: Text('SEJA\nBEM-VINDO\nAO', textAlign: TextAlign.center, style: TextStyle(fontSize: 40),)),
-        ),
-        PageViewModel(
-          title: "Learn as you go",
-          body:
-              "Download the Stockpile app and master the market with our mini-lesson.",
-          image: _buildImage('img2'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Kids and teens",
-          body:
-              "Kids and teens can track their stocks 24/7 and place trades that you approve.",
-          image: _buildImage('img3'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Another title page",
-          body: "Another beautiful body text for this example onboarding",
-          image: _buildImage('img2'),
-          footer: RaisedButton(
-            onPressed: () {
-              introKey.currentState?.animateScroll(0);
-            },
-            child: const Text(
-              'FooButton',
-              style: TextStyle(color: Colors.white),
-            ),
-            color: Colors.lightBlue,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Title of last page",
-          bodyWidget: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text("Click on ", style: bodyStyle),
-              Icon(Icons.edit),
-              Text(" to edit a post", style: bodyStyle),
-            ],
-          ),
-          image: _buildImage('img1'),
-          decoration: pageDecoration,
-        ),
-      ],
-      onDone: () => _onIntroEnd(context),
-      //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
-      showSkipButton: true,
-      skipFlex: 0,
-      nextFlex: 0,
-      skip: const Text('Skip'),
-      next: const Icon(Icons.arrow_forward),
-      done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
-      dotsDecorator: const DotsDecorator(
-        size: Size(10.0, 10.0),
-        color: Color(0xFFBDBDBD),
-        activeSize: Size(22.0, 10.0),
-        activeShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(25.0)),
-        ),
+
+
+
+
+
+class IntroPage extends StatefulWidget {
+  @override
+  _IntroPageState createState() => _IntroPageState();
+}
+
+class _IntroPageState extends State<IntroPage> {
+  List<Slide> slides = new List();
+
+  @override
+  void initState() {
+    super.initState();
+
+    slides.add(
+      new Slide(
+        title: "SEJA BEM-VINDO AO",
+        description: "Allow miles wound place the leave had. To sitting subject no improve studied limited",
+        pathImage: "images/photo_eraser.png",
+        backgroundColor: Colors.red,
       ),
     );
+    slides.add(
+      new Slide(
+        title: "PENCIL",
+        description: "Ye indulgence unreserved connection alteration appearance",
+        pathImage: "images/photo_pencil.png",
+        backgroundColor:  Colors.amber,
+      ),
+    );
+    slides.add(
+      new Slide(
+        title: "RULER",
+        description:
+            "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
+        pathImage: "images/photo_ruler.png",
+        backgroundColor:  Colors.black,
+      ),
+      
+    );
+    slides.add(
+      new Slide(
+        title: "RULER",
+        description:
+            "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
+        pathImage: "images/photo_ruler.png",
+        backgroundColor:  Colors.black,
+      ),
+      
+    );
   }
-}
 
-class HomePage extends StatelessWidget {
+  void onDonePress() {
+    // TODO: go to next screen
+  }
+
+  void onSkipPress() {
+    // TODO: go to next screen
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: const Center(child: Text("This is the screen after Introduction")),
+    return new IntroSlider(
+      slides: this.slides,
+      onDonePress: this.onDonePress,
+      onSkipPress: this.onSkipPress,
     );
   }
 }

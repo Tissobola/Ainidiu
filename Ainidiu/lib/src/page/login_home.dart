@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:login/src/pages/login_cadastro.dart';
-import 'package:login/src/pages/login_login.dart';
+
+import 'login_cadastro.dart';
+import 'login_login.dart';
+
 
 class LoginHome extends StatefulWidget {
   @override
