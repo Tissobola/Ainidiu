@@ -74,68 +74,71 @@ class _CadastroPageState extends State<CadastroPage> {
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 70,
-              ),
-              buildLogo(),
-              SizedBox(
-                height: 80,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: TextField(
-                  controller: _controladorEmail,
-                  decoration: InputDecoration(
-                      labelText: 'Email', border: OutlineInputBorder()),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+                      child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 70,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: TextField(
-                  controller: _controladorSenha,
-                  decoration: InputDecoration(
-                      labelText: 'Senha', border: OutlineInputBorder()),
+                buildLogo(),
+                SizedBox(
+                  height: 80,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Row(
-                      children: <Widget>[
-                        Text('Gênero'),
-                        FlatButton(
-                          child: Text(_currText),
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: buildCheck(),
-                                  );
-                                });
-                          },
-                        )
-                      ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: TextField(
+                    controller: _controladorEmail,
+                    decoration: InputDecoration(
+                        labelText: 'Email', border: OutlineInputBorder()),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: TextField(
+                    controller: _controladorSenha,
+                    decoration: InputDecoration(
+                        labelText: 'Senha', border: OutlineInputBorder()),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: <Widget>[
+                          Text('Gênero'),
+                          FlatButton(
+                            child: Text(_currText),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: buildCheck(),
+                                    );
+                                  });
+                            },
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 190,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: builButton(),
-              )
-            ],
+                SizedBox(
+                  height: 190,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: builButton(),
+                )
+              ],
+            ),
           ),
         ),
       ),

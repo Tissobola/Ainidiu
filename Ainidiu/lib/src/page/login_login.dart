@@ -45,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Login'),
       ),
@@ -52,39 +53,42 @@ class _LoginPageState extends State<LoginPage> {
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-              height: 70,
-            ),
-              buildLogo(),
-              SizedBox(
-              height: 80,
-            ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: TextField(
-                  controller: _controladorEmail,
-                  decoration: InputDecoration(
-                      labelText: 'Email', border: OutlineInputBorder()),
-                ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+                      child: Column(
+              children: <Widget>[
+                SizedBox(
+                height: 70,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: TextField(
-                  controller: _controladorSenha,
-                  decoration: InputDecoration(
-                      labelText: 'Senha', border: OutlineInputBorder()),
-                ),
+                buildLogo(),
+                SizedBox(
+                height: 80,
               ),
-              SizedBox(
-              height: 190,
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: TextField(
+                    controller: _controladorEmail,
+                    decoration: InputDecoration(
+                        labelText: 'Email', border: OutlineInputBorder()),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: TextField(
+                    controller: _controladorSenha,
+                    decoration: InputDecoration(
+                        labelText: 'Senha', border: OutlineInputBorder()),
+                  ),
+                ),
+                SizedBox(
+                height: 190,
+              ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: builButton(),
+                )
+              ],
             ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: builButton(),
-              )
-            ],
           ),
         ),
       ),

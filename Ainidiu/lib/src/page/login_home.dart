@@ -89,6 +89,7 @@ class _LoginHomeState extends State<LoginHome> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: Container(
         color: Colors.blue,
         child: Column(
