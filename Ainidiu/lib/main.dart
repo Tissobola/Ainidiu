@@ -15,7 +15,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Test(),
+      //HomePage() para o app
+      //IntroPage() para a introdução
+      //Test() para o FireBase
+
+      home: IntroPage(),
     );
   }
 }
