@@ -10,7 +10,9 @@ class _CadastroPageState extends State<CadastroPage> {
   final TextEditingController _controladorEmail = TextEditingController();
   final TextEditingController _controladorSenha = TextEditingController();
 
-  bool _isChecked = false;
+  bool mas = false;
+  bool fem = false;
+  bool neu = false;
   String _currText = 'Selecionar';
   List<String> generos = ["Masculino", "Feminino", "Neutro", "Selecionar"];
 
@@ -27,7 +29,9 @@ class _CadastroPageState extends State<CadastroPage> {
   Center builButton() {
     return Center(
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          
+        },
         child: ClipOval(
           child: Container(
             color: Colors.blue,
@@ -47,22 +51,67 @@ class _CadastroPageState extends State<CadastroPage> {
 
   Column buildCheck() {
     return Column(
-        children: generos
-            .map((e) => CheckboxListTile(
-                  title: Text(e),
-                  value: _isChecked,
-                  onChanged: (val) {
-                    setState(() {
-                      _isChecked = val;
-                      if (val == true) {
-                        _currText = e;
-                      }
-                    });
+      children: <Widget>[
+        CheckboxListTile(
+          title: Text(generos[0]),
+          value: mas,
+          onChanged: (bool value) {
+            setState(() {
+              mas = value;
+              fem = false;
+              neu = false;
+              _currText = generos[0];
+              Navigator.pop(context);
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text(generos[1]),
+          value: fem,
+          onChanged: (bool value) {
+            setState(() {
+              fem = value;
+              mas = false;
+              fem = false;
+              _currText = generos[1];
+              Navigator.pop(context);
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text(generos[2]),
+          value: neu,
+          onChanged: (bool value) {
+            setState(() {
+              neu = value;
+              mas = false;
+              fem = false;
+              _currText = generos[2];
+              Navigator.pop(context);
+            });
+          },
+        ),
+      ],
+    );
+  }
 
-                    Navigator.pop(context);
-                  },
-                ))
-            .toList());
+  Text mensagem() {
+    String msg;
+    if (fem) {
+      setState(() {
+        msg = 'Olá ${_controladorEmail.text}, seja bem-vindA\nSua senha é ${_controladorSenha.text}';
+      });
+    } else if (mas) {
+      setState(() {
+        msg = 'Olá ${_controladorEmail.text}, seja bem-vindO\nSua senha é ${_controladorSenha.text}';
+      });
+    } else {
+      setState(() {
+        msg = 'Olá ${_controladorEmail.text}, seja bem-vindX\nSua senha é ${_controladorSenha.text}';
+      });
+    }
+
+    return Text(msg);
   }
 
   Widget build(BuildContext context) {
@@ -76,7 +125,7 @@ class _CadastroPageState extends State<CadastroPage> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-                      child: Column(
+            child: Column(
               children: <Widget>[
                 SizedBox(
                   height: 70,
@@ -120,7 +169,8 @@ class _CadastroPageState extends State<CadastroPage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      content: buildCheck(),
+                                      content: Container(
+                                          height: 325, child: buildCheck()),
                                     );
                                   });
                             },
@@ -133,6 +183,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 SizedBox(
                   height: 190,
                 ),
+                mensagem(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: builButton(),

@@ -22,15 +22,34 @@ class _ChatState extends State<Chat> {
   espacoDeDigitacao() {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(25, 0, 0, 25),
+        padding: const EdgeInsets.fromLTRB(15, 0, 0, 10),
         child: Row (children: <Widget>[Container(width: 300,
         child:TextField(
           decoration: InputDecoration(
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0))),
+                  borderRadius: BorderRadius.circular(100.0))),
         ),),
-        IconButton(iconSize: 40,icon: Icon(Icons.send), onPressed:() {print('OK');}
-        )]),
+        Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: ClipOval(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(),
+                color: Colors.white,
+              ),
+              
+              height: 59,
+              width: 59,
+              child: Center(
+                child: Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 50,
+                ),
+              ),
+            ),
+          ),
+        )
+        ]),
       ),
     );
   }

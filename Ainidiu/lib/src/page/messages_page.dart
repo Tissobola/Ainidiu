@@ -21,6 +21,7 @@ class _MessagesPageState extends State<MessagesPage> {
     final conversas = List<Conversas>.generate(
       20,
       (i) => Conversas(
+        'Apelido $i',
         'Conversa $i',
         'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png',
       ),
@@ -30,8 +31,7 @@ class _MessagesPageState extends State<MessagesPage> {
       itemCount: conversas.length,
       itemBuilder: (context, index) {
         return ListTile(
-          leading: Image.network(conversas[index].foto),
-          title: Text(conversas[index].apelido),
+
           onTap: () {
             Navigator.push(
                 context,
@@ -42,7 +42,36 @@ class _MessagesPageState extends State<MessagesPage> {
                   ),
                 ));
           },
-          contentPadding: EdgeInsets.fromLTRB(0, 2, 0, 2),
+          
+          leading: CircleAvatar(
+            foregroundColor: Colors.blue,
+            backgroundColor: Colors.grey,
+            backgroundImage: new NetworkImage(conversas[index].foto),
+            radius: 25,
+          ),
+
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                conversas[index].apelido,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '12:00',
+                style: new TextStyle(color: Colors.grey, fontSize: 14.0),
+              )
+            ],
+          ),
+          
+          subtitle: Container(
+            padding: EdgeInsets.only(top: 5.0),
+            child: Text(
+              conversas[index].conversa,
+              style: new TextStyle(color: Colors.grey, fontSize: 15.0),
+            ),
+          ),
+
         );
       },
     );
@@ -52,6 +81,7 @@ class _MessagesPageState extends State<MessagesPage> {
 class Conversas {
   final String apelido;
   final String foto;
+  final String conversa;
 
-  Conversas(this.apelido, this.foto);
+  Conversas(this.apelido, this.conversa,this.foto);
 }
