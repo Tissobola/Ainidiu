@@ -1,5 +1,5 @@
 import 'package:ainidiu/src/page/messages_page.dart';
-import 'package:ainidiu/src/page/perfil_page.dart';
+import 'package:ainidiu/src/page/perfil_page2.dart';
 import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:flutter/material.dart';
 
