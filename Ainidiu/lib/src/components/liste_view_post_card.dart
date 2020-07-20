@@ -27,14 +27,14 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('Carregando as postagens...', style: TextStyle(color: Colors.grey),),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 25,),
                   CircularProgressIndicator()
                 ],
               ),
             );
           } else {
             return ListView.builder(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(5),
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 return PostCard(context, snapshot.data[index]);

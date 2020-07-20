@@ -45,7 +45,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
           (i + 100),
           'Apelido $i',
           'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png',
-          'Texto da postagem de exemplo $i. Lorem ipsum nam facilisis aenean nam lacus cursus ipsum, nulla sodales sed in rhoncus sapien odio litora, velit primis condimentum lobortis vulputate curabitur fringilla. condimentum laoreet ligula imperdiet cras aliquam vehicula suscipit aliquet in ultricies',
+          'Texto da postagem de exmplo $i. Lorem ipsum nam facilisis aenean nam lacus cursus ipsum, nulla sodales sed in rhoncus sapien odio litora, velit primis condimentum lobortis vulputate curabitur fringilla. condimentum laoreet ligula imperdiet cras aliquam vehicula suscipit aliquet in ultricies',
           DateTime.now(),0));
       
       postagens[(i-1)].addComentarios(comentarios);
@@ -57,7 +57,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
   ///pois o componente espera os dados Futuros, 
   ///ideal para usar com Firebase e webservices
   Future<List<ItemData>> getFutureDados() async =>
-      await Future.delayed(Duration(seconds: 5), () {
+      await Future.delayed(Duration(seconds: 3), () {
         return montaListaPostagem();
       });
 

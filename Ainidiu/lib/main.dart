@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
       ),
       //HomePage() para o app
       //IntroPage() para a introdução
-      //Test() para o FireBase
+      
 
-      home: HomePage(),
+      home: LoginHome(),
     );
   }
 }

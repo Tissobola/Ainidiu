@@ -46,7 +46,7 @@ class _MessagesPageState extends State<MessagesPage> {
           leading: CircleAvatar(
             foregroundColor: Colors.blue,
             backgroundColor: Colors.grey,
-            backgroundImage: new NetworkImage(conversas[index].foto),
+            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png'),
             radius: 25,
           ),
 
