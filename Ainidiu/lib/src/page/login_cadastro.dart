@@ -72,7 +72,7 @@ class _CadastroPageState extends State<CadastroPage> {
             setState(() {
               fem = value;
               mas = false;
-              fem = false;
+              neu = false;
               _currText = generos[1];
               Navigator.pop(context);
             });

@@ -108,7 +108,7 @@ class _LoginHomeState extends State<LoginHome> {
             ),
             build2(),
             SizedBox(
-              height: 270,
+              height: 250,
             ),
             Text(
               'Termos de Serviço',
