@@ -18,8 +18,10 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   ///Controler do texto da mensagem
   final textoController = TextEditingController();
+
   ///Espaçamento no final da largura do campo mensagem
   final espacamento = 150;
+
   ///Altura do card
   var alturaDoCard = 120.0;
 
@@ -47,9 +49,18 @@ class _PostCardState extends State<PostCard> {
   }
 
   ///Exibe a tarja azual quando é comentário
-   Widget exibeTarjaAzul() {
-    if(this.ehComentario()){
-      return Container(color: Colors.blue, width: 5, height: (alturaDoCard + 22),);
+  
+
+  Border exibeTarjaAzul() {
+    if (this.ehComentario()) {
+      return Border(left: BorderSide(color: Colors.blue, width: 3));
+    }
+    return Border();
+  }
+
+  Widget exibeEspaco(){
+    if(this.ehComentario()) {
+      return SizedBox(width: 3,);
     }
     return SizedBox();
   }
@@ -103,63 +114,64 @@ class _PostCardState extends State<PostCard> {
           },
 
           child: Card(
+            shape: exibeTarjaAzul(),
             elevation: 1,
             child: Padding(
               padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
               child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Row(
+                      exibeEspaco(),
+
+                      //Foto
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.grey,
+                        foregroundColor: Colors.blue,
+                        backgroundImage:
+                            NetworkImage(this.getCurrent().imagemURL),
+                      ),
+
+                      SizedBox(width: 10),
+
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          exibeTarjaAzul(),
-
-                          //Foto
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Colors.grey,
-                            foregroundColor: Colors.blue,
-                            backgroundImage: NetworkImage(this.getCurrent().imagemURL),
+                          //Apelido
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  this.getCurrent().postadoPorNome + "  -",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "${this.getCurrent().dataHora.hour.toString()}:${this.getCurrent().dataHora.minute.toString()}",
+                                  style: TextStyle(color: Colors.grey),
+                                )
+                              ],
+                            ),
                           ),
 
-                          SizedBox(width: 10),
+                          SizedBox(
+                            height: 5,
+                          ),
 
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
+                          //Campo mensagem
+                          Container(
+                            width: (MediaQuery.of(context).size.width -
+                                espacamento +
+                                45),
 
-                              //Apelido
-                              Container(
-                                
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    Text(
-                                      this.getCurrent().postadoPorNome + "  -",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(width: 5,),
-                                    Text(
-                                      "${this.getCurrent().dataHora.hour.toString()}:${this.getCurrent().dataHora.minute.toString()}",
-                                      style: TextStyle(color: Colors.grey),
-                                    )
-                                  ],
-                                ),
-                              ),
-
-                              SizedBox(
-                                height: 5,
-                              ),
-                              
-                              //Campo mensagem
-                              Container(
-                                width: (MediaQuery.of(context).size.width -
-                                    espacamento + 45),
-                                
-                                /*
+                            /*
                                 Codigo que coloca borda no campo de mensagem
                         decoration: BoxDecoration(
                           color: Colors.white10,
@@ -168,50 +180,73 @@ class _PostCardState extends State<PostCard> {
                               const BorderRadius.all(const Radius.circular(8)),
                         ),
                         */
-                                child: TextField(
-                                    readOnly: true,
-                                    controller: textoController,
-                                    keyboardType: TextInputType.multiline,
-                                    textAlign: TextAlign.justify, 
-                                    maxLines: null,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none)
-                                    ),
-                              ),
-                            ],
+                            child: TextField(
+                                onTap: () {
+                                  ///Verifica se tem comentários para exibir os detalhes
+                                  ///Métod executado sempre que clicar no card
+                                  if (this
+                                          .getCurrent()
+                                          .getComentarios()
+                                          .length >
+                                      0) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetalhePostagemPage(
+                                                    this.getCurrent())));
+                                  }
+                                },
+                                readOnly: true,
+                                controller: textoController,
+                                keyboardType: TextInputType.multiline,
+                                textAlign: TextAlign.justify,
+                                maxLines: null,
+                                decoration:
+                                    InputDecoration(border: InputBorder.none)),
                           ),
                         ],
                       ),
-                      
-                      //Botoes
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          FlatButton(
-                              onPressed: () {
-                                Navigator.push(
-                                context, MaterialPageRoute(builder: (context) => Comentar()));
-                                print('Clicou em comentar');
-                              },
-                              child: Row(
-                                
-                                children: <Widget>[
-                                  Icon(Icons.insert_comment),
-                                  SizedBox(width: 10,),
-                                  getTotalComentarios()
-                                ],
-                              )),
-                          FlatButton(
-                              onPressed: () {
-                                print('Clicou em Chat');
-                              },
-                              child: Row(
-                                children: <Widget>[Icon(Icons.reply, textDirection: TextDirection.rtl,)],
-                              ))
-                        ],
-                      )
                     ],
                   ),
+
+                  //Botoes
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Comentar()));
+                            print('Clicou em comentar');
+                          },
+                          child: Row(
+                            children: <Widget>[
+                              Icon(Icons.insert_comment),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              getTotalComentarios()
+                            ],
+                          )),
+                      FlatButton(
+                          onPressed: () {
+                            print('Clicou em Chat');
+                          },
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.reply,
+                                textDirection: TextDirection.rtl,
+                              )
+                            ],
+                          ))
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ));

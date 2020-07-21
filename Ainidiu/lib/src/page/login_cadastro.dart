@@ -181,7 +181,7 @@ class _CadastroPageState extends State<CadastroPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 190,
+                  height: 100,
                 ),
                 mensagem(),
                 Padding(

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       //IntroPage() para a introdução
       
 
-      home: LoginHome(),
+      home: HomePage(),
     );
   }
 }
