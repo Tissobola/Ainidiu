@@ -1,53 +1,26 @@
-import 'package:flutter/cupertino.dart';
+import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:ainidiu/src/page/login_home.dart';
 
-class CadastroPage extends StatefulWidget {
+class Cadastro extends StatefulWidget {
   @override
-  _CadastroPageState createState() => _CadastroPageState();
+  _CadastroState createState() => _CadastroState();
 }
 
-class _CadastroPageState extends State<CadastroPage> {
+class _CadastroState extends State<Cadastro> {
+  FbRepository repository = FbRepository();
+
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _controladorEmail = TextEditingController();
   final TextEditingController _controladorSenha = TextEditingController();
 
   bool mas = false;
   bool fem = false;
   bool neu = false;
+
   String _currText = 'Selecionar';
   List<String> generos = ["Masculino", "Feminino", "Neutro", "Selecionar"];
-
-  @override
-
-  // ignore: override_on_non_overriding_member
-  Text buildLogo() {
-    return Text(
-      'AINIDIU',
-      style: TextStyle(fontSize: 50, color: Colors.blue),
-    );
-  }
-
-  Center builButton() {
-    return Center(
-      child: GestureDetector(
-        onTap: () {
-          
-        },
-        child: ClipOval(
-          child: Container(
-            color: Colors.blue,
-            height: 70,
-            width: 70,
-            child: Center(
-              child: Icon(
-                Icons.keyboard_arrow_right,
-                size: 50,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Column buildCheck() {
     return Column(
@@ -56,102 +29,94 @@ class _CadastroPageState extends State<CadastroPage> {
           title: Text(generos[0]),
           value: mas,
           onChanged: (bool value) {
-            setState(() {
-              mas = value;
-              fem = false;
-              neu = false;
-              _currText = generos[0];
-              Navigator.pop(context);
-            });
+            if (value) {
+              setState(() {
+                mas = value;
+                fem = false;
+                neu = false;
+                _currText = generos[0];
+                Navigator.pop(context);
+              });
+            }
           },
         ),
         CheckboxListTile(
           title: Text(generos[1]),
           value: fem,
           onChanged: (bool value) {
-            setState(() {
-              fem = value;
-              mas = false;
-              neu = false;
-              _currText = generos[1];
-              Navigator.pop(context);
-            });
+            if (value) {
+              setState(() {
+                fem = value;
+                mas = false;
+                neu = false;
+                _currText = generos[1];
+                Navigator.pop(context);
+              });
+            }
           },
         ),
         CheckboxListTile(
           title: Text(generos[2]),
           value: neu,
           onChanged: (bool value) {
-            setState(() {
-              neu = value;
-              mas = false;
-              fem = false;
-              _currText = generos[2];
-              Navigator.pop(context);
-            });
+            if (value) {
+              setState(() {
+                neu = value;
+                mas = false;
+                fem = false;
+                _currText = generos[2];
+                Navigator.pop(context);
+              });
+            }
           },
         ),
       ],
     );
   }
 
-  Text mensagem() {
-    String msg;
-    if (fem) {
-      setState(() {
-        msg = 'Olá ${_controladorEmail.text}, seja bem-vindA\nSua senha é ${_controladorSenha.text}';
-      });
-    } else if (mas) {
-      setState(() {
-        msg = 'Olá ${_controladorEmail.text}, seja bem-vindO\nSua senha é ${_controladorSenha.text}';
-      });
-    } else {
-      setState(() {
-        msg = 'Olá ${_controladorEmail.text}, seja bem-vindX\nSua senha é ${_controladorSenha.text}';
-      });
-    }
-
-    return Text(msg);
-  }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro'),
       ),
-      body: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
+      body: Builder(
+              builder: (context) => Container(
+          child: Form(
+            key: _formKey,
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  height: 70,
-                ),
-                buildLogo(),
-                SizedBox(
-                  height: 80,
-                ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: TextField(
+                  padding: const EdgeInsets.only(top: 16.0, left: 10, right: 10),
+                  child: TextFormField(
                     controller: _controladorEmail,
                     decoration: InputDecoration(
                         labelText: 'Email', border: OutlineInputBorder()),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Campo obrigatório';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: TextField(
+                  padding: const EdgeInsets.only(top: 16.0, left: 10, right: 10),
+                  child: TextFormField(
+                    obscureText: true,
                     controller: _controladorSenha,
                     decoration: InputDecoration(
                         labelText: 'Senha', border: OutlineInputBorder()),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Campo obrigatório';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
+                  padding: const EdgeInsets.only(top: 16.0, left: 10, right: 10),
                   child: Container(
                     height: 60,
                     decoration: BoxDecoration(
@@ -180,13 +145,21 @@ class _CadastroPageState extends State<CadastroPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 100,
-                ),
-                mensagem(),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: builButton(),
+                RaisedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      int aux = await repository.cadastro(_controladorEmail.text,
+                          _controladorSenha.text, _currText);
+                      if (aux == 0) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => LoginHome()));
+                      } else {
+                        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email já em uso!'), backgroundColor: Colors.red,));
+                        
+                      }
+                    }
+                  },
+                  child: Text('ok'),
                 )
               ],
             ),

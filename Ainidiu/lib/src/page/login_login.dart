@@ -1,5 +1,7 @@
+import 'package:ainidiu/src/page/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ainidiu/src/services/firebase_repository.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,6 +11,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controladorEmail = TextEditingController();
   final TextEditingController _controladorSenha = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
+  FbRepository repository = FbRepository();
 
   @override
 
@@ -23,9 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   Center builButton() {
     return Center(
       child: GestureDetector(
-        onTap: () {
-          
-        },
+        onTap: () {},
         child: ClipOval(
           child: Container(
             color: Colors.blue,
@@ -49,48 +53,65 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-                      child: Column(
-              children: <Widget>[
-                SizedBox(
-                height: 70,
-              ),
-                buildLogo(),
-                SizedBox(
-                height: 80,
-              ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: TextField(
-                    controller: _controladorEmail,
-                    decoration: InputDecoration(
-                        labelText: 'Email', border: OutlineInputBorder()),
+      body: Builder(
+              builder: (context) => Container(
+            color: Colors.white,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 16.0, left: 10, right: 10),
+                    child: TextFormField(
+                      controller: _controladorEmail,
+                      decoration: InputDecoration(
+                          labelText: 'Email', border: OutlineInputBorder()),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Campo obrigatório';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: TextField(
-                    controller: _controladorSenha,
-                    decoration: InputDecoration(
-                        labelText: 'Senha', border: OutlineInputBorder()),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 16.0, left: 10, right: 10),
+                    child: TextFormField(
+                      obscureText: true,
+                      controller: _controladorSenha,
+                      decoration: InputDecoration(
+                          labelText: 'Senha', border: OutlineInputBorder()),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Campo obrigatório';
+                        }
+
+                        return null;
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(
-                height: 190,
+                  RaisedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        int aux = await repository.login(
+                            _controladorEmail.text, _controladorSenha.text);
+                        if (aux == 0) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => HomePage()));
+                        } else if(aux == 1) {
+                          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email não registrado!'), backgroundColor: Colors.red,));
+                        }else{
+                          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Senha incorreta!'), backgroundColor: Colors.red,));
+                        }
+                      }
+                    },
+                    child: Text('ok'),
+                  )
+                ],
               ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: builButton(),
-                )
-              ],
-            ),
-          ),
-        ),
+            )),
       ),
     );
   }

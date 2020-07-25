@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       //LoginHome para login
       
 
-      home: HomePage(),
+      home: LoginHome(),
     );
   }
 }

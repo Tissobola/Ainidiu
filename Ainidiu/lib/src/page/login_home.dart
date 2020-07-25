@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
-
+import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'login_cadastro.dart';
 import 'login_login.dart';
-
 
 class LoginHome extends StatefulWidget {
   @override
@@ -53,11 +51,12 @@ class _LoginHomeState extends State<LoginHome> {
   FlatButton buildButton(texto, op) {
     return FlatButton(
         onPressed: () {
-           if(op == 1) {
-             Navigator.push(this.context, MaterialPageRoute(builder: (context) => LoginPage()));
-           }else{
-            Navigator.push(this.context, MaterialPageRoute(builder: (context) => CadastroPage()));
-           }
+          if (op == 1) {
+            Navigator.push(this.context, MaterialPageRoute(builder: (context) => LoginPage()));
+          } else {
+            Navigator.push(this.context,
+                MaterialPageRoute(builder: (context) => Cadastro()));
+          }
         },
         child: Container(
           width: 171,
