@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "29468994698",
+    "firebase_url": "https://ainidiu-app.firebaseio.com",
+    "project_id": "ainidiu-app",
+    "storage_bucket": "ainidiu-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29468994698:android:a1fcda0863c10a757d1173",
+        "android_client_info": {
+          "package_name": "com.cefetmg.ainidiu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "29468994698-4qf5bpbcfqtjevmv0p4ur08vnnsmnlc9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cefetmg.ainidiu",
+            "certificate_hash": "a3283606775174e50858ce94b8038e01aad39ee7"
+          }
+        },
+        {
+          "client_id": "29468994698-4ejoa59h60loit2h8c6mpskmb2895irq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAk9Ju0oFsaRemd5ym1ClkOtZLlax26h_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "29468994698-4ejoa59h60loit2h8c6mpskmb2895irq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

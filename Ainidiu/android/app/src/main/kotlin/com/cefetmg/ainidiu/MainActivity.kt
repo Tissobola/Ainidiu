@@ -1,4 +1,4 @@
-package com.example.ainidiu
+package com.cefetmg.ainidiu
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
