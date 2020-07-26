@@ -12,26 +12,26 @@ class FbRepository {
         .setData({'de': 'Cláudio', 'text': 'Será que vai dar certo?'});
   }
 
-  Future<int> login(email, senha) async {
+  Future<String> login(email, senha) async {
     QuerySnapshot dados =
         await getConexao().collection('usuarios').getDocuments();
 
     for (var item in dados.documents) {
-      print(item.data.values.toList()[2]);
-      print(email);
+      //print(item.data.values.toList()[1]);
+      //print(email);
 
-      if (email == item.data.values.toList()[2]) {
+      if (email == item.data.values.toList()[3]) {
         if (item.data.values.toList()[0] == senha) {
           //dados corretos
-          return 0;
+          return item.data.values.toList()[1];
         } else {
           //senha incorreta
-          return 2;
+          return '2';
         }
       }
     }
     //email não registrado
-    return 1;
+    return '1';
   }
 
   Future<int> cadastro(email, senha, genero) async {
@@ -39,7 +39,7 @@ class FbRepository {
         await getConexao().collection('usuarios').getDocuments();
 
     for (var item in dados.documents) {
-      if (email == item.data.values.toList()[2]) {
+      if (email == item.data.values.toList()[3]) {
         return 1;
       }
     }
@@ -47,7 +47,7 @@ class FbRepository {
     getConexao()
         .collection('usuarios')
         .document('user${dados.documents.length + 1}')
-        .setData({'email': email, 'genero': genero, 'senha': senha});
+        .setData({'apelido':'Usuário ${dados.documents.length + 1}' ,'email': email, 'genero': genero, 'senha': senha});
 
     return 0;
   }

@@ -4,14 +4,17 @@ import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  String usuario;
+  HomePage({Key key, this.usuario}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(usuario: usuario);
 }
 
 class _HomePageState extends State<HomePage> {
   int bottomSelectedIndex = 0;
+  String usuario;
+  _HomePageState({this.usuario});
 
   String namePage(bottomSelectedIndex) {
     String name;
@@ -40,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         MessagesPage(),
         PrincipalPage(),
-        PerfilPage(),
+        PerfilPage(usuario: usuario,),
       ],
     );
   }

@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
         title: Text('Login'),
       ),
       body: Builder(
-              builder: (context) => Container(
+        builder: (context) => Container(
             color: Colors.white,
             child: Form(
               key: _formKey,
@@ -95,15 +95,25 @@ class _LoginPageState extends State<LoginPage> {
                   RaisedButton(
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
-                        int aux = await repository.login(
+                        String aux = await repository.login(
                             _controladorEmail.text, _controladorSenha.text);
-                        if (aux == 0) {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => HomePage()));
-                        } else if(aux == 1) {
-                          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email não registrado!'), backgroundColor: Colors.red,));
-                        }else{
-                          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Senha incorreta!'), backgroundColor: Colors.red,));
+                       
+                        if (aux != '1' && aux != '2') {
+                          
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage(usuario: aux)));
+                        } else if (aux == '1') {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('Email não registrado!'),
+                            backgroundColor: Colors.red,
+                          ));
+                        } else {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('Senha incorreta!'),
+                            backgroundColor: Colors.red,
+                          ));
                         }
                       }
                     },

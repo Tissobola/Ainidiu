@@ -2,14 +2,17 @@ import 'package:ainidiu/src/page/configuracoes_page.dart';
 import 'package:flutter/material.dart';
 
 class PerfilPage extends StatefulWidget {
-  PerfilPage({Key key}) : super(key: key);
+  String usuario;
+  PerfilPage({Key key, this.usuario}) : super(key: key);
 
   @override
-  _PerfilPageState createState() => _PerfilPageState();
+  _PerfilPageState createState() => _PerfilPageState(apelido: usuario);
 }
 
 class _PerfilPageState extends State<PerfilPage> {
-  String apelido = "Apelido";
+  String apelido;
+  _PerfilPageState({this.apelido});
+
   bool view = false;
 
   CircleAvatar buildAvatar() {
@@ -46,12 +49,16 @@ class _PerfilPageState extends State<PerfilPage> {
                 height: 120,
               ),
               GestureDetector(
-                onVerticalDragUpdate: (d) {setState(() {
-                  corFundo = Colors.red;
-                });},
-                onHorizontalDragUpdate: (d) {setState(() {
-                  corFundo = Colors.black;
-                });},
+                onVerticalDragUpdate: (d) {
+                  setState(() {
+                    corFundo = Colors.red;
+                  });
+                },
+                onHorizontalDragUpdate: (d) {
+                  setState(() {
+                    corFundo = Colors.black;
+                  });
+                },
                 child: ClipOval(
                   child: Container(
                     height: 200,
@@ -106,7 +113,7 @@ class _PerfilPageState extends State<PerfilPage> {
                               height: 90,
                             ),
                             Text(
-                              'Apelido',
+                              '$apelido',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 30,
