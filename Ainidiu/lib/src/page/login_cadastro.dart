@@ -14,12 +14,14 @@ class _CadastroState extends State<Cadastro> {
 
   final TextEditingController _controladorEmail = TextEditingController();
   final TextEditingController _controladorSenha = TextEditingController();
+  final TextEditingController _controladorConfirmarSenha =
+      TextEditingController();
 
   bool mas = false;
   bool fem = false;
   bool neu = false;
 
-  String _currText = 'Selecionar';
+  String _currText = 'Neutro';
   List<String> generos = ["Masculino", "Feminino", "Neutro", "Selecionar"];
 
   Column buildCheck() {
@@ -74,6 +76,17 @@ class _CadastroState extends State<Cadastro> {
     );
   }
 
+  String validaSenha(value) {
+    if (value.isEmpty) {
+      return 'Campo Obrigatório';
+    } else {
+      if (value != _controladorConfirmarSenha.text) {
+        return 'As duas senhas não correspondem';
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,13 +94,14 @@ class _CadastroState extends State<Cadastro> {
         title: Text('Cadastro'),
       ),
       body: Builder(
-              builder: (context) => Container(
+        builder: (context) => Container(
           child: Form(
             key: _formKey,
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 16.0, left: 10, right: 10),
+                  padding:
+                      const EdgeInsets.only(top: 16.0, left: 10, right: 10),
                   child: TextFormField(
                     controller: _controladorEmail,
                     decoration: InputDecoration(
@@ -101,10 +115,22 @@ class _CadastroState extends State<Cadastro> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 16.0, left: 10, right: 10),
+                  padding:
+                      const EdgeInsets.only(top: 16.0, left: 10, right: 10),
                   child: TextFormField(
                     obscureText: true,
                     controller: _controladorSenha,
+                    decoration: InputDecoration(
+                        labelText: 'Senha', border: OutlineInputBorder()),
+                    validator: validaSenha,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 16.0, left: 10, right: 10),
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: _controladorConfirmarSenha,
                     decoration: InputDecoration(
                         labelText: 'Senha', border: OutlineInputBorder()),
                     validator: (value) {
@@ -116,7 +142,8 @@ class _CadastroState extends State<Cadastro> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 16.0, left: 10, right: 10),
+                  padding:
+                      const EdgeInsets.only(top: 16.0, left: 10, right: 10),
                   child: Container(
                     height: 60,
                     decoration: BoxDecoration(
@@ -148,14 +175,20 @@ class _CadastroState extends State<Cadastro> {
                 RaisedButton(
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
-                      int aux = await repository.cadastro(_controladorEmail.text,
-                          _controladorSenha.text, _currText);
+                      int aux = await repository.cadastro(
+                          _controladorEmail.text,
+                          _controladorSenha.text,
+                          _currText);
                       if (aux == 0) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => LoginHome()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginHome()));
                       } else {
-                        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email já em uso!'), backgroundColor: Colors.red,));
-                        
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('Email já em uso!'),
+                          backgroundColor: Colors.red,
+                        ));
                       }
                     }
                   },
