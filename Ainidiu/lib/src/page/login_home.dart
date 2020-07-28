@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ainidiu/src/services/firebase_repository.dart';
+
 import 'login_cadastro.dart';
 import 'login_login.dart';
 
@@ -9,113 +9,101 @@ class LoginHome extends StatefulWidget {
 }
 
 class _LoginHomeState extends State<LoginHome> {
-  @override
-  // ignore: override_on_non_overriding_member
-  Text buildLogo() {
-    return Text(
-      'AINIDIU',
-      style: TextStyle(fontSize: 50, color: Colors.white),
+  Widget buildLogo() {
+    return Container(
+      color: Colors.blue,
+      width: 50,
+      height: 50,
+      child: Icon(Icons.favorite_border, size: 80, color: Colors.white,),
     );
   }
 
-  TextStyle estilo1() {
-    return TextStyle(
-      fontSize: 25,
-      color: Colors.white,
-    );
-  }
-
-  Row build1(texto, texto2) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget buildText() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 18),
-          child: Text(
-            texto,
-            style: estilo1(),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 15),
-          child: Text(
-            texto2,
-            textAlign: TextAlign.end,
-            style: estilo1(),
-          ),
-        )
+        SizedBox(height: 50,),
+        buildLogo(),
+        SizedBox(height: 260,),
+        Text(
+      'SEJA\nBEM-VINDO AO\nAINIDIU',
+      style: TextStyle(
+        fontSize: 35,
+        fontFamily: 'Montserrat'
+      ),
+    )
       ],
     );
   }
 
-  FlatButton buildButton(texto, op) {
+  Widget buildButton() {
     return FlatButton(
-        onPressed: () {
-          if (op == 1) {
-            Navigator.push(this.context, MaterialPageRoute(builder: (context) => LoginPage()));
-          } else {
-            Navigator.push(this.context,
-                MaterialPageRoute(builder: (context) => Cadastro()));
-          }
-        },
-        child: Container(
-          width: 171,
-          color: Colors.white,
-          child: Center(
-            child: Text(
-              texto,
-              style: TextStyle(fontSize: 30),
-            ),
-          ),
-        ));
-  }
-
-  Row build2() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 0),
-          child: buildButton('LOGIN', 1),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 0),
-          child: buildButton('CADASTRO', 2),
-        )
-      ],
-    );
-  }
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: Container(
-        color: Colors.blue,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              height: 130,
-            ),
-            buildLogo(),
-            SizedBox(
-              height: 180,
-            ),
-            build1('JÁ TEM UMA\nCONTA?', 'É NOVO\nPOR AQUI?'),
-            SizedBox(
-              height: 50,
-            ),
-            build2(),
-            SizedBox(
-              height: 250,
-            ),
-            Text(
-              'Termos de Serviço',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            )
-          ],
+      onPressed: () {
+        Navigator.push(this.context, MaterialPageRoute(builder: (context) => LoginPage()));
+      },
+      color: Colors.blue,
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 25, bottom: 25, left: 90, right: 90),
+        child: Text(
+          'SIGN IN',
+          style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       ),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.0),
+          side: BorderSide(color: Colors.blue)),
+    );
+  }
+
+  Widget buildCadastro() {
+    var estilo = TextStyle(fontSize: 18);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'É novo aqui?',
+          style: estilo,
+        ),
+        FlatButton(
+            onPressed: () {
+              Navigator.push(this.context,
+                MaterialPageRoute(builder: (context) => Cadastro()));
+            },
+            child: Container(
+                width: 110,
+                child: Text(
+                  'Cadastre-se',
+                  style: estilo,
+                )))
+      ],
+    );
+  }
+
+  Widget buildTest() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[buildButton(), buildCadastro()],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               //crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[buildText(), buildTest()],
+              ),
+            ],
+          )),
     );
   }
 }

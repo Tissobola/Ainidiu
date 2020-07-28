@@ -9,64 +9,197 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-  List<Slide> slides = new List();
+  int _page = 1;
+  
 
-  @override
-  void initState() {
-    super.initState();
+  Widget filho() {
+    final larguraTela = MediaQuery.of(context).size.width;
+    final alturaTela = MediaQuery.of(context).size.height;
+    if (_page == 1) {
+      return Container(
+        width: larguraTela,
+        height: alturaTela,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              height: 100,
+              width: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.blue,
+              ),
+            )
+          ],
+        ),
+      );
+    } else if (_page == 2) {
+      return Center(
+        child: Text('Page $_page'),
+      );
+    } else if (_page == 3) {
+      return Center(
+        child: Text('Page $_page'),
+      );
+    } else if (_page == 4) {
+      return Center(
+        child: Text('Page $_page'),
+      );
+    }
+    return null;
+  }
 
-    slides.add(
-      new Slide(
-        title: "SEJA BEM-VINDO AO",
-        description: "Allow miles wound place the leave had. To sitting subject no improve studied limited",
-        
-        backgroundColor: Colors.red,
+  bolinha(page) {
+    var c1 = Colors.black;
+    var c2 = Colors.black;
+    var c3 = Colors.black;
+    var c4 = Colors.black;
+
+    if (page == 1) {
+      c1 = Colors.red;
+    } else if (page == 2) {
+      c2 = Colors.red;
+    } else if (page == 3) {
+      c3 = Colors.red;
+    } else {
+      c4 = Colors.red;
+    }
+
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Container(
+            height: 10,
+            width: 10,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: c1,
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Container(
+            height: 10,
+            width: 10,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: c2,
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Container(
+            height: 10,
+            width: 10,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: c3,
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Container(
+            height: 10,
+            width: 10,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: c4,
+            ),
+          )
+        ],
       ),
-    );
-    slides.add(
-      new Slide(
-        title: "PENCIL",
-        description: "Ye indulgence unreserved connection alteration appearance",
-        
-        backgroundColor:  Colors.amber,
-      ),
-    );
-    slides.add(
-      new Slide(
-        title: "RULER",
-        description:
-            "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
-        
-        backgroundColor:  Colors.black,
-      ),
-      
-    );
-    slides.add(
-      new Slide(
-        title: "RULER",
-        description:
-            "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
-        
-        backgroundColor:  Colors.black,
-      ),
-      
     );
   }
 
-  void onDonePress() {
-    // TODO: go to next screen
-  }
+  var cor = Colors.red;
+  var back;
+  var next;
 
-  void onSkipPress() {
-    // TODO: go to next screen
+  barra() {
+    if (_page == 1) {
+      back = '';
+    } else {
+      back = 'BACK';
+    }
+
+    if (_page == 4) {
+      next = 'DONE';
+    } else {
+      next = 'NEXT';
+    }
+
+    return AnimatedContainer(
+        duration: Duration(seconds: 1),
+        color: cor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  if (_page == 1) {
+                  } else if (_page == 2) {
+                    setState(() {
+                      _page = 1;
+                      cor = Colors.red;
+                    });
+                  } else if (_page == 3) {
+                    setState(() {
+                      _page = 2;
+                      cor = Colors.green;
+                    });
+                  } else if (_page == 4) {
+                    setState(() {
+                      _page = 3;
+                      cor = Colors.yellow;
+                    });
+                  }
+                },
+                child: Text(
+                  back,
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )),
+            bolinha(_page),
+            FlatButton(
+                onPressed: () {
+                  //print('page = $_page');
+                  if (_page == 1) {
+                    setState(() {
+                      cor = Colors.green;
+                      _page = 2;
+                    });
+                  } else if (_page == 2) {
+                    setState(() {
+                      cor = Colors.yellow;
+                      _page = 3;
+                    });
+                  } else if (_page == 3) {
+                    setState(() {
+                      cor = Colors.blue;
+                      _page = 4;
+                    });
+                  } else {
+                    print('DONE');
+                  }
+                },
+                child: Text(
+                  next,
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ))
+          ],
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return new IntroSlider(
-      slides: this.slides,
-      onDonePress: this.onDonePress,
-      onSkipPress: this.onSkipPress,
+    return Scaffold(
+      bottomNavigationBar: barra(),
+      body: AnimatedContainer(
+        duration: Duration(seconds: 1),
+        color: cor,
+        child: filho(),
+      ),
     );
   }
 }
