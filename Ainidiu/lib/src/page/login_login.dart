@@ -1,3 +1,4 @@
+import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_cadastro.dart';
 import 'package:flutter/cupertino.dart';
@@ -126,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                               _controladorEmail.text, _controladorSenha.text);
 
                           if (aux != '1' && aux != '2') {
+                            
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

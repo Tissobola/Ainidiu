@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       },
       children: <Widget>[
         MessagesPage(),
-        PrincipalPage(),
+        PrincipalPage(usuario: usuario,),
         PerfilPage(usuario: usuario,),
       ],
     );

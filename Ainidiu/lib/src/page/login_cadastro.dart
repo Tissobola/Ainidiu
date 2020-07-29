@@ -184,7 +184,7 @@ class _CadastroState extends State<Cadastro> {
                       obscureText: true,
                       controller: _controladorConfirmarSenha,
                       decoration: InputDecoration(
-                          labelText: 'Senha', border: OutlineInputBorder()),
+                          labelText: 'Confirmar Senha', border: OutlineInputBorder()),
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Campo obrigatório';

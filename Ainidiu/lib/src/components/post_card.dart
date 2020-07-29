@@ -49,7 +49,6 @@ class _PostCardState extends State<PostCard> {
   }
 
   ///Exibe a tarja azual quando é comentário
-  
 
   Border exibeTarjaAzul() {
     if (this.ehComentario()) {
@@ -58,9 +57,11 @@ class _PostCardState extends State<PostCard> {
     return Border();
   }
 
-  Widget exibeEspaco(){
-    if(this.ehComentario()) {
-      return SizedBox(width: 3,);
+  Widget exibeEspaco() {
+    if (this.ehComentario()) {
+      return SizedBox(
+        width: 3,
+      );
     }
     return SizedBox();
   }
@@ -154,7 +155,7 @@ class _PostCardState extends State<PostCard> {
                                   width: 5,
                                 ),
                                 Text(
-                                  "${this.getCurrent().dataHora.hour.toString()}:${this.getCurrent().dataHora.minute.toString()}",
+                                  "${this.getCurrent().data}",
                                   style: TextStyle(color: Colors.grey),
                                 )
                               ],

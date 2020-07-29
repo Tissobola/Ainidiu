@@ -1,14 +1,21 @@
+import 'package:ainidiu/src/api/item.dart';
+import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class Escrever extends StatefulWidget {
-  Escrever({Key key}) : super(key: key);
+  String usuario;
+  Escrever({Key key, this.usuario}) : super(key: key);
 
   @override
-  _EscreverState createState() => _EscreverState();
+  _EscreverState createState() => _EscreverState(usuario: usuario);
 }
 
 class _EscreverState extends State<Escrever> {
+  String usuario;
+  _EscreverState({this.usuario});
   TextEditingController msg = TextEditingController();
+  FbRepository repository = FbRepository();
 
   Widget _buildTextField() {
     final maxLines = 10;
@@ -45,10 +52,16 @@ class _EscreverState extends State<Escrever> {
                 top: 240.0 + 24,
                 left: larguraTela - 70 - 12,
                 child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      
-                    });
+                  onTap: () async {
+                    //print('usuario = $usuario');
+                    User user =
+                        await repository.carregarDadosDoUsuario(usuario);
+
+                    repository.escreverPostagens(DateTime.now(), user.imageURL,
+                        user.id, 0, user.id, user.apelido, msg.text);
+
+                    Navigator.pop(context);
+                    
                   },
                   child: ClipOval(
                     child: Container(
@@ -64,7 +77,6 @@ class _EscreverState extends State<Escrever> {
                   ),
                 ),
               ),
-              
             ])));
   }
 }
