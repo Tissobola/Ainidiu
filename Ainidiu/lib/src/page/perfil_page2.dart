@@ -1,8 +1,10 @@
+import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/configuracoes_page.dart';
+import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class PerfilPage extends StatefulWidget {
-  String usuario;
+  User usuario;
   PerfilPage({Key key, this.usuario}) : super(key: key);
 
   @override
@@ -10,20 +12,22 @@ class PerfilPage extends StatefulWidget {
 }
 
 class _PerfilPageState extends State<PerfilPage> {
-  String apelido;
+  User apelido;
   _PerfilPageState({this.apelido});
 
   bool view = false;
 
-  CircleAvatar buildAvatar() {
+  FbRepository repository = FbRepository();
+
+  CircleAvatar buildAvatar(){
+  
     return CircleAvatar(
       radius: 60,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       child: CircleAvatar(
         radius: 55,
-        backgroundColor: Colors.grey,
-        backgroundImage: NetworkImage(
-            'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png'),
+        backgroundColor: Colors.white,
+        backgroundImage: NetworkImage(apelido.imageURL),
       ),
     );
   }
@@ -113,7 +117,7 @@ class _PerfilPageState extends State<PerfilPage> {
                               height: 90,
                             ),
                             Text(
-                              '$apelido',
+                              '${apelido.apelido}',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 30,

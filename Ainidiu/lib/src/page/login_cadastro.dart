@@ -25,6 +25,67 @@ class _CadastroState extends State<Cadastro> {
   String _currText = 'Neutro';
   List<String> generos = ["Masculino", "Feminino", "Neutro", "Selecionar"];
 
+  String _avatar =
+      'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png';
+
+  Widget exibirFoto(url) {
+    return FlatButton(
+      onPressed: () {
+        setState(() {
+          _avatar = url;
+        });
+        Navigator.pop(context);
+      },
+      child: CircleAvatar(
+        radius: 30,
+        backgroundColor: Colors.white,
+        backgroundImage: NetworkImage(url),
+      ),
+    );
+  }
+
+  Column escolherFoto() {
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            exibirFoto(
+                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F001-man-13.png?alt=media&token=ccfbda64-d61a-4625-8e15-d809384456e5'),
+            exibirFoto(
+                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F002-woman-14.png?alt=media&token=48e9f9e5-072d-40c1-b883-0798b08900f5'),
+            exibirFoto(
+                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F005-woman-11.png?alt=media&token=9d4180ad-2302-4c8c-8eba-fcff6bd479ef'),
+          ],
+        ),
+        SizedBox(height: 20,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            exibirFoto(
+                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F001-man-13.png?alt=media&token=ccfbda64-d61a-4625-8e15-d809384456e5'),
+            exibirFoto(
+                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F002-woman-14.png?alt=media&token=48e9f9e5-072d-40c1-b883-0798b08900f5'),
+            exibirFoto(
+                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F005-woman-11.png?alt=media&token=9d4180ad-2302-4c8c-8eba-fcff6bd479ef'),
+          ],
+        ),
+        SizedBox(height: 20,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            exibirFoto(
+                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F001-man-13.png?alt=media&token=ccfbda64-d61a-4625-8e15-d809384456e5'),
+            exibirFoto(
+                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F002-woman-14.png?alt=media&token=48e9f9e5-072d-40c1-b883-0798b08900f5'),
+            exibirFoto(
+                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F005-woman-11.png?alt=media&token=9d4180ad-2302-4c8c-8eba-fcff6bd479ef'),
+          ],
+        )
+      ],
+    );
+  }
+
   Column buildCheck() {
     return Column(
       children: <Widget>[
@@ -98,12 +159,17 @@ class _CadastroState extends State<Cadastro> {
             color: Colors.blue,
             width: 60,
             height: 60,
-            child: Icon(Icons.favorite_border, size: 90, color: Colors.white,),
+            child: Icon(
+              Icons.favorite_border,
+              size: 90,
+              color: Colors.white,
+            ),
           ),
         ),
-        Text('AINIDIU', style: TextStyle(
-          fontSize: 20
-        ),)
+        Text(
+          'AINIDIU',
+          style: TextStyle(fontSize: 20),
+        )
       ],
     );
   }
@@ -122,7 +188,7 @@ class _CadastroState extends State<Cadastro> {
         FlatButton(
             onPressed: () {
               Navigator.push(this.context,
-                MaterialPageRoute(builder: (context) => LoginPage()));
+                  MaterialPageRoute(builder: (context) => LoginPage()));
             },
             child: Container(
                 width: 110,
@@ -145,10 +211,9 @@ class _CadastroState extends State<Cadastro> {
           color: Colors.white,
           child: Form(
             key: _formKey,
-            child: 
-            SingleChildScrollView(
+            child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-                          child: Column(
+              child: Column(
                 children: <Widget>[
                   buildLogo(),
                   Padding(
@@ -184,7 +249,8 @@ class _CadastroState extends State<Cadastro> {
                       obscureText: true,
                       controller: _controladorConfirmarSenha,
                       decoration: InputDecoration(
-                          labelText: 'Confirmar Senha', border: OutlineInputBorder()),
+                          labelText: 'Confirmar Senha',
+                          border: OutlineInputBorder()),
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Campo obrigatório';
@@ -214,7 +280,9 @@ class _CadastroState extends State<Cadastro> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         content: Container(
-                                            height: 325, child: buildCheck()),
+                                          child: buildCheck(),
+                                          height: 180,
+                                        ),
                                       );
                                     });
                               },
@@ -224,18 +292,59 @@ class _CadastroState extends State<Cadastro> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 50,),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+                    child: Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Row(
+                          children: <Widget>[
+                            Text('Avatar'),
+                            FlatButton(
+                              child: Text('Selecionar Foto'),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        content: Container(
+                                          height: 230,
+                                          child: escolherFoto(),
+                                        ),
+                                      );
+                                    });
+                              },
+                            ),
+                            CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage: NetworkImage(_avatar),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
                   RaisedButton(
                     shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          side: BorderSide(color: Colors.blue)),
+                        borderRadius: BorderRadius.circular(50),
+                        side: BorderSide(color: Colors.blue)),
                     color: Colors.blue,
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         int aux = await repository.cadastro(
                             _controladorEmail.text,
                             _controladorSenha.text,
-                            _currText);
+                            _currText,
+                            _avatar
+                            );
                         if (aux == 0) {
                           Navigator.push(
                               context,
@@ -250,13 +359,13 @@ class _CadastroState extends State<Cadastro> {
                       }
                     },
                     child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 25, bottom: 25, left: 90, right: 90),
-                        child: Text(
-                          'CADASTRO',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
+                      padding: const EdgeInsets.only(
+                          top: 25, bottom: 25, left: 90, right: 90),
+                      child: Text(
+                        'CADASTRO',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
+                    ),
                   ),
                   buildCadastro()
                 ],

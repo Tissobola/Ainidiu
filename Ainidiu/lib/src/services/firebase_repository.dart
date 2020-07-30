@@ -111,7 +111,7 @@ class FbRepository {
     return '1';
   }
 
-  Future<int> cadastro(email, senha, genero) async {
+  Future<int> cadastro(email, senha, genero, imageURL) async {
     QuerySnapshot dados =
         await getConexao().collection('usuarios').getDocuments();
 
@@ -130,8 +130,7 @@ class FbRepository {
       'genero': genero,
       'senha': senha,
       'id': dados.documents.length + 1,
-      'ImageURL':
-          'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png'
+      'ImageURL': imageURL
     });
 
     return 0;

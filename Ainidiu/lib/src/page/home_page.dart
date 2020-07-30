@@ -1,10 +1,11 @@
+import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/messages_page.dart';
 import 'package:ainidiu/src/page/perfil_page2.dart';
 import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  String usuario;
+  User usuario;
   HomePage({Key key, this.usuario}) : super(key: key);
 
   @override
@@ -13,7 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int bottomSelectedIndex = 0;
-  String usuario;
+  User usuario;
   _HomePageState({this.usuario});
 
   String namePage(bottomSelectedIndex) {

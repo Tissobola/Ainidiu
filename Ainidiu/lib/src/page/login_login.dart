@@ -31,12 +31,17 @@ class _LoginPageState extends State<LoginPage> {
             color: Colors.blue,
             width: 60,
             height: 60,
-            child: Icon(Icons.favorite_border, size: 90, color: Colors.white,),
+            child: Icon(
+              Icons.favorite_border,
+              size: 90,
+              color: Colors.white,
+            ),
           ),
         ),
-        Text('AINIDIU', style: TextStyle(
-          fontSize: 20
-        ),)
+        Text(
+          'AINIDIU',
+          style: TextStyle(fontSize: 20),
+        )
       ],
     );
   }
@@ -55,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
         FlatButton(
             onPressed: () {
               Navigator.push(this.context,
-                MaterialPageRoute(builder: (context) => Cadastro()));
+                  MaterialPageRoute(builder: (context) => Cadastro()));
             },
             child: Container(
                 width: 110,
@@ -80,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
               key: _formKey,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
-                              child: Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     buildLogo(),
@@ -116,7 +121,9 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       ),
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(
+                      height: 50,
+                    ),
                     RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
@@ -126,13 +133,15 @@ class _LoginPageState extends State<LoginPage> {
                           String aux = await repository.login(
                               _controladorEmail.text, _controladorSenha.text);
 
+                          User user =
+                              await repository.carregarDadosDoUsuario(aux);
+
                           if (aux != '1' && aux != '2') {
-                            
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        HomePage(usuario: aux)));
+                                        HomePage(usuario: user)));
                           } else if (aux == '1') {
                             Scaffold.of(context).showSnackBar(SnackBar(
                               content: Text('Email não registrado!'),
@@ -156,8 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                  buildCadastro(),
-                  
+                    buildCadastro(),
                   ],
                 ),
               ),

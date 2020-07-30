@@ -1,11 +1,12 @@
 import 'package:ainidiu/src/api/item.dart';
+import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
 import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class PrincipalPage extends StatefulWidget {
-  String usuario;
+  User usuario;
   PrincipalPage({Key key, this.usuario}) : super(key: key);
 
   @override
@@ -13,7 +14,7 @@ class PrincipalPage extends StatefulWidget {
 }
 
 class _PrincipalPageState extends State<PrincipalPage> {
-  String usuario;
+  User usuario;
   _PrincipalPageState({this.usuario});
 
   FbRepository repository = FbRepository();
@@ -74,7 +75,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => Escrever(
-                        usuario: usuario,
+                        usuario: usuario.apelido,
                       )));
         },
         tooltip: 'Increment',

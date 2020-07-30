@@ -131,7 +131,7 @@ class _PostCardState extends State<PostCard> {
                       //Foto
                       CircleAvatar(
                         radius: 30,
-                        backgroundColor: Colors.grey,
+                        backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
                         backgroundImage:
                             NetworkImage(this.getCurrent().imagemURL),
