@@ -47,6 +47,7 @@ class _CadastroState extends State<Cadastro> {
     );
   }
 
+<<<<<<< .mine
   List<String> _urls = new List<String>();
 
   a() async {
@@ -124,6 +125,154 @@ class _CadastroState extends State<Cadastro> {
         ),
       );
     }
+=======
+  List<String> _urls = new List<String>();
+
+  a() async {
+    var storage = FirebaseStorage.instance;
+
+    for (var i = 1; i < 7; i++) {
+      String aux =
+          await storage.ref().child('avatares/img ($i).png').getDownloadURL();
+      _urls.add(aux);
+    }
+
+    return _urls;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> .theirs
+  }
+
+  void mudaTamanho() {}
+
+  Widget escolherFoto() {
+    
+      if (_currText == "Neutro") {
+        return SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+                  child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  exibirFoto(_urls[0]),
+                  exibirFoto(_urls[1]),
+                  exibirFoto(_urls[2]),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  exibirFoto(_urls[3]),
+                  exibirFoto(_urls[4]),
+                  exibirFoto(_urls[5]),
+                ],
+              ),
+              
+            ],
+          ),
+        );
+      } else if (_currText == "Masculino") {
+        return SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+                  child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  exibirFoto(_urls[0]),
+                  exibirFoto(_urls[1]),
+                  exibirFoto(_urls[2]),
+                ],
+              ),
+              
+            ],
+          ),
+        );
+      } else {
+        return SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+                  child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  exibirFoto(_urls[3]),
+                  exibirFoto(_urls[4]),
+                  exibirFoto(_urls[5]),
+                ],
+              ),
+              
+            ],
+          ),
+        );
+      }
   }
 
   Column buildCheck() {
@@ -352,6 +501,7 @@ class _CadastroState extends State<Cadastro> {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
+<<<<<<< .mine
                                       return FutureBuilder(
                                         future: a(),
                                         builder: (context, snapshot) {
@@ -381,6 +531,37 @@ class _CadastroState extends State<Cadastro> {
                                             );
                                           }
                                         },
+=======
+                                      return FutureBuilder(
+                                        future: a(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return AlertDialog(
+                                              content: Container(
+                                                height: _tamanhoAlert,
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text('Carregando Imagens'),
+                                                    SizedBox(height: 20,),
+                                                    CircularProgressIndicator()
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return AlertDialog(
+                                              elevation: 5,
+                                              content: Container(child: escolherFoto(),),
+                                            );
+                                          }
+                                        },
+
+
+
+
+
+>>>>>>> .theirs
                                       );
                                     });
                               },
@@ -397,6 +578,7 @@ class _CadastroState extends State<Cadastro> {
                   SizedBox(
                     height: 50,
                   ),
+<<<<<<< .mine
                   Builder(
                     builder: (context) {
                       if (_loading) {
@@ -448,6 +630,59 @@ class _CadastroState extends State<Cadastro> {
                             ),
                           ),
                         );
+=======
+                  RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                        side: BorderSide(color: Colors.blue)),
+                    color: Colors.blue,
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        int aux = await repository.cadastro(
+                            _controladorEmail.text,
+                            _controladorSenha.text,
+                            _currText,
+                            _avatar);
+                        if (aux == 0) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginHome()));
+                        } else {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('Email já em uso!'),
+                            backgroundColor: Colors.red,
+                          ));
+                        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> .theirs
                       }
                     },
                   ),

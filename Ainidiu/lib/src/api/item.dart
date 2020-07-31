@@ -12,7 +12,7 @@ class ItemData {
   String postadoPorNome;
   
   ///Id do usuário da postagem
-  int portadoPorId;
+  int postadoPorId;
 
   ///URL da foto da pessoa
   ///Exmeplo: https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png
@@ -29,7 +29,7 @@ class ItemData {
   List<ItemData> _comentarios;
 
   ///Método construtor
-  ItemData(this.id, this.portadoPorId, this.postadoPorNome, this.imagemURL,
+  ItemData(this.id, this.postadoPorId, this.postadoPorNome, this.imagemURL,
       this.texto, this.data,this.parentId);
 
   ///Adicionar um comentario
@@ -39,7 +39,7 @@ class ItemData {
     this._comentarios.add(comentario);
   }
 
-  ///Adcicionar uma lista de comentários
+  ///Adicicionar uma lista de comentários
   void addComentarios(List<ItemData> comentarios) {
     if (this._comentarios == null) this._comentarios = new List<ItemData>();
 

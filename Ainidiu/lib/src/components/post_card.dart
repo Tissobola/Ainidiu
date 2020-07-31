@@ -254,6 +254,10 @@ class _PostCardState extends State<PostCard> {
   }
 }
 
+denunciarPostagem() {
+  
+}
+
 /*
 Card(
             elevation: 5,
