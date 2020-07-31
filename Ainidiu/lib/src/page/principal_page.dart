@@ -64,11 +64,29 @@ class _PrincipalPageState extends State<PrincipalPage> {
         return aux;
       });
 
+  Future<List<ItemData>> postagens;
+
+  @override
+  void initState() {
+    postagens = getFutureDados();
+    super.initState();
+  }
+
+  Future<void> _reload() async {
+    Future<List<ItemData>> aux = await Future.delayed(Duration(seconds: 3), () => getFutureDados());
+    setState(() {
+      postagens = aux;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       ///Usando o componente ListViewPostCard, passando como parâmetro a fonte de dados
-      body: ListViewPostCard(getFutureDados()),
+      body: RefreshIndicator(
+        child: ListViewPostCard(postagens),
+        onRefresh: _reload,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
