@@ -34,7 +34,7 @@ class FbRepository {
     return usuario;
   }
 
-  escreverPostagens(DateTime data, imagemURL, int id, parentId, portadoPorId,
+  escreverPostagens(DateTime data, imagemURL, int id, parentId, postadoPorId,
       postadoPorNome, texto) async {
     QuerySnapshot dados =
         await getConexao().collection('postagens').getDocuments();
@@ -49,7 +49,7 @@ class FbRepository {
       'id': id,
       'imagemURL': imagemURL,
       'parentId': parentId,
-      'portadoPorId': portadoPorId,
+      'postadoPorId': postadoPorId,
       'postadoPorNome': postadoPorNome,
       'texto': texto
     });
@@ -68,7 +68,7 @@ class FbRepository {
       //[0] postadoPorNome
       //[1] texto
       //[2] id
-      //[3] portadoPorId
+      //[3] postadoPorId
       //[4] dataHora
       //[5] imagemURL
       //[6] parentId
