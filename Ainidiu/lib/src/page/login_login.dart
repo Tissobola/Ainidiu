@@ -15,6 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controladorSenha = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  bool _loading = false;
 
   FbRepository repository = FbRepository();
 
@@ -124,46 +125,68 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 50,
                     ),
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          side: BorderSide(color: Colors.blue)),
-                      onPressed: () async {
-                        if (_formKey.currentState.validate()) {
-                          String aux = await repository.login(
-                              _controladorEmail.text, _controladorSenha.text);
+                    Builder(
+                      builder: (BuildContext context) {
+                        if (_loading) {
+                          return CircularProgressIndicator();
+                        } else {
+                          return RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                                side: BorderSide(color: Colors.blue)),
+                            onPressed: () async {
+                              if (_formKey.currentState.validate()) {
+                                setState(() {
+                                  _loading = true;
+                                });
 
-                          User user =
-                              await repository.carregarDadosDoUsuario(aux);
+                                String aux = await repository.login(
+                                    _controladorEmail.text,
+                                    _controladorSenha.text);
 
-                          if (aux != '1' && aux != '2') {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        HomePage(usuario: user)));
-                          } else if (aux == '1') {
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text('Email não registrado!'),
-                              backgroundColor: Colors.red,
-                            ));
-                          } else {
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text('Senha incorreta!'),
-                              backgroundColor: Colors.red,
-                            ));
-                          }
+                                User user = await repository
+                                    .carregarDadosDoUsuario(aux);
+
+                                if (aux != '1' && aux != '2') {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              HomePage(usuario: user)));
+                                } else if (aux == '1') {
+                                  setState(() {
+                                    _loading = false;
+                                  });
+
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text('Email não registrado!'),
+                                    backgroundColor: Colors.red,
+                                  ));
+                                } else {
+                                  setState(() {
+                                    _loading = false;
+                                  });
+
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text('Senha incorreta!'),
+                                    backgroundColor: Colors.red,
+                                  ));
+                                }
+                              }
+                            },
+                            color: Colors.blue,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 25, bottom: 25, left: 90, right: 90),
+                              child: Text(
+                                'LOGIN',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            ),
+                          );
                         }
                       },
-                      color: Colors.blue,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 25, bottom: 25, left: 90, right: 90),
-                        child: Text(
-                          'LOGIN',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
                     ),
                     buildCadastro(),
                   ],

@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   # firebase_core: ^0.2.5
-  intro_slider: ^1.0.8
+  email_validator: '^1.0.0'
 
   
 

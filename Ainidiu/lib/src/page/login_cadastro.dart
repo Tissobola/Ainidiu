@@ -1,5 +1,6 @@
 import 'package:ainidiu/src/page/login_login.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 
@@ -12,6 +13,7 @@ class _CadastroState extends State<Cadastro> {
   FbRepository repository = FbRepository();
 
   final _formKey = GlobalKey<FormState>();
+  bool _loading = false;
 
   final TextEditingController _controladorEmail = TextEditingController();
   final TextEditingController _controladorSenha = TextEditingController();
@@ -27,6 +29,7 @@ class _CadastroState extends State<Cadastro> {
 
   String _avatar =
       'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png';
+  double _tamanhoAlert = 200;
 
   Widget exibirFoto(url) {
     return FlatButton(
@@ -44,46 +47,83 @@ class _CadastroState extends State<Cadastro> {
     );
   }
 
-  Column escolherFoto() {
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  List<String> _urls = new List<String>();
+
+  a() async {
+    var storage = FirebaseStorage.instance;
+
+    for (var i = 1; i < 7; i++) {
+      String aux =
+          await storage.ref().child('avatares/img ($i).png').getDownloadURL();
+      _urls.add(aux);
+    }
+
+    return _urls;
+  }
+
+  void mudaTamanho() {}
+
+  Widget escolherFoto() {
+    if (_currText == "Neutro") {
+      return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
           children: <Widget>[
-            exibirFoto(
-                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F001-man-13.png?alt=media&token=ccfbda64-d61a-4625-8e15-d809384456e5'),
-            exibirFoto(
-                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F002-woman-14.png?alt=media&token=48e9f9e5-072d-40c1-b883-0798b08900f5'),
-            exibirFoto(
-                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F005-woman-11.png?alt=media&token=9d4180ad-2302-4c8c-8eba-fcff6bd479ef'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                exibirFoto(_urls[0]),
+                exibirFoto(_urls[1]),
+                exibirFoto(_urls[2]),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                exibirFoto(_urls[3]),
+                exibirFoto(_urls[4]),
+                exibirFoto(_urls[5]),
+              ],
+            ),
           ],
         ),
-        SizedBox(height: 20,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      );
+    } else if (_currText == "Masculino") {
+      return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
           children: <Widget>[
-            exibirFoto(
-                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F001-man-13.png?alt=media&token=ccfbda64-d61a-4625-8e15-d809384456e5'),
-            exibirFoto(
-                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F002-woman-14.png?alt=media&token=48e9f9e5-072d-40c1-b883-0798b08900f5'),
-            exibirFoto(
-                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F005-woman-11.png?alt=media&token=9d4180ad-2302-4c8c-8eba-fcff6bd479ef'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                exibirFoto(_urls[0]),
+                exibirFoto(_urls[1]),
+                exibirFoto(_urls[2]),
+              ],
+            ),
           ],
         ),
-        SizedBox(height: 20,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      );
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
           children: <Widget>[
-            exibirFoto(
-                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F001-man-13.png?alt=media&token=ccfbda64-d61a-4625-8e15-d809384456e5'),
-            exibirFoto(
-                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F002-woman-14.png?alt=media&token=48e9f9e5-072d-40c1-b883-0798b08900f5'),
-            exibirFoto(
-                'https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2F005-woman-11.png?alt=media&token=9d4180ad-2302-4c8c-8eba-fcff6bd479ef'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                exibirFoto(_urls[3]),
+                exibirFoto(_urls[4]),
+                exibirFoto(_urls[5]),
+              ],
+            ),
           ],
-        )
-      ],
-    );
+        ),
+      );
+    }
   }
 
   Column buildCheck() {
@@ -227,7 +267,8 @@ class _CadastroState extends State<Cadastro> {
                         if (value.isEmpty) {
                           return 'Campo obrigatório';
                         }
-                        return null;
+      
+
                       },
                     ),
                   ),
@@ -311,11 +352,35 @@ class _CadastroState extends State<Cadastro> {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        content: Container(
-                                          height: 230,
-                                          child: escolherFoto(),
-                                        ),
+                                      return FutureBuilder(
+                                        future: a(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return AlertDialog(
+                                              content: Container(
+                                                height: _tamanhoAlert,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text('Carregando Imagens'),
+                                                    SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    CircularProgressIndicator()
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return AlertDialog(
+                                              elevation: 5,
+                                              content: Container(
+                                                child: escolherFoto(),
+                                              ),
+                                            );
+                                          }
+                                        },
                                       );
                                     });
                               },
@@ -332,40 +397,59 @@ class _CadastroState extends State<Cadastro> {
                   SizedBox(
                     height: 50,
                   ),
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        side: BorderSide(color: Colors.blue)),
-                    color: Colors.blue,
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        int aux = await repository.cadastro(
-                            _controladorEmail.text,
-                            _controladorSenha.text,
-                            _currText,
-                            _avatar
-                            );
-                        if (aux == 0) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginHome()));
-                        } else {
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text('Email já em uso!'),
-                            backgroundColor: Colors.red,
-                          ));
-                        }
+                  Builder(
+                    builder: (context) {
+                      if (_loading) {
+                        return CircularProgressIndicator();
+                      } else {
+                        return RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                              side: BorderSide(color: Colors.blue)),
+                          color: Colors.blue,
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              setState(() {
+                                _loading = true;
+                              });
+
+                              int aux = await repository.cadastro(
+                                  _controladorEmail.text,
+                                  _controladorSenha.text,
+                                  _currText,
+                                  _avatar);
+                              if (aux == 0) {
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text('Cadastro realizado!'),
+                                  backgroundColor: Colors.blue,
+                                ));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginHome()));
+                              } else {
+                                setState(() {
+                                  _loading = false;
+                                });
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text('Email já em uso!'),
+                                  backgroundColor: Colors.red,
+                                ));
+                              }
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 25, bottom: 25, left: 90, right: 90),
+                            child: Text(
+                              'CADASTRO',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          ),
+                        );
                       }
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 25, bottom: 25, left: 90, right: 90),
-                      child: Text(
-                        'CADASTRO',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    ),
                   ),
                   buildCadastro()
                 ],
