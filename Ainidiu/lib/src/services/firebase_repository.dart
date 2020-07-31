@@ -67,14 +67,14 @@ class FbRepository {
 
       //[0] postadoPorNome
       //[1] texto
-      //[2] id
-      //[3] postadoPorId
+      //[2] postadoPorId
+      //[3] id
       //[4] dataHora
       //[5] imagemURL
       //[6] parentId
 
       postagens.add(ItemData(
-          lista[2], lista[3], lista[0], lista[5], lista[1], lista[4], lista[6]));
+          lista[3], lista[2], lista[0], lista[5], lista[1], lista[4], lista[6]));
   
     }
 
@@ -134,5 +134,36 @@ class FbRepository {
     });
 
     return 0;
+  }
+
+  Future denunciar(int idDoPost, String texto) async{
+    print(idDoPost);
+    String nomeDoPost;
+    print('rodou');
+    QuerySnapshot dados = await getConexao()
+    .collection('postagens')
+    .getDocuments();
+
+    for(var item in dados.documents) {
+      var lista = item.data.values.toList();
+      if (lista[3] == idDoPost) {
+        print('achado');
+        nomeDoPost = item.documentID;
+        enviarDenuncia(idDoPost, lista);
+      }
+    }
+    return nomeDoPost;
+  }
+
+  void enviarDenuncia(int idDoPost, List lista) async{
+    getConexao()
+      .collection('denuncias')
+      .document('denuncia$idDoPost')
+      .setData({'dataHora': lista[4],
+      'id': lista[3],
+      'parentId': lista[6],
+      'postadoPorId': lista[2],
+      'postadoPorNome': lista[0],
+      'texto': lista[1]});
   }
 }

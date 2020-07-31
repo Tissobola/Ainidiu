@@ -1,6 +1,8 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/page/comentar_page.dart';
+import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:ainidiu/src/page/denunciar_postagem_page.dart';
 
 import 'detalhe_postagem_page.dart';
 
@@ -66,6 +68,8 @@ class _PostCardState extends State<PostCard> {
     return SizedBox();
   }
 
+  FbRepository repository = FbRepository();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -111,7 +115,9 @@ class _PostCardState extends State<PostCard> {
           direction: DismissDirection.endToStart,
           //Ação para deuninciar a publicação
           onDismissed: (direcao) {
-            print('Clicou em denunciar a postagem');
+            //repository.denunciar(this.getCurrent().id);
+            Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Denunciar()));
           },
 
           child: Card(
@@ -252,10 +258,6 @@ class _PostCardState extends State<PostCard> {
           ),
         ));
   }
-}
-
-denunciarPostagem() {
-  
 }
 
 /*
