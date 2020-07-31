@@ -57,8 +57,7 @@ class _EscreverState extends State<Escrever> {
                     User user =
                         await repository.carregarDadosDoUsuario(usuario);
 
-                    repository.escreverPostagens(DateTime.now(), user.imageURL,
-                        user.id, 0, user.id, user.apelido, msg.text);
+                    repository.escreverPostagens(DateTime.now(), user.imageURL, 0, user.id, user.apelido, msg.text);
 
                     Navigator.pop(context);
                     
