@@ -34,11 +34,7 @@ class FbRepository {
     return usuario;
   }
 
-<<<<<<< .mine
-  escreverPostagens(DateTime data, imagemURL,parentId, portadoPorId,
-=======
-  escreverPostagens(DateTime data, imagemURL, int id, parentId, postadoPorId,
->>>>>>> .theirs
+  escreverPostagens(DateTime data, imagemURL, parentId, postadoPorId,
       postadoPorNome, texto) async {
     QuerySnapshot dados =
         await getConexao().collection('postagens').getDocuments();
