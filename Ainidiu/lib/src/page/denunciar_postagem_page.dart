@@ -1,4 +1,3 @@
-import 'package:ainidiu/src/api/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
@@ -36,11 +35,10 @@ class _DenunciarState extends State<Denunciar> {
     );
   }
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     var alturaTela = MediaQuery.of(context).size.height;
     var larguraTela = MediaQuery.of(context).size.width;
-    int idDoPost = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
         appBar: AppBar(

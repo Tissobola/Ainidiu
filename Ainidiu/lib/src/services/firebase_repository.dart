@@ -1,6 +1,5 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FbRepository {
@@ -40,21 +39,23 @@ class FbRepository {
         await getConexao().collection('postagens').getDocuments();
 
     var hora = '${data.hour}:${data.minute}';
-    int lastId;
+    int lastId = 0;
 
     for (var item in dados.documents) {
       lastId = item.data.values.toList()[3];
     }
-
-    getConexao().collection('postagens').document('post${lastId + 1}').setData({
-      'dataHora': hora,
-      'id': lastId + 1,
-      'imagemURL': imagemURL,
-      'parentId': parentId,
-      'postadoPorId': postadoPorId,
-      'postadoPorNome': postadoPorNome,
-      'texto': texto
-    });
+      getConexao()
+          .collection('postagens')
+          .document('post${lastId + 1}')
+          .setData({
+        'dataHora': hora,
+        'id': lastId + 1,
+        'imagemURL': imagemURL,
+        'parentId': parentId,
+        'postadoPorId': postadoPorId,
+        'postadoPorNome': postadoPorNome,
+        'texto': texto
+      });
   }
 
   Future<List<ItemData>> carregarPostagens() async {
@@ -80,6 +81,56 @@ class FbRepository {
     }
 
     return postagens;
+  }
+
+  escreverComentario(DateTime data, imagemURL, parentId, postadoPorId,
+      postadoPorNome, texto) async {
+    QuerySnapshot dados =
+        await getConexao().collection('postagens').document(acharPost(parentId).toString()).collection('comentarios').getDocuments();
+
+    var hora = '${data.hour}:${data.minute}';
+    int lastId = 0;
+
+    for (var item in dados.documents) {
+      lastId = item.data.values.toList()[3];
+    }
+      getConexao()
+          .collection('postagens')
+          .document(acharPost(parentId).toString()).collection('comentarios').document('comentario${lastId+1}')
+          .setData({
+        'dataHora': hora,
+        'id': lastId + 1,
+        'imagemURL': imagemURL,
+        'parentId': parentId,
+        'postadoPorId': postadoPorId,
+        'postadoPorNome': postadoPorNome,
+        'texto': texto
+      });
+  }
+
+  Future<List<ItemData>> carregarComentarios(parentId) async {
+    QuerySnapshot dados =
+        await getConexao().collection('postagens').document(acharPost(parentId).toString()).collection('comentarios').getDocuments();
+
+    var comentarios = new List<ItemData>();
+
+    for (var item in dados.documents) {
+      //print('a = ${item.data.values.toList()[6]}');
+      var lista = item.data.values.toList();
+
+      //[0] postadoPorNome
+      //[1] texto
+      //[2] postadoPorId
+      //[3] id
+      //[4] dataHora
+      //[5] imagemURL
+      //[6] parentId
+
+      comentarios.add(ItemData(lista[3], lista[2], lista[0], lista[5], lista[1],
+          lista[4], lista[6]));
+    }
+
+    return comentarios;
   }
 
   Future<String> login(email, senha) async {
@@ -137,26 +188,36 @@ class FbRepository {
     return 0;
   }
 
-  Future denunciar(int idDoPost, String texto) async {
+  Future acharPost(int idDoPost) async {
     print(idDoPost);
     String nomeDoPost;
-    print('rodou');
     QuerySnapshot dados =
         await getConexao().collection('postagens').getDocuments();
 
     for (var item in dados.documents) {
       var lista = item.data.values.toList();
       if (lista[3] == idDoPost) {
-        print('achado');
         nomeDoPost = item.documentID;
         print('Did = ${item.documentID}');
+      }
+    }
+
+    return nomeDoPost;
+  }
+
+  void denunciar(int idDoPost, String texto) async {
+    print(idDoPost);
+    QuerySnapshot dados =
+        await getConexao().collection('postagens').getDocuments();
+
+    for (var item in dados.documents) {
+      var lista = item.data.values.toList();
+      if (lista[3] == idDoPost) {
         getConexao().collection('postagens').document(item.documentID).delete();
 
         enviarDenuncia(idDoPost, lista, texto);
       }
     }
-
-    return nomeDoPost;
   }
 
   void enviarDenuncia(int idDoPost, List lista, texto) async {
@@ -177,7 +238,7 @@ class FbRepository {
       'postadoPorId': lista[2],
       'postadoPorNome': lista[0],
       'textoDaPostagem': lista[1],
-      'textoDaDenuncia': texto
+      'motivoDaDenuncia': texto
     });
   }
 }

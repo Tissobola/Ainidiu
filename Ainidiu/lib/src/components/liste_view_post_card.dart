@@ -50,8 +50,8 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
+                        Icon(Icons.delete_sweep),
                         Text('Me senti ofendido...'),
-                        Icon(Icons.delete)
                       ],
                     ),
                   ),
@@ -60,7 +60,6 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
                   direction: DismissDirection.endToStart,
                   onDismissed: (direction) {
                     setState(() {});
-                    
                     Navigator.push(
                         context,
                         MaterialPageRoute(
