@@ -23,6 +23,12 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
     return FutureBuilder<List<ItemData>>(
         future: getDataSource(),
         builder: (context, snapshot) {
+          print('lenght = ${snapshot.data.length}');
+          List<int> ids = new List<int>();
+          for (int i = 0; i < snapshot.data.length; i++) {
+            print('id = ${snapshot.data[i].id}');
+            ids.add(snapshot.data[i].id);
+          }
           if (!snapshot.hasData) {
             return Center(
               child: Column(
@@ -68,6 +74,9 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
                                 Denunciar(snapshot.data[i].id)));
                   },
                 );
+
+
+
               },
             );
           }
