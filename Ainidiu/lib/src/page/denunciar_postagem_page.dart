@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 
 class Denunciar extends StatefulWidget {
+  int id;
+  Denunciar(this.id);
   @override
-  _DenunciarState createState() => _DenunciarState();
+  _DenunciarState createState() => _DenunciarState(id);
 }
 
 class _DenunciarState extends State<Denunciar> {
+  int id;
+  _DenunciarState(this.id);
   TextEditingController msg = TextEditingController();
   FbRepository repository = FbRepository();
 
@@ -39,7 +43,10 @@ class _DenunciarState extends State<Denunciar> {
     int idDoPost = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-        appBar: AppBar(title: Text('Denunciar'), backgroundColor: Colors.red,),
+        appBar: AppBar(
+          title: Text('Denunciar'),
+          backgroundColor: Colors.red,
+        ),
         body: Container(
             height: alturaTela,
             child: Stack(children: <Widget>[
@@ -49,7 +56,8 @@ class _DenunciarState extends State<Denunciar> {
                 left: larguraTela - 70 - 12,
                 child: GestureDetector(
                   onTap: () async {
-                    await repository.denunciar(idDoPost, msg.toString());
+                    print('Id = ${id}');
+                    await repository.denunciar(id, msg.toString());
                     Navigator.pop(context);
                   },
                   child: ClipOval(
