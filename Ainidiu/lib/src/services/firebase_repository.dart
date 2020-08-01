@@ -46,10 +46,7 @@ class FbRepository {
       lastId = item.data.values.toList()[3];
     }
 
-    getConexao()
-        .collection('postagens')
-        .document('post${lastId + 1}')
-        .setData({
+    getConexao().collection('postagens').document('post${lastId + 1}').setData({
       'dataHora': hora,
       'id': lastId + 1,
       'imagemURL': imagemURL,
@@ -154,7 +151,8 @@ class FbRepository {
         nomeDoPost = item.documentID;
         print('Did = ${item.documentID}');
         getConexao().collection('postagens').document(item.documentID).delete();
-        enviarDenuncia(idDoPost, lista);
+        
+        await enviarDenuncia(idDoPost, lista);
       }
     }
 
@@ -169,9 +167,10 @@ class FbRepository {
   }
 
   void enviarDenuncia(int idDoPost, List lista) async {
+    print('ta aqui');
     getConexao().collection('denuncias').document('denuncia$idDoPost').setData({
       'dataHora': lista[4],
-      'id': lista[3],
+      'id': idDoPost,
       'parentId': lista[6],
       'postadoPorId': lista[2],
       'postadoPorNome': lista[0],
