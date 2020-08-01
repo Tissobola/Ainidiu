@@ -23,7 +23,6 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
     return FutureBuilder<List<ItemData>>(
         future: getDataSource(),
         builder: (context, snapshot) {
-         
           if (!snapshot.hasData) {
             return Center(
               child: Column(
@@ -60,11 +59,8 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
                   child: PostCard(context, snapshot.data[i]),
                   direction: DismissDirection.endToStart,
                   onDismissed: (direction) {
-                    print(snapshot.data);
-
-                    setState(() {
-                      //snapshot.data.removeAt(i);
-                    });
+                    setState(() {});
+                    
                     Navigator.push(
                         context,
                         MaterialPageRoute(
