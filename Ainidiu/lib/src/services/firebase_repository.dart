@@ -40,13 +40,18 @@ class FbRepository {
         await getConexao().collection('postagens').getDocuments();
 
     var hora = '${data.hour}:${data.minute}';
+    int lastId;
+
+    for (var item in dados.documents) {
+      lastId = item.data.values.toList()[3];
+    }
 
     getConexao()
         .collection('postagens')
-        .document('post${dados.documents.length + 1}')
+        .document('post${lastId + 1}')
         .setData({
       'dataHora': hora,
-      'id': dados.documents.length + 1,
+      'id': lastId + 1,
       'imagemURL': imagemURL,
       'parentId': parentId,
       'postadoPorId': postadoPorId,
@@ -73,9 +78,8 @@ class FbRepository {
       //[5] imagemURL
       //[6] parentId
 
-      postagens.add(ItemData(
-          lista[3], lista[2], lista[0], lista[5], lista[1], lista[4], lista[6]));
-  
+      postagens.add(ItemData(lista[3], lista[2], lista[0], lista[5], lista[1],
+          lista[4], lista[6]));
     }
 
     return postagens;
@@ -136,34 +140,42 @@ class FbRepository {
     return 0;
   }
 
-  Future denunciar(int idDoPost, String texto) async{
+  Future denunciar(int idDoPost, String texto) async {
     print(idDoPost);
     String nomeDoPost;
     print('rodou');
-    QuerySnapshot dados = await getConexao()
-    .collection('postagens')
-    .getDocuments();
+    QuerySnapshot dados =
+        await getConexao().collection('postagens').getDocuments();
 
-    for(var item in dados.documents) {
+    for (var item in dados.documents) {
       var lista = item.data.values.toList();
       if (lista[3] == idDoPost) {
         print('achado');
         nomeDoPost = item.documentID;
+        print('Did = ${item.documentID}');
+        getConexao().collection('postagens').document(item.documentID).delete();
         enviarDenuncia(idDoPost, lista);
       }
     }
+
+    for (var item in dados.documents) {
+      int aux = 1;
+      var lista = item.data.values.toList();
+      print('doc =' + item.documentID);
+      aux++;
+    }
+
     return nomeDoPost;
   }
 
-  void enviarDenuncia(int idDoPost, List lista) async{
-    getConexao()
-      .collection('denuncias')
-      .document('denuncia$idDoPost')
-      .setData({'dataHora': lista[4],
+  void enviarDenuncia(int idDoPost, List lista) async {
+    getConexao().collection('denuncias').document('denuncia$idDoPost').setData({
+      'dataHora': lista[4],
       'id': lista[3],
       'parentId': lista[6],
       'postadoPorId': lista[2],
       'postadoPorNome': lista[0],
-      'texto': lista[1]});
+      'texto': lista[1]
+    });
   }
 }
