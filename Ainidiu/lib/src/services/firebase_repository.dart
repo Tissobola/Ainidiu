@@ -151,30 +151,33 @@ class FbRepository {
         nomeDoPost = item.documentID;
         print('Did = ${item.documentID}');
         getConexao().collection('postagens').document(item.documentID).delete();
-        
-        await enviarDenuncia(idDoPost, lista);
-      }
-    }
 
-    for (var item in dados.documents) {
-      int aux = 1;
-      var lista = item.data.values.toList();
-      print('doc =' + item.documentID);
-      aux++;
+        enviarDenuncia(idDoPost, lista, texto);
+      }
     }
 
     return nomeDoPost;
   }
 
-  void enviarDenuncia(int idDoPost, List lista) async {
+  void enviarDenuncia(int idDoPost, List lista, texto) async {
     print('ta aqui');
+    QuerySnapshot dados =
+        await getConexao().collection('denuncias').getDocuments();
+
+    for (var item in dados.documents) {
+      for (int i = 0; i < item.data.values.toList().length; i++) {
+        print('[$i] = ${item.data.values.toList()[i]}');
+      }
+    }
+
     getConexao().collection('denuncias').document('denuncia$idDoPost').setData({
       'dataHora': lista[4],
       'id': idDoPost,
       'parentId': lista[6],
       'postadoPorId': lista[2],
       'postadoPorNome': lista[0],
-      'texto': lista[1]
+      'textoDaPostagem': lista[1],
+      'textoDaDenuncia': texto
     });
   }
 }
