@@ -148,12 +148,14 @@ class _LoginPageState extends State<LoginPage> {
                                     .carregarDadosDoUsuario(aux);
 
                                 if (aux != '1' && aux != '2') {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               HomePage(usuario: user)));
                                 } else if (aux == '1') {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   setState(() {
                                     _loading = false;
                                   });
@@ -163,6 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                                     backgroundColor: Colors.red,
                                   ));
                                 } else {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   setState(() {
                                     _loading = false;
                                   });

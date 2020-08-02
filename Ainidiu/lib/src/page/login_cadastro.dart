@@ -1,5 +1,6 @@
 import 'package:ainidiu/src/page/login_login.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/page/login_home.dart';
@@ -24,7 +25,7 @@ class _CadastroState extends State<Cadastro> {
   bool fem = false;
   bool neu = false;
 
-  String _currText = 'Neutro';
+  String _currText = 'Selecionar';
   List<String> generos = ["Masculino", "Feminino", "Neutro", "Selecionar"];
 
   String _avatar =
@@ -62,70 +63,66 @@ class _CadastroState extends State<Cadastro> {
   }
 
   Widget escolherFoto() {
-    
-      if (_currText == "Neutro") {
-        return SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-                  child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  exibirFoto(_urls[0]),
-                  exibirFoto(_urls[1]),
-                  exibirFoto(_urls[2]),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  exibirFoto(_urls[3]),
-                  exibirFoto(_urls[4]),
-                  exibirFoto(_urls[5]),
-                ],
-              ),
-              
-            ],
-          ),
-        );
-      } else if (_currText == "Masculino") {
-        return SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-                  child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  exibirFoto(_urls[0]),
-                  exibirFoto(_urls[1]),
-                  exibirFoto(_urls[2]),
-                ],
-              ),
-              
-            ],
-          ),
-        );
-      } else {
-        return SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-                  child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  exibirFoto(_urls[3]),
-                  exibirFoto(_urls[4]),
-                  exibirFoto(_urls[5]),
-                ],
-              ),
-              
-            ],
-          ),
-        );
-      }
+    if (_currText == "Neutro") {
+      return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                exibirFoto(_urls[0]),
+                exibirFoto(_urls[1]),
+                exibirFoto(_urls[2]),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                exibirFoto(_urls[3]),
+                exibirFoto(_urls[4]),
+                exibirFoto(_urls[5]),
+              ],
+            ),
+          ],
+        ),
+      );
+    } else if (_currText == "Masculino") {
+      return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                exibirFoto(_urls[0]),
+                exibirFoto(_urls[1]),
+                exibirFoto(_urls[2]),
+              ],
+            ),
+          ],
+        ),
+      );
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                exibirFoto(_urls[3]),
+                exibirFoto(_urls[4]),
+                exibirFoto(_urls[5]),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Column buildCheck() {
@@ -268,9 +265,13 @@ class _CadastroState extends State<Cadastro> {
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Campo obrigatório';
+                        } else if (EmailValidator.validate(value)) {
+                          return null;
+                        } else {
+                          return 'Email Inválido';
                         }
-      
 
+                        
                       },
                     ),
                   ),
@@ -294,12 +295,7 @@ class _CadastroState extends State<Cadastro> {
                       decoration: InputDecoration(
                           labelText: 'Confirmar Senha',
                           border: OutlineInputBorder()),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Campo obrigatório';
-                        }
-                        return null;
-                      },
+                      validator: validaSenha,
                     ),
                   ),
                   Padding(
@@ -421,6 +417,8 @@ class _CadastroState extends State<Cadastro> {
                                   _currText,
                                   _avatar);
                               if (aux == 0) {
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
                                 Scaffold.of(context).showSnackBar(SnackBar(
                                   content: Text('Cadastro realizado!'),
                                   backgroundColor: Colors.blue,
@@ -430,6 +428,8 @@ class _CadastroState extends State<Cadastro> {
                                     MaterialPageRoute(
                                         builder: (context) => LoginHome()));
                               } else {
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
                                 setState(() {
                                   _loading = false;
                                 });
