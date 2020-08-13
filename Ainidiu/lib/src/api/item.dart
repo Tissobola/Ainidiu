@@ -1,6 +1,5 @@
 ///Classe que represenda as informações a serem apresentadas nos cards
 class ItemData {
-
   ///Id da postagem pai, só deve ser difiente de zero, se for comentario
   ///aí nesse campo vai o Id da pastagem a qual pertence o comentário
   int parentId;
@@ -10,7 +9,7 @@ class ItemData {
 
   ///Nome ou apelido de quem postou
   String postadoPorNome;
-  
+
   ///Id do usuário da postagem
   int postadoPorId;
 
@@ -20,17 +19,18 @@ class ItemData {
 
   ///Texto da postagem
   String texto;
-   
+
   ///Data e hora da postagem
   DateTime dataHora;
   String data;
 
   ///Comentarios que essa postagem possui
   List<ItemData> _comentarios;
+  List comentarios;
 
   ///Método construtor
   ItemData(this.id, this.postadoPorId, this.postadoPorNome, this.imagemURL,
-      this.texto, this.data,this.parentId);
+      this.texto, this.data, this.parentId);
 
   ///Adicionar um comentario
   void addComentario(ItemData comentario) {

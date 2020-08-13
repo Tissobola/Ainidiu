@@ -9,12 +9,13 @@ class Comentar extends StatefulWidget {
   Comentar({Key key, this.usuario, this.current}) : super(key: key);
 
   @override
-  _ComentarState createState() => _ComentarState(usuario: usuario);
+  _ComentarState createState() => _ComentarState(usuario: usuario, current: current);
 }
 
 class _ComentarState extends State<Comentar> {
   String usuario;
-  _ComentarState({this.usuario});
+  ItemData current;
+  _ComentarState({this.usuario, this.current});
   TextEditingController msg = TextEditingController();
   FbRepository repository = FbRepository();
 
@@ -62,10 +63,13 @@ class _ComentarState extends State<Comentar> {
                     User user =
                         await repository.carregarDadosDoUsuario(usuario);
 
-                    repository.escreverComentario(DateTime.now(), user.imageURL, this.getCurrent().id, user.id, user.apelido, msg.text, );
+                    repository.escreverComentario(
+                      current.id,
+                      msg.text,
+                      user
+                    );
 
                     Navigator.pop(context);
-                    
                   },
                   child: ClipOval(
                     child: Container(

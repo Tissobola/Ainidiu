@@ -19,45 +19,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
   FbRepository repository = FbRepository();
 
-  List<ItemData> montaListaPostagem() {
-    var postagens = new List<ItemData>();
-
-    for (var i = 1; i <= 10; i++) {
-      var comentarios = new List<ItemData>();
-      if (i % 2 == 0) {
-        var id = i + 1000;
-        comentarios.add(ItemData(
-            id,
-            (i + 1000),
-            'Comentario $i',
-            'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png',
-            'Text do comentário',
-            'DateTime.now()',
-            i));
-
-        comentarios.add(ItemData(
-            id,
-            (i + 1000),
-            'Comentario $i',
-            'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png',
-            'Outro texto de comentário, bala bla bla bla Lorem ipsum nam facilisis aenean nam lacus cursus ipsum, nulla sodales sed in rhoncus sapien odio litora, velit primis condimentum lobortis vulputate curabitur fringilla. condimentum laoreet ligula imperdiet cras aliquam vehicula suscipit aliquet in ultricies. Lorem ipsum nam facilisis aenean nam lacus cursus ipsum, nulla sodales sed in rhoncus sapien odio litora, velit primis condimentum lobortis vulputate curabitur fringilla. condimentum laoreet ligula imperdiet cras aliquam vehicula suscipit aliquet in ultricies. Lorem ipsum nam facilisis aenean nam lacus cursus ipsum, nulla sodales sed in rhoncus sapien odio litora, velit primis condimentum lobortis vulputate curabitur fringilla. condimentum laoreet ligula imperdiet cras aliquam vehicula suscipit aliquet in ultricies',
-            'DateTime.now()',
-            i));
-
-        comentarios[1].addComentario(
-            ItemData(1, 1, 'postadoPorNome', 'imagemURL', 'texto', 'data', 1));
-      }
-      postagens.add(
-          ItemData(1, 1, 'postadoPorNome', 'imagemURL', 'texto', 'data', 1));
-
-      postagens[(i - 1)].addComentarios(comentarios);
-    }
-    return postagens;
-  }
-
-  ///Construindo um método Future, para vincular ao componente
-  ///pois o componente espera os dados Futuros,
-  ///ideal para usar com Firebase e webservices
+  
   Future<List<ItemData>> getFutureDados() async =>
       await Future.delayed(Duration(seconds: 0), () async {
         List<ItemData> aux = await repository.carregarPostagens();

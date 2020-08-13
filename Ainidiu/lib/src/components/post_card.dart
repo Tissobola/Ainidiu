@@ -14,10 +14,14 @@ class PostCard extends StatefulWidget {
   PostCard(this.context, this.current);
 
   @override
-  _PostCardState createState() => _PostCardState();
+  _PostCardState createState() => _PostCardState(current: current);
 }
 
 class _PostCardState extends State<PostCard> {
+  ItemData current;
+
+  _PostCardState({this.current});
+
   ///Controler do texto da mensagem
   final textoController = TextEditingController();
 
@@ -155,10 +159,7 @@ class _PostCardState extends State<PostCard> {
                               onTap: () {
                                 ///Verifica se tem comentários para exibir os detalhes
                                 ///Métod executado sempre que clicar no card
-                                if (this
-                                        .getCurrent()
-                                        .getComentarios()
-                                        .length >
+                                if (this.getCurrent().getComentarios().length >
                                     0) {
                                   Navigator.push(
                                       context,
@@ -187,10 +188,14 @@ class _PostCardState extends State<PostCard> {
                   children: <Widget>[
                     FlatButton(
                         onPressed: () {
+                          print(current.id);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Comentar()));
+                                  builder: (context) => Comentar(
+                                        usuario: current.postadoPorNome,
+                                        current: current,
+                                      )));
                           print('Clicou em comentar');
                         },
                         child: Row(

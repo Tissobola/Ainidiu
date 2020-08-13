@@ -1,5 +1,6 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FbRepository {
@@ -21,12 +22,12 @@ class FbRepository {
     //[5] Email
 
     for (var item in dados.documents) {
-      var lista = item.data.values.toList();
+      var it = item.data;
 
-      if (user == item.data.values.toList()[1]) {
+      if (user == it['apelido']) {
         //print(item.data.values.toList()[5]);
-        usuario = new User(
-            lista[3], lista[1], lista[5], lista[2], lista[4], lista[0]);
+        usuario = new User(it['ImageURL'], it['apelido'], it['email'],
+            it['genero'], it['id'], it['senha']);
       }
     }
 
@@ -44,18 +45,16 @@ class FbRepository {
     for (var item in dados.documents) {
       lastId = item.data.values.toList()[3];
     }
-      getConexao()
-          .collection('postagens')
-          .document('post${lastId + 1}')
-          .setData({
-        'dataHora': hora,
-        'id': lastId + 1,
-        'imagemURL': imagemURL,
-        'parentId': parentId,
-        'postadoPorId': postadoPorId,
-        'postadoPorNome': postadoPorNome,
-        'texto': texto
-      });
+    getConexao().collection('postagens').document('post${lastId + 1}').setData({
+      'dataHora': hora,
+      'id': lastId + 1,
+      'imagemURL': imagemURL,
+      'parentId': parentId,
+      'postadoPorId': postadoPorId,
+      'postadoPorNome': postadoPorNome,
+      'texto': texto,
+      'comentarios': []
+    });
   }
 
   Future<List<ItemData>> carregarPostagens() async {
@@ -66,71 +65,105 @@ class FbRepository {
 
     for (var item in dados.documents) {
       //print('a = ${item.data.values.toList()[6]}');
-      var lista = item.data.values.toList();
+      var post = item.data;
+      ItemData aux = ItemData(
+        post['id'],
+        post['postadoPorId'],
+        post['postadoPorNome'],
+        post['imagemURL'],
+        post['texto'],
+        post['dataHora'],
+        post['parentId'],
+      );
 
-      //[0] postadoPorNome
-      //[1] texto
-      //[2] postadoPorId
-      //[3] id
-      //[4] dataHora
-      //[5] imagemURL
-      //[6] parentId
+      List comentarios = post['comentarios'];
 
-      postagens.add(ItemData(lista[3], lista[2], lista[0], lista[5], lista[1],
-          lista[4], lista[6]));
+      for (int i = 0; i < comentarios.length; i++) {
+        aux.addComentario(await carregarComentario(comentarios[i]));
+      }
+
+      postagens.add(aux);
     }
 
     return postagens;
   }
 
-  escreverComentario(DateTime data, imagemURL, parentId, postadoPorId,
-      postadoPorNome, texto) async {
+  carregarComentario(id) async {
     QuerySnapshot dados =
-        await getConexao().collection('postagens').document(acharPost(parentId).toString()).collection('comentarios').getDocuments();
+        await getConexao().collection('comentarios').getDocuments();
 
-    var hora = '${data.hour}:${data.minute}';
-    int lastId = 0;
+    ItemData comentario;
 
     for (var item in dados.documents) {
-      lastId = item.data.values.toList()[3];
+      if (id == item.data['id']) {
+        comentario = ItemData(
+          item.data['id'],
+          item.data['postadoPorId'],
+          item.data['postadoPorNome'],
+          item.data['imagemURL'],
+          item.data['texto'],
+          item.data['dataHora'],
+          item.data['parentId'],
+        );
+      }
     }
-      getConexao()
-          .collection('postagens')
-          .document(acharPost(parentId).toString()).collection('comentarios').document('comentario${lastId+1}')
-          .setData({
-        'dataHora': hora,
-        'id': lastId + 1,
-        'imagemURL': imagemURL,
-        'parentId': parentId,
-        'postadoPorId': postadoPorId,
-        'postadoPorNome': postadoPorNome,
-        'texto': texto
-      });
+
+    return comentario;
   }
 
-  Future<List<ItemData>> carregarComentarios(parentId) async {
-    QuerySnapshot dados =
-        await getConexao().collection('postagens').document(acharPost(parentId).toString()).collection('comentarios').getDocuments();
+  escreverComentario(idPost, msg, User user) async {
+    QuerySnapshot dados;
 
-    var comentarios = new List<ItemData>();
+    dados = await getConexao().collection('comentarios').getDocuments();
+
+    print('tamanho = ${dados.documents.length}');
+
+    int id = dados.documents.length + 1;
+    var hora = '${DateTime.now().hour}:${DateTime.now().minute}';
+
+    getConexao().collection('comentarios').document('comentario$id').setData({
+      'dataHora': hora,
+      'id': id,
+      'imagemURL': user.imageURL,
+      'parentId': idPost,
+      'postadoPorId': user.id,
+      'postadoPorNome': user.apelido,
+      'texto': msg,
+      'comentarios': []
+    });
+
+    dados = await getConexao().collection('postagens').getDocuments();
+
+    List aux = new List();
+    List comentarios = new List();
 
     for (var item in dados.documents) {
-      //print('a = ${item.data.values.toList()[6]}');
-      var lista = item.data.values.toList();
+      if (idPost == item.data['id']) {
+        aux = item.data['comentarios'];
 
-      //[0] postadoPorNome
-      //[1] texto
-      //[2] postadoPorId
-      //[3] id
-      //[4] dataHora
-      //[5] imagemURL
-      //[6] parentId
-
-      comentarios.add(ItemData(lista[3], lista[2], lista[0], lista[5], lista[1],
-          lista[4], lista[6]));
+        for (int i = 0; i < aux.length; i++) {
+          comentarios.add(aux[i]);
+        }
+        comentarios.add(id);
+        getConexao()
+            .collection('postagens')
+            .document('post$idPost')
+            .setData(
+              {
+      'dataHora': item.data['dataHora'],
+      'id': item.data['id'],
+      'imagemURL': item.data['imagemURL'],
+      'parentId': item.data['parentId'],
+      'postadoPorId': item.data['postadoPorId'],
+      'postadoPorNome': item.data['postadoPorNome'],
+      'texto': item.data['texto'],
+      'comentarios': comentarios
+    }
+            );
+      }
     }
 
-    return comentarios;
+    print('aux = $aux');
   }
 
   Future<String> login(email, senha) async {

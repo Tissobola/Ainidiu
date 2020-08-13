@@ -16,7 +16,6 @@ class DetalhePostagemPage extends StatefulWidget {
 }
 
 class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
-
   ItemData getCurrent() {
     return this.widget.postagem;
   }
@@ -25,19 +24,17 @@ class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
 
   Future<List<ItemData>> getFutureDados() async =>
       await Future.delayed(Duration(seconds: 1), () {
-        return repository.carregarComentarios(this.getCurrent().id);
+        return getCurrent().getComentarios();
       });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:Text('Comentários')),
+      appBar: AppBar(title: Text('Comentários')),
       body: Column(
         children: <Widget>[
           PostCard(context, this.widget.postagem),
           Expanded(child: ListViewPostCard(getFutureDados()))
-          
         ],
       ),
     );
