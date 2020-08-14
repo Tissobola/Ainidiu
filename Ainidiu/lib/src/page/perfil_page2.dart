@@ -19,8 +19,7 @@ class _PerfilPageState extends State<PerfilPage> {
 
   FbRepository repository = FbRepository();
 
-  CircleAvatar buildAvatar(){
-  
+  CircleAvatar buildAvatar() {
     return CircleAvatar(
       radius: 60,
       backgroundColor: Colors.black,
@@ -83,7 +82,18 @@ class _PerfilPageState extends State<PerfilPage> {
               SizedBox(
                 height: 30,
               ),
-              //Colocar aqui oque for ficar embaixo
+              RaisedButton(
+                onPressed: () async {
+                  await repository.resetPosts();
+                },
+                color: Colors.red,
+                child: Container(
+                  child: Text(
+                    'RESET',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
             ],
           ),
           Column(

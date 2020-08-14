@@ -8,6 +8,18 @@ class FbRepository {
     return Firestore.instance;
   }
 
+  resetPosts() async {
+    QuerySnapshot dados =
+        await getConexao().collection('postagens').getDocuments();
+
+    for (var item in dados.documents) {
+      await getConexao()
+          .collection('postagens')
+          .document('${item.documentID}')
+          .delete();
+    }
+  }
+
   Future<User> carregarDadosDoUsuario(user) async {
     QuerySnapshot dados =
         await getConexao().collection('usuarios').getDocuments();
@@ -43,7 +55,9 @@ class FbRepository {
     int lastId = 0;
 
     for (var item in dados.documents) {
-      lastId = item.data.values.toList()[3];
+      if (item.data['id'] > lastId) {
+        lastId = item.data['id'];
+      }
     }
     getConexao().collection('postagens').document('post${lastId + 1}').setData({
       'dataHora': hora,
@@ -64,38 +78,72 @@ class FbRepository {
     var postagens = new List<ItemData>();
 
     for (var item in dados.documents) {
-      //print('a = ${item.data.values.toList()[6]}');
-      var post = item.data;
-      ItemData aux = ItemData(
-        post['id'],
-        post['postadoPorId'],
-        post['postadoPorNome'],
-        post['imagemURL'],
-        post['texto'],
-        post['dataHora'],
-        post['parentId'],
-      );
+      if (item.data['parentId'] == 0) {
+        var post = item.data;
+        ItemData aux = ItemData(
+          post['id'],
+          post['postadoPorId'],
+          post['postadoPorNome'],
+          post['imagemURL'],
+          post['texto'],
+          post['dataHora'],
+          post['parentId'],
+        );
 
-      List comentarios = post['comentarios'];
+        List comentarios = post['comentarios'];
 
-      for (int i = 0; i < comentarios.length; i++) {
-        aux.addComentario(await carregarComentario(comentarios[i]));
+        for (int i = 0; i < comentarios.length; i++) {
+          aux.addComentario(await carregarPost(comentarios[i]));
+        }
+
+        postagens.add(aux);
       }
-
-      postagens.add(aux);
     }
 
     return postagens;
   }
 
-  carregarComentario(id) async {
+  carregarPost(com) async {
     QuerySnapshot dados =
-        await getConexao().collection('comentarios').getDocuments();
+        await getConexao().collection('postagens').getDocuments();
 
-    ItemData comentario;
+    ItemData aux;
 
     for (var item in dados.documents) {
-      if (id == item.data['id']) {
+      if (item.data['id'] == com) {
+        var post = item.data;
+        aux = ItemData(
+          post['id'],
+          post['postadoPorId'],
+          post['postadoPorNome'],
+          post['imagemURL'],
+          post['texto'],
+          post['dataHora'],
+          post['parentId'],
+        );
+
+        List coms = new List();
+        coms = post['comentarios'];
+
+        for (int i = 0; i < coms.length; i++) {
+          aux.addComentario(await carregarPost(coms[i]));
+        }
+      }
+    }
+
+    return aux;
+  }
+
+  carregarComentario(id) async {
+    QuerySnapshot dados =
+        await getConexao().collection('postagens').getDocuments();
+
+    ItemData comentario;
+    List<ItemData> aux = new List<ItemData>();
+
+    for (var item in dados.documents) {
+      if (id == item.data['parentId']) {
+        print('id = ${id}\nPaiId = ${item.data['parentId']}');
         comentario = ItemData(
           item.data['id'],
           item.data['postadoPorId'],
@@ -106,24 +154,32 @@ class FbRepository {
           item.data['parentId'],
         );
       }
+      aux.add(comentario);
     }
 
-    return comentario;
+    return aux;
   }
 
   escreverComentario(idPost, msg, User user) async {
     QuerySnapshot dados;
 
-    dados = await getConexao().collection('comentarios').getDocuments();
+    dados = await getConexao().collection('postagens').getDocuments();
 
-    print('tamanho = ${dados.documents.length}');
+    int lastId = 0;
 
-    int id = dados.documents.length + 1;
+    for (var item in dados.documents) {
+      if (item.data['id'] > lastId) {
+        lastId = item.data['id'];
+      }
+    }
+
+    lastId++;
+
     var hora = '${DateTime.now().hour}:${DateTime.now().minute}';
 
-    getConexao().collection('comentarios').document('comentario$id').setData({
+    getConexao().collection('postagens').document('post$lastId').setData({
       'dataHora': hora,
-      'id': id,
+      'id': lastId,
       'imagemURL': user.imageURL,
       'parentId': idPost,
       'postadoPorId': user.id,
@@ -144,26 +200,19 @@ class FbRepository {
         for (int i = 0; i < aux.length; i++) {
           comentarios.add(aux[i]);
         }
-        comentarios.add(id);
-        getConexao()
-            .collection('postagens')
-            .document('post$idPost')
-            .setData(
-              {
-      'dataHora': item.data['dataHora'],
-      'id': item.data['id'],
-      'imagemURL': item.data['imagemURL'],
-      'parentId': item.data['parentId'],
-      'postadoPorId': item.data['postadoPorId'],
-      'postadoPorNome': item.data['postadoPorNome'],
-      'texto': item.data['texto'],
-      'comentarios': comentarios
-    }
-            );
+        comentarios.add(lastId);
+        getConexao().collection('postagens').document('post$idPost').setData({
+          'dataHora': item.data['dataHora'],
+          'id': item.data['id'],
+          'imagemURL': item.data['imagemURL'],
+          'parentId': item.data['parentId'],
+          'postadoPorId': item.data['postadoPorId'],
+          'postadoPorNome': item.data['postadoPorNome'],
+          'texto': item.data['texto'],
+          'comentarios': comentarios
+        });
       }
     }
-
-    print('aux = $aux');
   }
 
   Future<String> login(email, senha) async {
