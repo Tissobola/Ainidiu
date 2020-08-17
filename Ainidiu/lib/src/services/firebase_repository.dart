@@ -1,6 +1,5 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FbRepository {

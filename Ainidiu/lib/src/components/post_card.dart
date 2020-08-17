@@ -2,7 +2,6 @@ import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/page/comentar_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:ainidiu/src/page/denunciar_postagem_page.dart';
 
 import 'detalhe_postagem_page.dart';
 

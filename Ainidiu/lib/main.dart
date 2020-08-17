@@ -1,6 +1,4 @@
-import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_home.dart';
-import 'package:ainidiu/src/page/pages_intro/introducao_home.dart';
 
 import 'package:flutter/material.dart';
 

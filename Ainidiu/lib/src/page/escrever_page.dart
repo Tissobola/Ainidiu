@@ -1,6 +1,8 @@
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show rootBundle;
 
 class Escrever extends StatefulWidget {
   String usuario;
@@ -12,10 +14,10 @@ class Escrever extends StatefulWidget {
 
 class _EscreverState extends State<Escrever> {
   String usuario;
+  bool temConteudo = true;
   _EscreverState({this.usuario});
   TextEditingController msg = TextEditingController();
   FbRepository repository = FbRepository();
-
   Widget _buildTextField() {
     final maxLines = 10;
 
@@ -23,8 +25,8 @@ class _EscreverState extends State<Escrever> {
       margin: EdgeInsets.all(12),
       height: maxLines * 24.0,
       child: TextField(
-        controller: msg,
         maxLines: maxLines,
+        controller: msg,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           hintText: "Diga o que está sentindo...",
@@ -53,13 +55,17 @@ class _EscreverState extends State<Escrever> {
                 child: GestureDetector(
                   onTap: () async {
                     //print('usuario = $usuario');
-                    User user =
-                        await repository.carregarDadosDoUsuario(usuario);
+                    if (msg != "") {
+                      String mensagem = msg.text;
+                      bool ehOfensivo = await filtrarTexto(mensagem);
+                      User user =
+                          await repository.carregarDadosDoUsuario(usuario);
 
-                    repository.escreverPostagens(DateTime.now(), user.imageURL, 0, user.id, user.apelido, msg.text);
+                      repository.escreverPostagens(DateTime.now(),
+                          user.imageURL, 0, user.id, user.apelido, msg.text);
 
-                    Navigator.pop(context);
-                    
+                      Navigator.pop(context);
+                    } else {}
                   },
                   child: ClipOval(
                     child: Container(
@@ -76,5 +82,36 @@ class _EscreverState extends State<Escrever> {
                 ),
               ),
             ])));
+  }
+
+  Future<String> carregarArquivo() async {
+    return await rootBundle.loadString('assets/blacklist.txt');
+  }
+
+  Future<List> lerArquivo() async {
+    String data = await carregarArquivo();
+    List<String> palavras = data.split(" ");
+    int i = palavras.length;
+    return palavras;
+  }
+
+  Future<int> tamanhoDaListaDePlavras() async {
+    String data = await carregarArquivo();
+    List<String> palavras = data.split(" ");
+    int i = palavras.length;
+    return Future.value(i);
+  }
+
+  Future<bool> filtrarTexto(String msg) async {
+    List<String> listaDePalavras = await lerArquivo();
+    msg = msg.toLowerCase();
+    bool ehOfensivo = false;
+    for (int i = 0; i < await tamanhoDaListaDePlavras() - 1; i++) {
+      bool aux = msg.contains(listaDePalavras[i]);
+      if (aux == true) {
+        ehOfensivo = true;
+      }
+    }
+    return ehOfensivo;
   }
 }
