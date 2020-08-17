@@ -17,22 +17,34 @@ class _EscreverState extends State<Escrever> {
   bool temConteudo = true;
   _EscreverState({this.usuario});
   TextEditingController msg = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   FbRepository repository = FbRepository();
   Widget _buildTextField() {
     final maxLines = 10;
 
-    return Container(
-      margin: EdgeInsets.all(12),
-      height: maxLines * 24.0,
-      child: TextField(
-        maxLines: maxLines,
-        controller: msg,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: "Diga o que está sentindo...",
-          hintStyle: TextStyle(color: Colors.grey[300]),
-          fillColor: Colors.white,
-          filled: true,
+    return Form(
+      key: _formKey,
+      child: Container(
+        margin: EdgeInsets.all(12),
+        height: maxLines * 24.0,
+        child: TextFormField(
+          validator: (texto) {
+            if (msg.text.isEmpty) {
+              return 'Você precisa escrever alguma coisa para que possamos te entender :)';
+            }else{
+              
+            }
+            return null;
+          },
+          maxLines: maxLines,
+          controller: msg,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: "Diga o que está sentindo...",
+            hintStyle: TextStyle(color: Colors.grey[300]),
+            fillColor: Colors.white,
+            filled: true,
+          ),
         ),
       ),
     );
@@ -55,16 +67,21 @@ class _EscreverState extends State<Escrever> {
                 child: GestureDetector(
                   onTap: () async {
                     //print('usuario = $usuario');
-                    if (msg != "") {
+                    if (_formKey.currentState.validate()) {
                       String mensagem = msg.text;
                       bool ehOfensivo = await filtrarTexto(mensagem);
-                      User user =
+
+                      
+                        User user =
                           await repository.carregarDadosDoUsuario(usuario);
 
                       repository.escreverPostagens(DateTime.now(),
                           user.imageURL, 0, user.id, user.apelido, msg.text);
 
                       Navigator.pop(context);
+                      
+
+                      
                     } else {}
                   },
                   child: ClipOval(
