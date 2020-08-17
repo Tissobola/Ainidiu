@@ -7,6 +7,27 @@ class FbRepository {
     return Firestore.instance;
   }
 
+  filtro() async {
+    QuerySnapshot dados =
+        await getConexao().collection('blacklist').getDocuments();
+
+    List aux = new List();
+
+    for (var item in dados.documents) {
+      aux = item.data['blacklist'];
+    }
+
+    List<String> blacklist = new List<String>();
+
+    aux.forEach((element) {
+      blacklist.add(element);
+    });
+
+    print(blacklist);
+
+    return blacklist;
+  }
+
   resetPosts() async {
     QuerySnapshot dados =
         await getConexao().collection('postagens').getDocuments();

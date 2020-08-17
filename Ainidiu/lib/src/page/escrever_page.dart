@@ -30,10 +30,8 @@ class _EscreverState extends State<Escrever> {
         child: TextFormField(
           validator: (texto) {
             if (msg.text.isEmpty) {
-              return 'Você precisa escrever alguma coisa para que possamos te entender :)';
-            }else{
-              
-            }
+              return 'Escreva alguma coisa para que possamos te entender :)';
+            } else {}
             return null;
           },
           maxLines: maxLines,
@@ -55,7 +53,11 @@ class _EscreverState extends State<Escrever> {
     var alturaTela = MediaQuery.of(context).size.height;
     var larguraTela = MediaQuery.of(context).size.width;
 
+    final GlobalKey<ScaffoldState> _scaffoldKey =
+        new GlobalKey<ScaffoldState>();
+
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(title: Text('Escrever')),
         body: Container(
             height: alturaTela,
@@ -71,18 +73,22 @@ class _EscreverState extends State<Escrever> {
                       String mensagem = msg.text;
                       bool ehOfensivo = await filtrarTexto(mensagem);
 
-                      
+                      if (ehOfensivo) {
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content:
+                              Text('Sua mensagem contém termos ofensivos!'),
+                          backgroundColor: Colors.red,
+                        ));
+                      } else {
                         User user =
-                          await repository.carregarDadosDoUsuario(usuario);
+                            await repository.carregarDadosDoUsuario(usuario);
 
-                      repository.escreverPostagens(DateTime.now(),
-                          user.imageURL, 0, user.id, user.apelido, msg.text);
+                        repository.escreverPostagens(DateTime.now(),
+                            user.imageURL, 0, user.id, user.apelido, msg.text);
 
-                      Navigator.pop(context);
-                      
-
-                      
-                    } else {}
+                        Navigator.pop(context);
+                      }
+                    }
                   },
                   child: ClipOval(
                     child: Container(
@@ -106,9 +112,7 @@ class _EscreverState extends State<Escrever> {
   }
 
   Future<List> lerArquivo() async {
-    String data = await carregarArquivo();
-    List<String> palavras = data.split(" ");
-    int i = palavras.length;
+    List<String> palavras = await repository.filtro();
     return palavras;
   }
 
@@ -123,8 +127,9 @@ class _EscreverState extends State<Escrever> {
     List<String> listaDePalavras = await lerArquivo();
     msg = msg.toLowerCase();
     bool ehOfensivo = false;
-    for (int i = 0; i < await tamanhoDaListaDePlavras() - 1; i++) {
+    for (int i = 0; i < listaDePalavras.length; i++) {
       bool aux = msg.contains(listaDePalavras[i]);
+      print(' palavra: ${listaDePalavras[i]}');
       if (aux == true) {
         ehOfensivo = true;
       }
