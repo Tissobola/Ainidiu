@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:ainidiu/src/api/user.dart';
 
 class Denunciar extends StatefulWidget {
+  User usuario;
   int id;
-  Denunciar(this.id);
+  Denunciar({Key key, this.usuario, this.id}) : super(key: key);
   @override
-  _DenunciarState createState() => _DenunciarState(id);
+  _DenunciarState createState() => _DenunciarState(usuario: usuario, id: id);
 }
 
 class _DenunciarState extends State<Denunciar> {
+  User usuario;
   int id;
-  _DenunciarState(this.id);
+  _DenunciarState({this.usuario, this.id});
   TextEditingController msg = TextEditingController();
   FbRepository repository = FbRepository();
 
@@ -35,7 +38,7 @@ class _DenunciarState extends State<Denunciar> {
     );
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     var alturaTela = MediaQuery.of(context).size.height;
     var larguraTela = MediaQuery.of(context).size.width;
@@ -55,7 +58,7 @@ class _DenunciarState extends State<Denunciar> {
                 child: GestureDetector(
                   onTap: () async {
                     //print('Id = ${id}');
-                    repository.denunciar(id, msg.text);
+                    repository.denunciar(id, msg.text, usuario);
                     Navigator.pop(context);
                   },
                   child: ClipOval(

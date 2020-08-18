@@ -107,24 +107,24 @@ class _EscreverState extends State<Escrever> {
             ])));
   }
 
-  Future<String> carregarArquivo() async {
+  Future<String> carregarBlacklist() async {
     return await rootBundle.loadString('assets/blacklist.txt');
   }
 
-  Future<List> lerArquivo() async {
+  Future<List> lerBlacklist() async {
     List<String> palavras = await repository.filtro();
     return palavras;
   }
 
   Future<int> tamanhoDaListaDePlavras() async {
-    String data = await carregarArquivo();
+    String data = await carregarBlacklist();
     List<String> palavras = data.split(" ");
     int i = palavras.length;
     return Future.value(i);
   }
 
   Future<bool> filtrarTexto(String msg) async {
-    List<String> listaDePalavras = await lerArquivo();
+    List<String> listaDePalavras = await lerBlacklist();
     msg = msg.toLowerCase();
     bool ehOfensivo = false;
     for (int i = 0; i < listaDePalavras.length; i++) {

@@ -1,4 +1,5 @@
 import 'package:ainidiu/src/api/item.dart';
+import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/comentar_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
@@ -9,17 +10,20 @@ import 'detalhe_postagem_page.dart';
 class PostCard extends StatefulWidget {
   BuildContext context;
   ItemData current;
+  User usuario;
 
   PostCard(this.context, this.current);
 
   @override
-  _PostCardState createState() => _PostCardState(current: current);
+  _PostCardState createState() =>
+      _PostCardState(usuario: usuario, current: current);
 }
 
 class _PostCardState extends State<PostCard> {
   ItemData current;
+  User usuario;
 
-  _PostCardState({this.current});
+  _PostCardState({this.usuario, this.current});
 
   ///Controler do texto da mensagem
   final textoController = TextEditingController();
@@ -84,7 +88,7 @@ class _PostCardState extends State<PostCard> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        DetalhePostagemPage(this.getCurrent())));
+                        DetalhePostagemPage(usuario:usuario,postagem: this.getCurrent())));
           }
         },
         child: Card(
@@ -164,8 +168,8 @@ class _PostCardState extends State<PostCard> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              DetalhePostagemPage(
-                                                  this.getCurrent())));
+                                              DetalhePostagemPage(usuario:
+                                                  usuario, postagem:this.getCurrent())));
                                 }
                               },
                               readOnly: true,

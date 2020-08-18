@@ -1,4 +1,5 @@
 import 'package:ainidiu/src/api/item.dart';
+import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
 import 'package:ainidiu/src/components/post_card.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +9,19 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 ///onde é apresentando os comentarios
 class DetalhePostagemPage extends StatefulWidget {
   ItemData postagem;
+  User usuario;
 
-  DetalhePostagemPage(this.postagem);
+  DetalhePostagemPage({Key key, this.usuario, this.postagem}) : super(key: key);
 
   @override
-  _DetalhePostagemPageState createState() => _DetalhePostagemPageState();
+  _DetalhePostagemPageState createState() => _DetalhePostagemPageState(usuario: usuario);
 }
 
 class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
+
+  User usuario;
+  _DetalhePostagemPageState({this.usuario});
+
   ItemData getCurrent() {
     return this.widget.postagem;
   }
@@ -34,7 +40,7 @@ class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
       body: Column(
         children: <Widget>[
           PostCard(context, this.widget.postagem),
-          Expanded(child: ListViewPostCard(getFutureDados()))
+          Expanded(child: ListViewPostCard(usuario: usuario,handleGetDataSoource: getFutureDados(),))
         ],
       ),
     );

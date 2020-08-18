@@ -1,4 +1,5 @@
 import 'package:ainidiu/src/api/item.dart';
+import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/post_card.dart';
 import 'package:ainidiu/src/page/denunciar_postagem_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
@@ -8,15 +9,18 @@ import 'package:flutter/material.dart';
 ///Com rolagem
 class ListViewPostCard extends StatefulWidget {
   Future<List<ItemData>> handleGetDataSoource;
+  User usuario;
 
-  ListViewPostCard(this.handleGetDataSoource);
+  ListViewPostCard({Key key, this.usuario, this.handleGetDataSoource}) : super(key: key);
 
   @override
-  _ListViewPostCardState createState() => _ListViewPostCardState();
+  _ListViewPostCardState createState() => _ListViewPostCardState(usuario:usuario);
 }
 
 class _ListViewPostCardState extends State<ListViewPostCard> {
   FbRepository repository = FbRepository();
+  User usuario;
+  _ListViewPostCardState({this.usuario});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +68,7 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                Denunciar(snapshot.data[i].id)));
+                                Denunciar(usuario:usuario,id: snapshot.data[i].id)));
                   },
                 );
               },
