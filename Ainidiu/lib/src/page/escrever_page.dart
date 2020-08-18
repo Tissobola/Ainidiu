@@ -1,4 +1,5 @@
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/services/filtrar.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 import 'dart:async' show Future;
@@ -70,8 +71,8 @@ class _EscreverState extends State<Escrever> {
                   onTap: () async {
                     //print('usuario = $usuario');
                     if (_formKey.currentState.validate()) {
-                      String mensagem = msg.text;
-                      bool ehOfensivo = await filtrarTexto(mensagem);
+      
+                      bool ehOfensivo = await Filtrar().filtrarTexto(msg.text);
 
                       if (ehOfensivo) {
                         _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -107,33 +108,4 @@ class _EscreverState extends State<Escrever> {
             ])));
   }
 
-  Future<String> carregarBlacklist() async {
-    return await rootBundle.loadString('assets/blacklist.txt');
-  }
-
-  Future<List> lerBlacklist() async {
-    List<String> palavras = await repository.filtro();
-    return palavras;
-  }
-
-  Future<int> tamanhoDaListaDePlavras() async {
-    String data = await carregarBlacklist();
-    List<String> palavras = data.split(" ");
-    int i = palavras.length;
-    return Future.value(i);
-  }
-
-  Future<bool> filtrarTexto(String msg) async {
-    List<String> listaDePalavras = await lerBlacklist();
-    msg = msg.toLowerCase();
-    bool ehOfensivo = false;
-    for (int i = 0; i < listaDePalavras.length; i++) {
-      bool aux = msg.contains(listaDePalavras[i]);
-      print(' palavra: ${listaDePalavras[i]}');
-      if (aux == true) {
-        ehOfensivo = true;
-      }
-    }
-    return ehOfensivo;
-  }
 }

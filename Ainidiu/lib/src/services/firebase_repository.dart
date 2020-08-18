@@ -46,20 +46,13 @@ class FbRepository {
 
     User usuario;
 
-    //[0] Senha
-    //[1] Apelido
-    //[2] Genero
-    //[3] Foto
-    //[4] id
-    //[5] Email
-
     for (var item in dados.documents) {
-      var it = item.data;
+      var data = item.data;
 
-      if (user == it['apelido']) {
-        //print(item.data.values.toList()[5]);
-        usuario = new User(it['ImageURL'], it['apelido'], it['email'],
-            it['genero'], it['id'], it['senha']);
+      if (user == data['apelido']) {
+        //print(dataem.data.values.toList()[5]);
+        usuario = new User(data['ImageURL'], data['apelido'], data['email'],
+            data['genero'], data['id'], data['senha']);
       }
     }
 
@@ -163,7 +156,6 @@ class FbRepository {
 
     for (var item in dados.documents) {
       if (id == item.data['parentId']) {
-        print('id = $id\nPaiId = ${item.data['parentId']}');
         comentario = ItemData(
           item.data['id'],
           item.data['postadoPorId'],
@@ -240,21 +232,10 @@ class FbRepository {
         await getConexao().collection('usuarios').getDocuments();
 
     for (var item in dados.documents) {
-      //print(item.data.values.toList()[5]);
-
-      //[0] Senha
-      //[1] Apelido
-      //[2] Genero
-      //[3] Id
-      //[4] Foto
-      //[5] Email
-
-      //print(email);
-
-      if (email == item.data.values.toList()[5]) {
-        if (item.data.values.toList()[0] == senha) {
+      if (email == item.data['email']) {
+        if (senha == item.data['senha']) {
           //dados corretos
-          return item.data.values.toList()[1];
+          return item.data['apelido'];
         } else {
           //senha incorreta
           return '2';
@@ -270,7 +251,7 @@ class FbRepository {
         await getConexao().collection('usuarios').getDocuments();
 
     for (var item in dados.documents) {
-      if (email == item.data.values.toList()[5]) {
+      if (email == item.data['email']) {
         return 1;
       }
     }
@@ -291,16 +272,14 @@ class FbRepository {
   }
 
   Future acharPost(int idDoPost) async {
-    print(idDoPost);
     String nomeDoPost;
     QuerySnapshot dados =
         await getConexao().collection('postagens').getDocuments();
 
     for (var item in dados.documents) {
-      var lista = item.data.values.toList();
-      if (lista[3] == idDoPost) {
+      var data = item.data;
+      if (data['id'] == idDoPost) {
         nomeDoPost = item.documentID;
-        print('Did = ${item.documentID}');
       }
     }
 
@@ -312,27 +291,23 @@ class FbRepository {
         await getConexao().collection('postagens').getDocuments();
 
     for (var item in dados.documents) {
-      var lista = item.data.values.toList();
-      if (lista[3] == idDoPost) {
+      var data = item.data;
+      if (data['id'] == idDoPost) {
         getConexao().collection('postagens').document(item.documentID).delete();
 
-        enviarDenuncia(idDoPost, lista, texto, autor);
+        enviarDenuncia(idDoPost, data, texto, autor);
       }
     }
   }
 
-  void enviarDenuncia(int idDoPost, List lista, texto, User autor) async {
-    
-    QuerySnapshot dados =
-        await getConexao().collection('denuncias').getDocuments();
+  void enviarDenuncia(int idDoPost, data, texto, User autor) async {
+    String time = '${DateTime.now().hour}:${DateTime.now().minute}';
 
     getConexao().collection('denuncias').document('denuncia$idDoPost').setData({
-      'dataHora': lista[4],
+      'dataHora': time,
       'id': idDoPost,
-      'parentId': lista[6],
-      'postadoPorId': lista[2],
-      'postadoPorNome': lista[0],
-      'textoDaPostagem': lista[1],
+      'parentId': data['id'],
+      'textoDaPostagem': data['texto'],
       'motivoDaDenuncia': texto,
       'ID do autor da denuncia': autor.id,
       'Apelido do autor da denuncia': autor.apelido
