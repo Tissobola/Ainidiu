@@ -10,15 +10,14 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 class DetalhePostagemPage extends StatefulWidget {
   ItemData postagem;
   User usuario;
-
   DetalhePostagemPage({Key key, this.usuario, this.postagem}) : super(key: key);
 
   @override
-  _DetalhePostagemPageState createState() => _DetalhePostagemPageState(usuario: usuario);
+  _DetalhePostagemPageState createState() =>
+      _DetalhePostagemPageState(usuario: usuario);
 }
 
 class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
-
   User usuario;
   _DetalhePostagemPageState({this.usuario});
 
@@ -39,8 +38,12 @@ class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
       appBar: AppBar(title: Text('Comentários')),
       body: Column(
         children: <Widget>[
-          PostCard(context, this.widget.postagem),
-          Expanded(child: ListViewPostCard(usuario: usuario,handleGetDataSoource: getFutureDados(),))
+          PostCard(context, this.widget.postagem, usuario),
+          Expanded(
+              child: ListViewPostCard(
+            usuario: usuario,
+            handleGetDataSoource: getFutureDados(),
+          ))
         ],
       ),
     );

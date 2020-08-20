@@ -12,7 +12,7 @@ class PostCard extends StatefulWidget {
   ItemData current;
   User usuario;
 
-  PostCard(this.context, this.current);
+  PostCard(this.context, this.current, this.usuario);
 
   @override
   _PostCardState createState() =>
@@ -84,11 +84,12 @@ class _PostCardState extends State<PostCard> {
           ///Verifica se tem comentários para exibir os detalhes
           ///Métod executado sempre que clicar no card
           if (this.getCurrent().getComentarios().length > 0) {
+            print('user = ${usuario.apelido}');
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        DetalhePostagemPage(usuario:usuario,postagem: this.getCurrent())));
+                    builder: (context) => DetalhePostagemPage(
+                        usuario: usuario, postagem: this.getCurrent())));
           }
         },
         child: Card(
@@ -168,8 +169,10 @@ class _PostCardState extends State<PostCard> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              DetalhePostagemPage(usuario:
-                                                  usuario, postagem:this.getCurrent())));
+                                              DetalhePostagemPage(
+                                                  usuario: usuario,
+                                                  postagem:
+                                                      this.getCurrent())));
                                 }
                               },
                               readOnly: true,

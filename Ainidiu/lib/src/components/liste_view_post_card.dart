@@ -60,7 +60,7 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
                     ),
                   ),
                   key: UniqueKey(),
-                  child: PostCard(context, snapshot.data[i]),
+                  child: PostCard(context, snapshot.data[i], usuario),
                   direction: DismissDirection.endToStart,
                   onDismissed: (direction) {
                     setState(() {});

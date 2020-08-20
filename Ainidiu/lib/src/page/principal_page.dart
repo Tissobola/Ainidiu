@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
@@ -19,7 +21,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
 
   FbRepository repository = FbRepository();
 
-  
   Future<List<ItemData>> getFutureDados() async =>
       await Future.delayed(Duration(seconds: 0), () async {
         List<ItemData> aux = await repository.carregarPostagens();
@@ -35,7 +36,12 @@ class _PrincipalPageState extends State<PrincipalPage> {
   }
 
   Future<void> _reload() async {
-    Future<List<ItemData>> aux = await Future.delayed(Duration(seconds: 3), () => getFutureDados());
+    
+
+    
+
+    Future<List<ItemData>> aux =
+        await Future.delayed(Duration(seconds: 1), () => getFutureDados());
     setState(() {
       postagens = aux;
     });
@@ -46,7 +52,8 @@ class _PrincipalPageState extends State<PrincipalPage> {
     return Scaffold(
       ///Usando o componente ListViewPostCard, passando como parâmetro a fonte de dados
       body: RefreshIndicator(
-        child: ListViewPostCard(usuario:usuario,handleGetDataSoource: postagens),
+        child:
+            ListViewPostCard(usuario: usuario, handleGetDataSoource: postagens),
         onRefresh: _reload,
       ),
       floatingActionButton: FloatingActionButton(

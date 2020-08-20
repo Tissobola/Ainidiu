@@ -293,51 +293,38 @@ class FbRepository {
     for (var item in dados.documents) {
       var data = item.data;
       if (data['id'] == idDoPost) {
-        getConexao().collection('postagens').document(item.documentID).delete();
-        
+        enviarDenuncia(idDoPost, data, texto, autor);
+
         if (data['parentId'] != 0) {
-          
-          DocumentSnapshot pai = await getConexao()
+          var pai = await getConexao()
               .collection('postagens')
               .document('post${data['parentId']}')
-              .get();
+              .snapshots()
+              .first;
 
           List aux = new List();
           List aux2 = new List();
 
-          aux = await pai.data['comentarios'];
-
+          aux = pai.data['comentarios'];
           for (int i = 0; i < aux.length; i++) {
-            aux2.add(aux[i]);
+            if (aux[i] != idDoPost) {
+              aux2.add(aux[i]);
+            }
           }
-
-          print('aux = ${aux}');
-          print('aux2 = ${aux2}');
 
           getConexao()
               .collection('postagens')
               .document('post${data['parentId']}')
-              .setData({
-            'dataHora': pai.data['dataHora'],
-            'id': pai.data['id'],
-            'imagemURL': pai.data['imagemURL'],
-            'parentId': pai.data['parentId'],
-            'postadoPorId': pai.data['postadoPorId'],
-            'postadoPorNome': pai.data['postadoPorNome'],
-            'texto': pai.data['texto'],
-            'comentarios': aux2
-          });
+              .updateData({'comentarios': aux2});
         }
-
-        print('autor ');
-        
-        enviarDenuncia(idDoPost, data, texto, autor);
       }
     }
   }
 
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
+    print('object');
+    
     String time = '${DateTime.now().hour}:${DateTime.now().minute}';
 
     getConexao().collection('denuncias').document('denuncia$idDoPost').setData({
@@ -347,7 +334,10 @@ class FbRepository {
       'textoDaPostagem': data['texto'],
       'motivoDaDenuncia': texto,
       'ID do autor da denuncia': autor.id,
-      'Apelido do autor da denuncia': 'autor.apelido'
+      'Apelido do autor da denuncia': autor.apelido
     });
+
+    getConexao().collection('postagens').document('post$idDoPost').delete();
+    print('ok');
   }
 }
