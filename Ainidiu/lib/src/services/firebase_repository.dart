@@ -294,13 +294,50 @@ class FbRepository {
       var data = item.data;
       if (data['id'] == idDoPost) {
         getConexao().collection('postagens').document(item.documentID).delete();
+        
+        if (data['parentId'] != 0) {
+          
+          DocumentSnapshot pai = await getConexao()
+              .collection('postagens')
+              .document('post${data['parentId']}')
+              .get();
 
+          List aux = new List();
+          List aux2 = new List();
+
+          aux = await pai.data['comentarios'];
+
+          for (int i = 0; i < aux.length; i++) {
+            aux2.add(aux[i]);
+          }
+
+          print('aux = ${aux}');
+          print('aux2 = ${aux2}');
+
+          getConexao()
+              .collection('postagens')
+              .document('post${data['parentId']}')
+              .setData({
+            'dataHora': pai.data['dataHora'],
+            'id': pai.data['id'],
+            'imagemURL': pai.data['imagemURL'],
+            'parentId': pai.data['parentId'],
+            'postadoPorId': pai.data['postadoPorId'],
+            'postadoPorNome': pai.data['postadoPorNome'],
+            'texto': pai.data['texto'],
+            'comentarios': aux2
+          });
+        }
+
+        print('autor ');
+        
         enviarDenuncia(idDoPost, data, texto, autor);
       }
     }
   }
 
-  void enviarDenuncia(int idDoPost, data, texto, User autor) async {
+  void enviarDenuncia(
+      int idDoPost, Map<String, dynamic> data, texto, User autor) async {
     String time = '${DateTime.now().hour}:${DateTime.now().minute}';
 
     getConexao().collection('denuncias').document('denuncia$idDoPost').setData({
@@ -310,7 +347,7 @@ class FbRepository {
       'textoDaPostagem': data['texto'],
       'motivoDaDenuncia': texto,
       'ID do autor da denuncia': autor.id,
-      'Apelido do autor da denuncia': autor.apelido
+      'Apelido do autor da denuncia': 'autor.apelido'
     });
   }
 }
