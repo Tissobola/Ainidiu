@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +7,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FbRepository {
   Firestore getConexao() {
     return Firestore.instance;
+  }
+
+  mandarMensagem(texto) async {
+    QuerySnapshot dados = await getConexao().collection('chat').getDocuments();
+    int id = dados.documents.length;
+    int env;
+    if (id % 2 == 0) {
+      env = 0;
+    } else {
+      env = 1;
+    }
+
+    getConexao()
+        .collection('chat')
+        .document('${id + 1}')
+        .setData({'env': env, 'texto': texto, 'id': id + 1});
   }
 
   filtro() async {
@@ -324,7 +342,7 @@ class FbRepository {
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
     print('object');
-    
+
     String time = '${DateTime.now().hour}:${DateTime.now().minute}';
 
     getConexao().collection('denuncias').document('denuncia$idDoPost').setData({

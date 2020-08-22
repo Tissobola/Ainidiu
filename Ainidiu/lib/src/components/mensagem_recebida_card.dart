@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 class MensagemRecebidaCard extends StatefulWidget {
   String nomeDoUsuario;
-  MensagemRecebidaCard(this.nomeDoUsuario);
+  String msg;
+  MensagemRecebidaCard(this.nomeDoUsuario, this.msg);
   @override
   _MensagemRecebidaCardState createState() =>
-      _MensagemRecebidaCardState(nomeDoUsuario: nomeDoUsuario);
+      _MensagemRecebidaCardState(nomeDoUsuario: nomeDoUsuario, mensagem: msg);
 }
 
 class _MensagemRecebidaCardState extends State<MensagemRecebidaCard> {
-  _MensagemRecebidaCardState({this.nomeDoUsuario});
+  _MensagemRecebidaCardState({this.nomeDoUsuario, this.mensagem});
 
   final textoController = TextEditingController();
 
@@ -23,10 +24,12 @@ class _MensagemRecebidaCardState extends State<MensagemRecebidaCard> {
 
   String horario = '12:30';
 
-  String mensagem = 'testando';
+  String mensagem;
 
   @override
   Widget build(BuildContext context) {
+    textoController.text = mensagem;
+
     return Card(
       child: Container(
         height: alturaDoCard,
