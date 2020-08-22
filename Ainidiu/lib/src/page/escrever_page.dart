@@ -2,8 +2,6 @@ import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/services/filtrar.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
-import 'dart:async' show Future;
-import 'package:flutter/services.dart' show rootBundle;
 
 class Escrever extends StatefulWidget {
   String usuario;

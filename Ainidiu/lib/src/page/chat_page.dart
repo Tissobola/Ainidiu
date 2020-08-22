@@ -1,3 +1,5 @@
+import 'package:ainidiu/src/components/mensagem_enviada_card.dart';
+import 'package:ainidiu/src/components/mensagem_recebida_card.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/page/messages_page.dart';
 
@@ -15,6 +17,7 @@ class _ChatState extends State<Chat> {
         title: Text(conversa.apelido),
       ),
       bottomNavigationBar: espacoDeDigitacao(),
+      body: MensagemEnviadaCard(conversa.apelido),
       //persistentFooterButtons: <Widget>[IconButton(icon: Icon(Icons.send), onPressed:() {print('OK');})],
     );
   }
