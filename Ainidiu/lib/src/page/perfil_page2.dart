@@ -1,5 +1,8 @@
+import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/components/liste_view_post_card.dart';
 import 'package:ainidiu/src/page/configuracoes_page.dart';
+import 'package:ainidiu/src/page/meus_posts.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +21,11 @@ class _PerfilPageState extends State<PerfilPage> {
   bool view = false;
 
   FbRepository repository = FbRepository();
+
+  Future<List<ItemData>> getFuruteDados() async {
+    List<ItemData> aux = await repository.carregarMinhasPostagens(apelido.id);
+    return aux;
+  }
 
   CircleAvatar buildAvatar() {
     return CircleAvatar(
@@ -41,121 +49,123 @@ class _PerfilPageState extends State<PerfilPage> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData localTheme = Theme.of(context);
     return Container(
       color: corFundo,
-      child: Stack(
-        children: <Widget>[
-          Container(height: 230, color: Colors.blue[300]),
-          Column(
+      child: Column(
+        children: [
+          Stack(
             children: <Widget>[
-              SizedBox(
-                height: 120,
-              ),
-              GestureDetector(
-                onVerticalDragUpdate: (d) {
-                  setState(() {
-                    corFundo = Colors.red;
-                  });
-                },
-                onHorizontalDragUpdate: (d) {
-                  setState(() {
-                    corFundo = Colors.black;
-                  });
-                },
-                child: ClipOval(
-                  child: Container(
-                    height: 200,
-                    width: 480,
-                    //color: Colors.blue[300],
-                    decoration:
-                        BoxDecoration(color: Colors.blue[300], boxShadow: [
-                      BoxShadow(
-                        color: Colors.red,
-                        spreadRadius: 50,
-                        blurRadius: 70,
-                        offset: Offset(0, 0),
+              Container(height: 200, color: Colors.blue[300]),
+              Column(
+                children: <Widget>[
+                  Center(
+                      child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.settings,
+                              size: 45,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Configuracoes()));
+                            }),
+                        top: 0,
+                        right: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 80),
+                        child: Center(
+                          child: Container(
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 90,
+                                ),
+                                Text(
+                                  '${apelido.apelido}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 0,
+                                ),
+                              ],
+                            ),
+                            height: 150,
+                            width: 350,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                  Colors.blue[200],
+                                  Colors.blue[300]
+                                ],
+                                    stops: [
+                                  0,
+                                  1
+                                ])),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Center(child: buildAvatar()),
                       )
-                    ]),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              RaisedButton(
-                onPressed: () async {
-                  await repository.resetPosts();
-                },
-                color: Colors.red,
-                child: Container(
-                  child: Text(
-                    'RESET',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
+                    ],
+                  )),
+                ],
+              )
             ],
           ),
-          Column(
-            children: <Widget>[
-              Center(
-                  child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    child: IconButton(
-                        icon: Icon(
-                          Icons.settings,
-                          size: 45,
-                          color: Colors.white,
-                        ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 5),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(width: 2.0, color: Colors.lightBlue.shade600),
+                )
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Minhas Postagens',
+                      style: localTheme.textTheme.title,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: RaisedButton(
+                        color: corFundo,
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Configuracoes()));
-                        }),
-                    top: 0,
-                    right: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 80),
-                    child: Center(
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(
-                              height: 90,
-                            ),
-                            Text(
-                              '${apelido.apelido}',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 0,
-                            ),
-                          ],
-                        ),
-                        height: 150,
-                        width: 350,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [Colors.blue[200], Colors.blue[300]],
-                                stops: [0, 1])),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Center(child: buildAvatar()),
+                                  builder: (context) => MeusPosts()));
+                        },
+                        child: Text('Ver todas')),
                   )
                 ],
-              )),
-            ],
+              ),
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height - 451,
+            child: ListViewMeusPostCards(
+              usuario: apelido,
+              handleGetDataSoource: getFuruteDados(),
+            ),
           )
         ],
       ),

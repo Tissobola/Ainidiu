@@ -134,6 +134,41 @@ class FbRepository {
     return postagens;
   }
 
+  carregarMinhasPostagens(authorId) async {
+    QuerySnapshot dados =
+        await getConexao().collection('postagens').getDocuments();
+
+    var postagens = new List<ItemData>();
+
+    for (var item in dados.documents) {
+      var data = item.data;
+
+      if (item.data['parentId'] == 0) {
+        if (authorId == item.data['postadoPorId']) {
+          var post = item.data;
+          ItemData aux = ItemData(
+            post['id'],
+            post['postadoPorId'],
+            post['postadoPorNome'],
+            post['imagemURL'],
+            post['texto'],
+            post['dataHora'],
+            post['parentId'],
+          );
+
+          List comentarios = post['comentarios'];
+
+          for (int i = 0; i < comentarios.length; i++) {
+            aux.addComentario(await carregarPost(comentarios[i]));
+          }
+
+          postagens.add(aux);
+        }
+      }
+    }
+    return postagens;
+  }
+
   carregarPost(com) async {
     QuerySnapshot dados =
         await getConexao().collection('postagens').getDocuments();

@@ -1,23 +1,20 @@
-import 'dart:developer';
-
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
-import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
-class PrincipalPage extends StatefulWidget {
+class MeusPosts extends StatefulWidget {
   User usuario;
-  PrincipalPage({Key key, this.usuario}) : super(key: key);
+  MeusPosts({Key key, this.usuario}) : super(key: key);
 
   @override
-  _PrincipalPageState createState() => _PrincipalPageState(usuario: usuario);
+  _MeusPostsState createState() => _MeusPostsState(usuario: usuario);
 }
 
-class _PrincipalPageState extends State<PrincipalPage> {
+class _MeusPostsState extends State<MeusPosts> {
   User usuario;
-  _PrincipalPageState({this.usuario});
+  _MeusPostsState({this.usuario});
 
   FbRepository repository = FbRepository();
 
@@ -46,23 +43,14 @@ class _PrincipalPageState extends State<PrincipalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Meus Posts'),
+      ),
       ///Usando o componente ListViewPostCard, passando como parâmetro a fonte de dados
       body: RefreshIndicator(
         child:
             ListViewPostCard(usuario: usuario, handleGetDataSoource: postagens),
         onRefresh: _reload,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Escrever(
-                        usuario: usuario.apelido,
-                      )));
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add_comment),
       ),
     );
   }
