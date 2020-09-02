@@ -123,7 +123,7 @@ class _ListViewMeusPostCardsState extends State<ListViewMeusPostCards> {
           } else {
             return ListView.builder(
               shrinkWrap: true,
-              itemCount: 3,
+              itemCount: (snapshot.data.length >= 3)? 3 : snapshot.data.length,
               itemBuilder: (context, i) {
                 return Dismissible(
                   background: Container(

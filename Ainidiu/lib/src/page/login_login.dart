@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_cadastro.dart';
@@ -81,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Builder(
         builder: (context) => Container(
+          height: double.infinity,
             color: Colors.white,
             child: Form(
               key: _formKey,

@@ -20,7 +20,7 @@ class _MeusPostsState extends State<MeusPosts> {
 
   Future<List<ItemData>> getFutureDados() async =>
       await Future.delayed(Duration(seconds: 0), () async {
-        List<ItemData> aux = await repository.carregarPostagens();
+        List<ItemData> aux = await repository.carregarMinhasPostagens(usuario.id);
         return aux;
       });
 
@@ -42,14 +42,17 @@ class _MeusPostsState extends State<MeusPosts> {
 
   @override
   Widget build(BuildContext context) {
+    print('AAAAAAAAAAAAAAAAAAAAAAA ${usuario.apelido}}');
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Meus Posts'),
       ),
+
       ///Usando o componente ListViewPostCard, passando como parâmetro a fonte de dados
       body: RefreshIndicator(
-        child:
-            ListViewPostCard(usuario: usuario, handleGetDataSoource: postagens),
+        child: ListViewMeusPostCards(
+            usuario: usuario, handleGetDataSoource: postagens),
         onRefresh: _reload,
       ),
     );

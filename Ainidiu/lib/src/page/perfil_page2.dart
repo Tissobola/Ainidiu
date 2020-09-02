@@ -130,10 +130,10 @@ class _PerfilPageState extends State<PerfilPage> {
             padding: const EdgeInsets.only(top: 10, bottom: 5),
             child: Container(
               decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(width: 2.0, color: Colors.lightBlue.shade600),
-                )
-              ),
+                  border: Border(
+                bottom:
+                    BorderSide(width: 2.0, color: Colors.lightBlue.shade600),
+              )),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -152,7 +152,7 @@ class _PerfilPageState extends State<PerfilPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MeusPosts()));
+                                  builder: (context) => MeusPosts(usuario: apelido,)));
                         },
                         child: Text('Ver todas')),
                   )
