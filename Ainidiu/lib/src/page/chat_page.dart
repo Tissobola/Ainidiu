@@ -1,9 +1,6 @@
 import 'package:ainidiu/src/components/mensagem.dart';
-import 'package:ainidiu/src/components/mensagem_enviada_card.dart';
-import 'package:ainidiu/src/components/mensagem_recebida_card.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:ainidiu/src/page/messages_page.dart';
 
 class Chat extends StatefulWidget {
   String apelido;
@@ -11,7 +8,7 @@ class Chat extends StatefulWidget {
   int myId;
   Chat({this.apelido, this.id, this.myId});
   @override
-  _ChatState createState() => _ChatState(apelido : apelido, id:id, myId:myId);
+  _ChatState createState() => _ChatState(apelido: apelido, id: id, myId: myId);
 }
 
 class _ChatState extends State<Chat> {
@@ -23,7 +20,6 @@ class _ChatState extends State<Chat> {
   String apelido;
   int primeiro;
   int segundo;
-    
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +29,7 @@ class _ChatState extends State<Chat> {
       primeiro = myId;
       segundo = id;
     }
-    
+
     FbRepository repository = new FbRepository();
     return Scaffold(
         appBar: AppBar(
@@ -52,7 +48,10 @@ class _ChatState extends State<Chat> {
                   builder: (context, snapshot) {
                     var item = snapshot.data.documents;
 
-                    return ListView.builder(
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }else{
+                      return ListView.builder(
                       itemCount: item.length,
                       itemBuilder: (context, index) {
                         //print('$index = ${item[index]['env']}');
@@ -60,6 +59,7 @@ class _ChatState extends State<Chat> {
                             '${item[index]['texto']}', item[index]['env'], myId);
                       },
                     );
+                    }
                   },
                 ),
               ),
@@ -76,7 +76,7 @@ class _ChatState extends State<Chat> {
 
   digitar() {
     FbRepository repository = new FbRepository();
-    
+
     TextEditingController msg = new TextEditingController();
 
     return Padding(
@@ -108,7 +108,7 @@ class _ChatState extends State<Chat> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 5),
-                  child:  Container(
+                  child: Container(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: IconButton(
@@ -118,11 +118,9 @@ class _ChatState extends State<Chat> {
                             color: Colors.white,
                           ),
                           onPressed: () async {
+                            await repository.mandarMensagem(msg.text, id, myId);
 
-                              await repository.mandarMensagem(msg.text, id, myId);
-                            
-                          msg.text = '';
-
+                            msg.text = '';
                           }),
                     ),
                     height: 48,

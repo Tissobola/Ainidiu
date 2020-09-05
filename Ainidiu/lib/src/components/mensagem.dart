@@ -29,7 +29,7 @@ class Mensagem extends StatelessWidget {
 
     return Row(
       mainAxisAlignment:
-          (env == 0) ? MainAxisAlignment.start : MainAxisAlignment.end,
+          (!(env == myId)) ? MainAxisAlignment.start : MainAxisAlignment.end,
       children: [
         Padding(
           padding:
