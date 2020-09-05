@@ -1,5 +1,5 @@
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/page/messages_page.dart';
+import 'package:ainidiu/src/page/chat_home.dart';
 import 'package:ainidiu/src/page/perfil_page2.dart';
 import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
         pageChanged(index);
       },
       children: <Widget>[
-        MessagesPage(),
+        ChatHome(usuario: usuario,),
         PrincipalPage(usuario: usuario,),
         PerfilPage(usuario: usuario,),
       ],

@@ -1,5 +1,6 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/components/conversas.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FbRepository {
@@ -7,8 +8,81 @@ class FbRepository {
     return Firestore.instance;
   }
 
-  mandarMensagem(texto, userid, myId) async {
+  criarChat(int myId, int outroId) async {
+    if (!(myId == outroId)) {
+      QuerySnapshot dados =
+          await getConexao().collection('chat').getDocuments();
 
+      var ok = true;
+
+      for (var item in dados.documents) {
+        if (item.documentID == '${myId}_$outroId' ||
+            item.documentID == '${outroId}_$myId') {
+          ok = false;
+        } else {
+          
+        }
+      }
+      if(ok){
+        getConexao()
+              .collection('chat')
+              .document('${myId}_$outroId')
+              .setData({'conversa': ''});
+          
+      }
+    }
+  }
+
+  Future teste(int myId, String con) async {
+    String aux = '';
+    String aux2 = '';
+    bool jaPassou = false;
+    for (int i = 0; i < con.length; i++) {
+      if (con[i] == '_') {
+        jaPassou = true;
+      } else {
+        if (!jaPassou) {
+          aux += con[i];
+        } else {
+          aux2 += con[i];
+        }
+      }
+    }
+
+    if (myId.toString() == aux) {
+      User user = await carregarDadosDoUsuario("Usuário $aux2");
+
+      return user;
+    } else {
+      if (myId.toString() == aux2) {
+        User user = await carregarDadosDoUsuario("Usuário $aux");
+        return user;
+      }
+
+      return 1;
+    }
+  }
+
+  minhasConversas(myId) async {
+    QuerySnapshot dados = await getConexao().collection('chat').getDocuments();
+    List<Conversas> conversas = new List<Conversas>();
+
+    for (var item in dados.documents) {
+      var data = item.data;
+
+      if (await teste(myId, item.documentID) != 1) {
+        User outro = await teste(myId, item.documentID);
+        print(outro);
+        Conversas aux =
+            new Conversas(outro.apelido, data['conversa'], data['foto']);
+        conversas.add(aux);
+      }
+    }
+
+    return conversas;
+  }
+
+  mandarMensagem(texto, userid, myId) async {
     int primeiro = userid;
     int segundo = myId;
     if (userid > myId) {
@@ -16,7 +90,9 @@ class FbRepository {
       segundo = userid;
     }
 
-    QuerySnapshot dados = await getConexao().collection('/chat/conversas/${primeiro}_$segundo').getDocuments();
+    QuerySnapshot dados = await getConexao()
+        .collection('/chat/conversas/${primeiro}_$segundo')
+        .getDocuments();
     int id = dados.documents.length;
 
     getConexao()
