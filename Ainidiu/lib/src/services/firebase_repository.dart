@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,20 +7,22 @@ class FbRepository {
     return Firestore.instance;
   }
 
-  mandarMensagem(texto) async {
-    QuerySnapshot dados = await getConexao().collection('chat').getDocuments();
-    int id = dados.documents.length;
-    int env;
-    if (id % 2 == 0) {
-      env = 0;
-    } else {
-      env = 1;
+  mandarMensagem(texto, userid, myId) async {
+
+    int primeiro = userid;
+    int segundo = myId;
+    if (userid > myId) {
+      primeiro = myId;
+      segundo = userid;
     }
 
+    QuerySnapshot dados = await getConexao().collection('/chat/conversas/${primeiro}_$segundo').getDocuments();
+    int id = dados.documents.length;
+
     getConexao()
-        .collection('chat')
+        .collection('/chat/conversas/${primeiro}_$segundo')
         .document('${id + 1}')
-        .setData({'env': env, 'texto': texto, 'id': id + 1});
+        .setData({'env': myId, 'texto': texto, 'id': id + 1});
   }
 
   filtro() async {

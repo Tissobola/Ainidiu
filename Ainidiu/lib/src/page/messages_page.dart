@@ -31,25 +31,17 @@ class _MessagesPageState extends State<MessagesPage> {
       itemCount: conversas.length,
       itemBuilder: (context, index) {
         return ListTile(
-
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Chat(),
-                  settings: RouteSettings(
-                    arguments: conversas[index],
-                  ),
-                ));
+                context, MaterialPageRoute(builder: (context) => Chat()));
           },
-          
           leading: CircleAvatar(
             foregroundColor: Colors.blue,
             backgroundColor: Colors.grey,
-            backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png'),
+            backgroundImage: NetworkImage(
+                'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png'),
             radius: 25,
           ),
-
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -63,7 +55,6 @@ class _MessagesPageState extends State<MessagesPage> {
               )
             ],
           ),
-          
           subtitle: Container(
             padding: EdgeInsets.only(top: 5.0),
             child: Text(
@@ -71,7 +62,6 @@ class _MessagesPageState extends State<MessagesPage> {
               style: new TextStyle(color: Colors.grey, fontSize: 15.0),
             ),
           ),
-
         );
       },
     );
@@ -83,5 +73,5 @@ class Conversas {
   final String foto;
   final String conversa;
 
-  Conversas(this.apelido, this.conversa,this.foto);
+  Conversas(this.apelido, this.conversa, this.foto);
 }

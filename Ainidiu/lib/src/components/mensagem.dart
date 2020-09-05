@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class Mensagem extends StatelessWidget {
   String texto;
   int env;
+  int myId;
 
-  Mensagem(this.texto, this.env);
+  Mensagem(this.texto, this.env, this.myId);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class Mensagem extends StatelessWidget {
                   child:
                       Text(texto, style: TextStyle(fontSize: 16))),
             ),
-            decoration: (env == 0) ? recebida : enviada,
+            decoration: (env == myId) ? enviada : recebida
           ),
         )
       ],

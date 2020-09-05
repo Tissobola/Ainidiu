@@ -2,36 +2,51 @@ import 'package:ainidiu/src/components/mensagem.dart';
 import 'package:ainidiu/src/components/mensagem_enviada_card.dart';
 import 'package:ainidiu/src/components/mensagem_recebida_card.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/page/messages_page.dart';
 
 class Chat extends StatefulWidget {
+  String apelido;
+  int id;
+  int myId;
+  Chat({this.apelido, this.id, this.myId});
   @override
-  _ChatState createState() => _ChatState();
+  _ChatState createState() => _ChatState(apelido : apelido, id:id, myId:myId);
 }
 
 class _ChatState extends State<Chat> {
+  _ChatState({this.apelido, this.id, this.myId});
   final _formKey = new GlobalKey<FormState>();
+
+  int myId;
+  int id;
+  String apelido;
+  int primeiro;
+  int segundo;
+    
 
   @override
   Widget build(BuildContext context) {
-    final Conversas conversa = ModalRoute.of(context).settings.arguments;
-    FbRepository repository = new FbRepository();
+    primeiro = id;
+    segundo = myId;
+    if (id > myId) {
+      primeiro = myId;
+      segundo = id;
+    }
     
+    FbRepository repository = new FbRepository();
     return Scaffold(
         appBar: AppBar(
-          title: Text(conversa.apelido),
+          title: Text(apelido),
         ),
         body: Container(
-          //color: Colors.red[200] /*Wallpaper*/ ,
           child: Column(
             children: [
               Expanded(
                 child: StreamBuilder(
                   stream: repository
                       .getConexao()
-                      .collection('chat')
+                      .collection('/chat/conversas/${primeiro}_$segundo')
                       .orderBy('id')
                       .snapshots(),
                   builder: (context, snapshot) {
@@ -42,7 +57,7 @@ class _ChatState extends State<Chat> {
                       itemBuilder: (context, index) {
                         //print('$index = ${item[index]['env']}');
                         return Mensagem(
-                            '${item[index]['texto']}', item[index]['env']);
+                            '${item[index]['texto']}', item[index]['env'], myId);
                       },
                     );
                   },
@@ -81,7 +96,7 @@ class _ChatState extends State<Chat> {
                       if (text.isEmpty) {
                         return 'Escreva algo';
                       } else if (text.length > 40) {
-                        return 'Mácixo de caracteres é 40';
+                        return 'O máximo de caracteres é 40';
                       }
                       return null;
                     },
@@ -104,7 +119,7 @@ class _ChatState extends State<Chat> {
                           ),
                           onPressed: () async {
 
-                              await repository.mandarMensagem(msg.text);
+                              await repository.mandarMensagem(msg.text, id, myId);
                             
                           msg.text = '';
 
