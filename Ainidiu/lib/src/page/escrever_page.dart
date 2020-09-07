@@ -1,4 +1,6 @@
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/page/home_page.dart';
+import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/filtrar.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +71,6 @@ class _EscreverState extends State<Escrever> {
                   onTap: () async {
                     //print('usuario = $usuario');
                     if (_formKey.currentState.validate()) {
-      
                       bool ehOfensivo = await Filtrar().filtrarTexto(msg.text);
 
                       if (ehOfensivo) {
@@ -86,6 +87,7 @@ class _EscreverState extends State<Escrever> {
                             user.imageURL, 0, user.id, user.apelido, msg.text);
 
                         Navigator.pop(context);
+                        
                       }
                     }
                   },
@@ -105,5 +107,4 @@ class _EscreverState extends State<Escrever> {
               ),
             ])));
   }
-
 }

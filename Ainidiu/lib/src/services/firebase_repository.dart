@@ -179,7 +179,7 @@ class FbRepository {
 
   Future<List<ItemData>> carregarPostagens() async {
     QuerySnapshot dados =
-        await getConexao().collection('postagens').getDocuments();
+        await getConexao().collection('postagens').orderBy('id', descending: true).getDocuments();
 
     var postagens = new List<ItemData>();
 
