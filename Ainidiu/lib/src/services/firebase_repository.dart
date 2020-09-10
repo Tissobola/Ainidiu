@@ -4,7 +4,7 @@ import 'package:ainidiu/src/components/conversas.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FbRepository {
-  Firestore getConexao() {
+  FirebaseFirestore getConexao() {
     return Firestore.instance;
   }
 
@@ -67,7 +67,7 @@ class FbRepository {
     List<Conversas> conversas = new List<Conversas>();
 
     for (var item in dados.documents) {
-      var data = item.data;
+      var data = item.data();
 
       if (await teste(myId, item.documentID) != 1) {
         User outro = await teste(myId, item.documentID);
@@ -107,7 +107,7 @@ class FbRepository {
     List aux = new List();
 
     for (var item in dados.documents) {
-      aux = item.data['blacklist'];
+      aux = item.data()['blacklist'];
     }
 
     List<String> blacklist = new List<String>();
@@ -140,7 +140,7 @@ class FbRepository {
     User usuario;
 
     for (var item in dados.documents) {
-      var data = item.data;
+      var data = item.data();
 
       if (user == data['apelido']) {
         //print(dataem.data.values.toList()[5]);
@@ -161,8 +161,8 @@ class FbRepository {
     int lastId = 0;
 
     for (var item in dados.documents) {
-      if (item.data['id'] > lastId) {
-        lastId = item.data['id'];
+      if (item.data()['id'] > lastId) {
+        lastId = item.data()['id'];
       }
     }
     getConexao().collection('postagens').document('post${lastId + 1}').setData({
@@ -184,8 +184,8 @@ class FbRepository {
     var postagens = new List<ItemData>();
 
     for (var item in dados.documents) {
-      if (item.data['parentId'] == 0) {
-        var post = item.data;
+      if (item.data()['parentId'] == 0) {
+        var post = item.data();
         ItemData aux = ItemData(
           post['id'],
           post['postadoPorId'],
@@ -216,11 +216,11 @@ class FbRepository {
     var postagens = new List<ItemData>();
 
     for (var item in dados.documents) {
-      var data = item.data;
+      var data = item.data();
 
-      if (item.data['parentId'] == 0) {
-        if (authorId == item.data['postadoPorId']) {
-          var post = item.data;
+      if (item.data()['parentId'] == 0) {
+        if (authorId == item.data()['postadoPorId']) {
+          var post = item.data();
           ItemData aux = ItemData(
             post['id'],
             post['postadoPorId'],
@@ -251,8 +251,8 @@ class FbRepository {
     ItemData aux;
 
     for (var item in dados.documents) {
-      if (item.data['id'] == com) {
-        var post = item.data;
+      if (item.data()['id'] == com) {
+        var post = item.data();
         aux = ItemData(
           post['id'],
           post['postadoPorId'],
@@ -283,15 +283,15 @@ class FbRepository {
     List<ItemData> aux = new List<ItemData>();
 
     for (var item in dados.documents) {
-      if (id == item.data['parentId']) {
+      if (id == item.data()['parentId']) {
         comentario = ItemData(
-          item.data['id'],
-          item.data['postadoPorId'],
-          item.data['postadoPorNome'],
-          item.data['imagemURL'],
-          item.data['texto'],
-          item.data['dataHora'],
-          item.data['parentId'],
+          item.data()['id'],
+          item.data()['postadoPorId'],
+          item.data()['postadoPorNome'],
+          item.data()['imagemURL'],
+          item.data()['texto'],
+          item.data()['dataHora'],
+          item.data()['parentId'],
         );
       }
       aux.add(comentario);
@@ -308,8 +308,8 @@ class FbRepository {
     int lastId = 0;
 
     for (var item in dados.documents) {
-      if (item.data['id'] > lastId) {
-        lastId = item.data['id'];
+      if (item.data()['id'] > lastId) {
+        lastId = item.data()['id'];
       }
     }
 
@@ -334,21 +334,21 @@ class FbRepository {
     List comentarios = new List();
 
     for (var item in dados.documents) {
-      if (idPost == item.data['id']) {
-        aux = item.data['comentarios'];
+      if (idPost == item.data()['id']) {
+        aux = item.data()['comentarios'];
 
         for (int i = 0; i < aux.length; i++) {
           comentarios.add(aux[i]);
         }
         comentarios.add(lastId);
         getConexao().collection('postagens').document('post$idPost').setData({
-          'dataHora': item.data['dataHora'],
-          'id': item.data['id'],
-          'imagemURL': item.data['imagemURL'],
-          'parentId': item.data['parentId'],
-          'postadoPorId': item.data['postadoPorId'],
-          'postadoPorNome': item.data['postadoPorNome'],
-          'texto': item.data['texto'],
+          'dataHora': item.data()['dataHora'],
+          'id': item.data()['id'],
+          'imagemURL': item.data()['imagemURL'],
+          'parentId': item.data()['parentId'],
+          'postadoPorId': item.data()['postadoPorId'],
+          'postadoPorNome': item.data()['postadoPorNome'],
+          'texto': item.data()['texto'],
           'comentarios': comentarios
         });
       }
@@ -360,10 +360,10 @@ class FbRepository {
         await getConexao().collection('usuarios').getDocuments();
 
     for (var item in dados.documents) {
-      if (email == item.data['email']) {
-        if (senha == item.data['senha']) {
+      if (email == item.data()['email']) {
+        if (senha == item.data()['senha']) {
           //dados corretos
-          return item.data['apelido'];
+          return item.data()['apelido'];
         } else {
           //senha incorreta
           return '2';
@@ -379,7 +379,7 @@ class FbRepository {
         await getConexao().collection('usuarios').getDocuments();
 
     for (var item in dados.documents) {
-      if (email == item.data['email']) {
+      if (email == item.data()['email']) {
         return 1;
       }
     }
@@ -405,7 +405,7 @@ class FbRepository {
         await getConexao().collection('postagens').getDocuments();
 
     for (var item in dados.documents) {
-      var data = item.data;
+      var data = item.data();
       if (data['id'] == idDoPost) {
         nomeDoPost = item.documentID;
       }
@@ -419,7 +419,7 @@ class FbRepository {
         await getConexao().collection('postagens').getDocuments();
 
     for (var item in dados.documents) {
-      var data = item.data;
+      var data = item.data();
       if (data['id'] == idDoPost) {
         enviarDenuncia(idDoPost, data, texto, autor);
 
@@ -433,7 +433,7 @@ class FbRepository {
           List aux = new List();
           List aux2 = new List();
 
-          aux = pai.data['comentarios'];
+          aux = pai.data()['comentarios'];
           for (int i = 0; i < aux.length; i++) {
             if (aux[i] != idDoPost) {
               aux2.add(aux[i]);

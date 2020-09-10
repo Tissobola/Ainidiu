@@ -23,14 +23,17 @@ dependencies:
   connectivity: ^0.4.8+1
   email_validator: '^1.0.0'
   cupertino_icons: ^0.1.2
-  firebase_core: ^0.4.3+2
-  cloud_firestore: ^0.12.9+4
-  firebase_auth: ^0.14.0+5
-  firebase_storage: ^3.0.6
+  firebase_core: ^0.5.0
+  cloud_firestore: ^0.14.0+2
+  firebase_auth: ^0.18.0+1
+  firebase_storage: ^4.0.0
   google_sign_in: ^4.1.1
   string_similarity: ^1.1.0
   path_provider: ^1.6.11
   flutter_local_notifications: ^1.4.4+4
+  firebase_messaging: ^7.0.0
+  cloud_functions: ^0.6.0
+  flutter_launcher_icons: ^0.7.5
 
 dev_dependencies:
   flutter_test:

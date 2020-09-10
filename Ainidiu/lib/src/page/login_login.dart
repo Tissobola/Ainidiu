@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_cadastro.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
@@ -141,8 +142,11 @@ class _LoginPageState extends State<LoginPage> {
                               if (_formKey.currentState.validate()) {
                                 setState(() {
                                   _loading = true;
+                                
                                 });
-
+                                
+                                FirebaseApp  app = await Firebase.initializeApp();
+                                
                                 String aux = await repository.login(
                                     _controladorEmail.text,
                                     _controladorSenha.text);

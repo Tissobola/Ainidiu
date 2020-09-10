@@ -21,7 +21,7 @@ class _ChatState extends State<Chat> {
   final _formKey = new GlobalKey<FormState>();
   bool podeEnviar = true;
   ScrollController scrollController =
-        new ScrollController(initialScrollOffset: 5000);
+      new ScrollController(initialScrollOffset: 5000);
 
   FbRepository repository = new FbRepository();
 
@@ -109,8 +109,8 @@ class _ChatState extends State<Chat> {
     if (old == 0) {
       old = now;
     } else if (old < now) {
-      if (lastData['env'] != myId) {
-        texto = lastData['texto'];
+      if (lastData.data()['env'] != myId) {
+        texto = lastData.data()['texto'];
 
         _mostrarNotificacao();
       }
@@ -146,6 +146,9 @@ class _ChatState extends State<Chat> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     var item = snapshot.data.documents;
+
+                    //print('item = ${item[0].data()['texto']}');
+                    print(item.length);
                     if (old < item.length) {
                       notifica(item.length, item[(item.length - 1)]);
                     }
@@ -157,9 +160,11 @@ class _ChatState extends State<Chat> {
                         controller: scrollController,
                         itemCount: item.length,
                         itemBuilder: (context, index) {
+                          //print('item = ${item[index]['texto']}');
+
                           //print('$index = ${item[index]['env']}');
-                          return Mensagem('${item[index]['texto']}',
-                              item[index]['env'], myId);
+                          return Mensagem('${item[index].data()['texto']}',
+                              item[index].data()['env'], myId);
                         },
                       );
                     }
@@ -167,79 +172,72 @@ class _ChatState extends State<Chat> {
                 ),
               ),
               Padding(
-      padding: EdgeInsets.only(bottom: 5, top: 5),
-      child: Center(
-        child: Container(
-          child: Form(
-            key: _formKey,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
+                padding: EdgeInsets.only(bottom: 5, top: 5),
+                child: Center(
                   child: Container(
-                    width: 300,
-                    child: TextFormField(
-                      validator: (text) {
-                        if (text.isEmpty) {
-                          setState(() {
-                            podeEnviar = false;
-                          });
-                          return null;
-                        }
-                        setState(() {
-                          podeEnviar = true;
-                        });
-                        return null;
-                      },
-                      controller: msg,
-                      decoration: InputDecoration(
-                          border:
-                              OutlineInputBorder(borderSide: BorderSide.none)),
+                    child: Form(
+                      key: _formKey,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Container(
+                              width: 300,
+                              child: TextFormField(
+                                validator: (text) {
+                                  return null;
+                                },
+                                controller: msg,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none)),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: IconButton(
+                                    icon: Icon(
+                                      Icons.send,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () async {
+                                      //_formKey.currentState.validate();
+                                      if (podeEnviar) {
+                                        await repository.mandarMensagem(
+                                            msg.text, id, myId);
+                                       // msg.text = '';
+                                      }
+                                    }),
+                              ),
+                              height: 48,
+                              width: 48,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(40)),
+                        border: Border.all(
+                            width: 1,
+                            color: Colors.grey,
+                            style: BorderStyle.solid)),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.send,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                          onPressed: () async {
-                            _formKey.currentState.validate();
-                            if (podeEnviar) {
-                              await repository.mandarMensagem(
-                                  msg.text, id, myId);
-                              msg.text = '';
-                            }
-                          }),
-                    ),
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          width: MediaQuery.of(context).size.width - 20,
-          height: 60,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(40)),
-              border: Border.all(
-                  width: 1, color: Colors.grey, style: BorderStyle.solid)),
-        ),
-      ),
-    ),
+              ),
             ],
           ),
         )
