@@ -27,6 +27,29 @@ class _PerfilPageState extends State<PerfilPage> {
     return aux;
   }
 
+  dynamic _retornaFoto(String caminho) {
+    //return AssetImage('images/no_photo.png');
+    if (caminho == null) {
+      return AssetImage('assets/img/img (7).jpg');
+    } else {
+      try {
+        return NetworkImage(caminho);
+      } catch (ex) {
+        print(ex);
+        return AssetImage('assets/img/img (7).jpg');
+      }
+    }
+  }
+
+  image(url) {
+    try {
+      return NetworkImage(url);
+    } catch (e) {
+      return NetworkImage(
+          "https://firebasestorage.googleapis.com/v0/b/ainidiu-app.appspot.com/o/avatares%2Fimg%20(7).jpg?alt=media&token=c8a91725-86eb-49fe-9516-cc7c92048640");
+    }
+  }
+
   CircleAvatar buildAvatar() {
     return CircleAvatar(
       radius: 60,
@@ -34,7 +57,7 @@ class _PerfilPageState extends State<PerfilPage> {
       child: CircleAvatar(
         radius: 55,
         backgroundColor: Colors.white,
-        backgroundImage: NetworkImage(apelido.imageURL),
+        backgroundImage: _retornaFoto(apelido.imageURL),
       ),
     );
   }
@@ -152,7 +175,9 @@ class _PerfilPageState extends State<PerfilPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MeusPosts(usuario: apelido,)));
+                                  builder: (context) => MeusPosts(
+                                        usuario: apelido,
+                                      )));
                         },
                         child: Text('Ver todas')),
                   )

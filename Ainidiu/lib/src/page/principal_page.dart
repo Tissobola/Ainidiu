@@ -62,7 +62,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
                       )));
         },
         tooltip: 'Increment',
-        child: Icon(Icons.add_comment),
+        child: Icon(Icons.add_comment, color: Colors.white,),
       ),
     );
   }

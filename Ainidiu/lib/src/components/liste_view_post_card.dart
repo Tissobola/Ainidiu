@@ -11,10 +11,12 @@ class ListViewPostCard extends StatefulWidget {
   Future<List<ItemData>> handleGetDataSoource;
   User usuario;
 
-  ListViewPostCard({Key key, this.usuario, this.handleGetDataSoource}) : super(key: key);
+  ListViewPostCard({Key key, this.usuario, this.handleGetDataSoource})
+      : super(key: key);
 
   @override
-  _ListViewPostCardState createState() => _ListViewPostCardState(usuario:usuario);
+  _ListViewPostCardState createState() =>
+      _ListViewPostCardState(usuario: usuario);
 }
 
 class _ListViewPostCardState extends State<ListViewPostCard> {
@@ -45,34 +47,67 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
               ),
             );
           } else {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, i) {
-                return Dismissible(
-                  background: Container(
-                    color: Colors.red,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Icon(Icons.delete_sweep),
-                        Text('Me senti ofendido...'),
-                      ],
-                    ),
+            var last = snapshot.data.length - 1;
+            return Container(
+              color: Colors.white,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, i) {
+                  if (i == last) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 100),
+                      child: Dismissible(
+                      background: Container(
+                        color: Colors.red,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Icon(Icons.delete_sweep),
+                            Text('Me senti ofendido...'),
+                          ],
+                        ),
+                      ),
+                      key: UniqueKey(),
+                      child: PostCard(context, snapshot.data[i], usuario),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        setState(() {});
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Denunciar(
+                                    usuario: usuario, id: snapshot.data[i].id)));
+                      },
                   ),
-                  key: UniqueKey(),
-                  child: PostCard(context, snapshot.data[i], usuario),
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (direction) {
-                    setState(() {});
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Denunciar(usuario:usuario,id: snapshot.data[i].id)));
-                  },
-                );
-              },
+                    );
+                  }
+
+                  return Dismissible(
+                    background: Container(
+                      color: Colors.red,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Icon(Icons.delete_sweep),
+                          Text('Me senti ofendido...'),
+                        ],
+                      ),
+                    ),
+                    key: UniqueKey(),
+                    child: PostCard(context, snapshot.data[i], usuario),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      setState(() {});
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Denunciar(
+                                  usuario: usuario, id: snapshot.data[i].id)));
+                    },
+                  );
+                },
+              ),
             );
           }
         });
@@ -87,10 +122,12 @@ class ListViewMeusPostCards extends StatefulWidget {
   Future<List<ItemData>> handleGetDataSoource;
   User usuario;
 
-  ListViewMeusPostCards({Key key, this.usuario, this.handleGetDataSoource}) : super(key: key);
+  ListViewMeusPostCards({Key key, this.usuario, this.handleGetDataSoource})
+      : super(key: key);
 
   @override
-  _ListViewMeusPostCardsState createState() => _ListViewMeusPostCardsState(usuario:usuario);
+  _ListViewMeusPostCardsState createState() =>
+      _ListViewMeusPostCardsState(usuario: usuario);
 }
 
 class _ListViewMeusPostCardsState extends State<ListViewMeusPostCards> {
@@ -123,7 +160,7 @@ class _ListViewMeusPostCardsState extends State<ListViewMeusPostCards> {
           } else {
             return ListView.builder(
               shrinkWrap: true,
-              itemCount: (snapshot.data.length >= 3)? 3 : snapshot.data.length,
+              itemCount: (snapshot.data.length >= 3) ? 3 : snapshot.data.length,
               itemBuilder: (context, i) {
                 return Dismissible(
                   background: Container(
@@ -144,8 +181,8 @@ class _ListViewMeusPostCardsState extends State<ListViewMeusPostCards> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                Denunciar(usuario:usuario,id: snapshot.data[i].id)));
+                            builder: (context) => Denunciar(
+                                usuario: usuario, id: snapshot.data[i].id)));
                   },
                 );
               },

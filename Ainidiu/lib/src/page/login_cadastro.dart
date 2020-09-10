@@ -181,6 +181,10 @@ class _CadastroState extends State<Cadastro> {
     if (value.isEmpty) {
       return 'Campo Obrigatório';
     } else {
+      if (value.toString().length < 8) {
+        return 'A senha não pode ter menos de 8 caracteres';
+      }
+
       if (value != _controladorConfirmarSenha.text) {
         return 'As duas senhas não correspondem';
       }
@@ -248,6 +252,7 @@ class _CadastroState extends State<Cadastro> {
       body: Builder(
         builder: (context) => Container(
           color: Colors.white,
+          height: MediaQuery.of(context).size.height,
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -270,8 +275,6 @@ class _CadastroState extends State<Cadastro> {
                         } else {
                           return 'Email Inválido';
                         }
-
-                        
                       },
                     ),
                   ),
@@ -411,6 +414,12 @@ class _CadastroState extends State<Cadastro> {
                                 _loading = true;
                               });
 
+                              if (_currText == "Selecionar") {
+                                setState(() {
+                                  _currText = "Neutro";
+                                });
+                              }
+
                               int aux = await repository.cadastro(
                                   _controladorEmail.text,
                                   _controladorSenha.text,
@@ -423,10 +432,12 @@ class _CadastroState extends State<Cadastro> {
                                   content: Text('Cadastro realizado!'),
                                   backgroundColor: Colors.blue,
                                 ));
-                                Navigator.push(
+
+                                Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => LoginHome()));
+                                        builder: (context) => LoginPage()),
+                                    (route) => false);
                               } else {
                                 FocusScope.of(context)
                                     .requestFocus(new FocusNode());

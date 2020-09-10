@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         Text(
           'AINIDIU',
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 20,),
         )
       ],
     );
@@ -83,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Builder(
         builder: (context) => Container(
-          height: double.infinity,
+            height: double.infinity,
             color: Colors.white,
             child: Form(
               key: _formKey,
@@ -151,14 +151,19 @@ class _LoginPageState extends State<LoginPage> {
                                     .carregarDadosDoUsuario(aux);
 
                                 if (aux != '1' && aux != '2') {
-                                  FocusScope.of(context).requestFocus(new FocusNode());
-                                  Navigator.push(
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
+                                  Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              HomePage(usuario: user)));
+                                              HomePage(usuario: user)),
+                                      (route) => false);
+
+                                  
                                 } else if (aux == '1') {
-                                  FocusScope.of(context).requestFocus(new FocusNode());
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
                                   setState(() {
                                     _loading = false;
                                   });
@@ -168,7 +173,8 @@ class _LoginPageState extends State<LoginPage> {
                                     backgroundColor: Colors.red,
                                   ));
                                 } else {
-                                  FocusScope.of(context).requestFocus(new FocusNode());
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
                                   setState(() {
                                     _loading = false;
                                   });
@@ -187,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Text(
                                 'LOGIN',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
+                                    color: Colors.black, fontSize: 18),
                               ),
                             ),
                           );

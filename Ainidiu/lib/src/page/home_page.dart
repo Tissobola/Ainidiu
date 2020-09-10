@@ -66,8 +66,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(namePage(bottomSelectedIndex))),
-      drawer: Drawer(),
+      appBar: AppBar(title: Text(namePage(bottomSelectedIndex), style: TextStyle(color: Colors.white),)),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: bottomSelectedIndex,
         items: const <BottomNavigationBarItem>[

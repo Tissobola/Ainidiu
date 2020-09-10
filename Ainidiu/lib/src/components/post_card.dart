@@ -1,6 +1,8 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/page/chat_home.dart';
 import 'package:ainidiu/src/page/comentar_page.dart';
+import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 import 'detalhe_postagem_page.dart';
@@ -91,259 +93,162 @@ class _PostCardState extends State<PostCard> {
                         usuario: usuario, postagem: this.getCurrent())));
           }
         },
-        child: Card(
-          shape: exibeTarjaAzul(),
-          elevation: 1,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    exibeEspaco(),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1, color: Colors.grey)
+            )
+          ),
+          child: Card(
+            
+            shape: exibeTarjaAzul(),
+            elevation: 0,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      exibeEspaco(),
 
-                    //Foto
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blue,
-                      backgroundImage:
-                          NetworkImage(this.getCurrent().imagemURL),
-                    ),
+                      //Foto
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.blue,
+                        backgroundImage:
+                            NetworkImage(this.getCurrent().imagemURL),
+                      ),
 
-                    SizedBox(width: 10),
+                      SizedBox(width: 10),
 
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        //Apelido
-                        Container(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          //Apelido
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  this.getCurrent().postadoPorNome + "  -",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "${this.getCurrent().data}",
+                                  style: TextStyle(color: Colors.grey),
+                                )
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: 5,
+                          ),
+
+                          //Campo mensagem
+                          Container(
+                            width: (MediaQuery.of(context).size.width -
+                                espacamento +
+                                45),
+
+                          
+                            child: TextField(
+                                onTap: () {
+                                  ///Verifica se tem comentários para exibir os detalhes
+                                  ///Métod executado sempre que clicar no card
+                                  if (this.getCurrent().getComentarios().length >
+                                      0) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetalhePostagemPage(
+                                                    usuario: usuario,
+                                                    postagem:
+                                                        this.getCurrent())));
+                                  }
+                                },
+                                readOnly: true,
+                                controller: textoController,
+                                keyboardType: TextInputType.multiline,
+                                textAlign: TextAlign.justify,
+                                maxLines: null,
+                                decoration:
+                                    InputDecoration(border: InputBorder.none)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  //Botoes
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      FlatButton(
+                          onPressed: () {
+                            print(current.id);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Comentar(
+                                          usuario: current.postadoPorNome,
+                                          current: current,
+                                        )));
+                            print('Clicou em comentar');
+                          },
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              Text(
-                                this.getCurrent().postadoPorNome + "  -",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                              Icon(
+                                Icons.insert_comment,
+                                
                               ),
                               SizedBox(
-                                width: 5,
+                                width: 10,
                               ),
-                              Text(
-                                "${this.getCurrent().data}",
-                                style: TextStyle(color: Colors.grey),
+                              getTotalComentarios()
+                            ],
+                          )),
+                      FlatButton(
+                          onPressed: () async {
+                            if (usuario.id == this.current.postadoPorId) {
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      'Você não pode falar com você mesmo ;-;')));
+                            } else {
+                              await repository.criarChat(
+                                  usuario.id, this.current.postadoPorId);
+
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          HomePage(usuario: usuario)),
+                                  (route) => false);
+                            }
+                          },
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.reply,
+                                textDirection: TextDirection.rtl,
+                                
                               )
                             ],
-                          ),
-                        ),
-
-                        SizedBox(
-                          height: 5,
-                        ),
-
-                        //Campo mensagem
-                        Container(
-                          width: (MediaQuery.of(context).size.width -
-                              espacamento +
-                              45),
-
-                          /*
-                              Codigo que coloca borda no campo de mensagem
-                      decoration: BoxDecoration(
-                        color: Colors.white10,
-                        border: Border.all(width: 1, color: Colors.grey),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(8)),
-                      ),
-                      */
-                          child: TextField(
-                              onTap: () {
-                                ///Verifica se tem comentários para exibir os detalhes
-                                ///Métod executado sempre que clicar no card
-                                if (this.getCurrent().getComentarios().length >
-                                    0) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetalhePostagemPage(
-                                                  usuario: usuario,
-                                                  postagem:
-                                                      this.getCurrent())));
-                                }
-                              },
-                              readOnly: true,
-                              controller: textoController,
-                              keyboardType: TextInputType.multiline,
-                              textAlign: TextAlign.justify,
-                              maxLines: null,
-                              decoration:
-                                  InputDecoration(border: InputBorder.none)),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                //Botoes
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    FlatButton(
-                        onPressed: () {
-                          print(current.id);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Comentar(
-                                        usuario: current.postadoPorNome,
-                                        current: current,
-                                      )));
-                          print('Clicou em comentar');
-                        },
-                        child: Row(
-                          children: <Widget>[
-                            Icon(Icons.insert_comment),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            getTotalComentarios()
-                          ],
-                        )),
-                    FlatButton(
-                        onPressed: () async {
-                          await repository.criarChat(
-                              usuario.id, this.current.postadoPorId);
-                        },
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.reply,
-                              textDirection: TextDirection.rtl,
-                            )
-                          ],
-                        ))
-                  ],
-                )
-              ],
+                          ))
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ));
   }
 }
-
-/*
-Card(
-            elevation: 5,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(5, 10, 10, 1),
-              child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          exibeTarjaAzul(),
-
-                          //Foto
-                          Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: NetworkImage(
-                                          this.getCurrent().imagemURL)),
-                                  border: Border.all(color: Colors.grey))),
-
-                          SizedBox(width: 10),
-
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-
-                              //Apelido
-                              Container(
-                                width: (MediaQuery.of(context).size.width -
-                                    espacamento),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      this.getCurrent().postadoPorNome,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      this.getCurrent().dataHora.toString(),
-                                      style: TextStyle(color: Colors.grey),
-                                    )
-                                  ],
-                                ),
-                              ),
-
-                              SizedBox(
-                                height: 5,
-                              ),
-                              
-                              //Campo mensagem
-                              Container(
-                                width: (MediaQuery.of(context).size.width -
-                                    espacamento),
-                                height: alturaDoCard,
-                                /*
-                                Codigo que coloca borda no campo de mensagem
-                        decoration: BoxDecoration(
-                          color: Colors.white10,
-                          border: Border.all(width: 1, color: Colors.grey),
-                          borderRadius:
-                              const BorderRadius.all(const Radius.circular(8)),
-                        ),
-                        */
-                                child: TextField(
-                                    readOnly: true,
-                                    controller: textoController,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: null,
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none)),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      
-                      //Botoes
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          FlatButton(
-                              onPressed: () {
-                                Navigator.push(
-                                context, MaterialPageRoute(builder: (context) => Comentar()));
-                                print('Clicou em comentar');
-                              },
-                              child: Row(
-                                children: <Widget>[
-                                  Text('Comentar '),
-                                  getTotalComentarios()
-                                ],
-                              )),
-                          FlatButton(
-                              onPressed: () {
-                                print('Clicou em Chat');
-                              },
-                              child: Row(
-                                children: <Widget>[Text('Chat')],
-                              ))
-                        ],
-                      )
-                    ],
-                  ),
-            ),
-          ),
-        */

@@ -141,6 +141,7 @@ class _LoginHomeState extends State<LoginHome> {
     if (_connection == "Não Conectado!") {
       return Scaffold(
         body: Container(
+          
           width: double.infinity,
           height: double.infinity,
           child: Column(

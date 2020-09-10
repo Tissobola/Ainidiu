@@ -1,6 +1,4 @@
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/page/home_page.dart';
-import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/filtrar.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
