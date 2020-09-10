@@ -420,6 +420,8 @@ class _CadastroState extends State<Cadastro> {
                                 });
                               }
 
+ FirebaseApp  app = await Firebase.initializeApp();
+
                               int aux = await repository.cadastro(
                                   _controladorEmail.text,
                                   _controladorSenha.text,
