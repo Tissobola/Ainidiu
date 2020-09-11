@@ -8,10 +8,11 @@
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android-permission.INTERNET"/>
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="ainidiu"
+        android:label="Ainidiu"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
