@@ -1,6 +1,7 @@
 import 'package:ainidiu/src/page/login_login.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/page/login_home.dart';
