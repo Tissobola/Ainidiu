@@ -141,6 +141,7 @@ class FbRepository {
       }
     }
 
+
     dados = await getConexao().collection('chat').get();
 
     for (var item in dados.docs) {
