@@ -1,5 +1,4 @@
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/components/conversas.dart';
 import 'package:ainidiu/src/page/chat_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';

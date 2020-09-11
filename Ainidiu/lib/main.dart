@@ -1,6 +1,6 @@
 
 import 'package:ainidiu/src/page/login_home.dart';
-import 'package:ainidiu/src/page/not.dart';
+
 
 import 'package:flutter/material.dart';
 

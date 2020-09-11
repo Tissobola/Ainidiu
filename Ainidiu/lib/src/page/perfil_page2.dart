@@ -52,10 +52,10 @@ class _PerfilPageState extends State<PerfilPage> {
 
   CircleAvatar buildAvatar() {
     return CircleAvatar(
-      radius: 60,
+      radius: 70,
       backgroundColor: Colors.black,
       child: CircleAvatar(
-        radius: 55,
+        radius: 65,
         backgroundColor: Colors.white,
         backgroundImage: _retornaFoto(apelido.imageURL),
       ),
@@ -74,126 +74,56 @@ class _PerfilPageState extends State<PerfilPage> {
   Widget build(BuildContext context) {
     ThemeData localTheme = Theme.of(context);
     return Container(
-      color: corFundo,
+
       child: Column(
+
         children: [
-          Stack(
-            children: <Widget>[
-              Container(height: 200, color: Colors.blue[300]),
-              Column(
-                children: <Widget>[
-                  Center(
-                      child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        child: IconButton(
-                            icon: Icon(
-                              Icons.settings,
-                              size: 45,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Configuracoes()));
-                            }),
-                        top: 0,
-                        right: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 80),
-                        child: Center(
-                          child: Container(
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 90,
-                                ),
-                                Text(
-                                  '${apelido.apelido}',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  height: 0,
-                                ),
-                              ],
-                            ),
-                            height: 150,
-                            width: 350,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                  Colors.blue[200],
-                                  Colors.blue[300]
-                                ],
-                                    stops: [
-                                  0,
-                                  1
-                                ])),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Center(child: buildAvatar()),
-                      )
-                    ],
-                  )),
-                ],
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 5),
+          Center(
+        child: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5.0),
             child: Container(
+              height: 220.0,
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.only(bottom: 6.0), //Same as `blurRadius` i guess
               decoration: BoxDecoration(
-                  border: Border(
-                bottom:
-                    BorderSide(width: 2.0, color: Colors.lightBlue.shade600),
-              )),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      'Minhas Postagens',
-                      style: localTheme.textTheme.title,
-                    ),
+                borderRadius: BorderRadius.circular(5.0),
+                color: Colors.cyan,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.0, 1.0), //(x,y)
+                    blurRadius: 6.0,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: RaisedButton(
-                        color: corFundo,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MeusPosts(
-                                        usuario: apelido,
-                                      )));
-                        },
-                        child: Text('Ver todas')),
-                  )
                 ],
               ),
+              child: Column(
+
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: IconButton(icon: Icon(Icons.settings, size: 40,), onPressed: () {}),
+                      )
+                    ],
+                  ),
+                  Center(child: buildAvatar()),
+                ],
+              ),
+              
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height - 451,
-            child: ListViewMeusPostCards(
-              usuario: apelido,
-              handleGetDataSoource: getFuruteDados(),
-            ),
-          )
-        ],
+        ),
       ),
+        ],
+
+      ),
+
     );
   }
 }
+
+
