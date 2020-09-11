@@ -4,7 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:ainidiu/src/page/login_home.dart';
+
 
 class Cadastro extends StatefulWidget {
   @override
@@ -421,7 +421,7 @@ class _CadastroState extends State<Cadastro> {
                                 });
                               }
 
- FirebaseApp  app = await Firebase.initializeApp();
+                              FirebaseApp app = await Firebase.initializeApp();
 
                               int aux = await repository.cadastro(
                                   _controladorEmail.text,

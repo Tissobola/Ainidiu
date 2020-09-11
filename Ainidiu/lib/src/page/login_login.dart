@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_cadastro.dart';
@@ -197,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Text(
                                 'LOGIN',
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                                    color: Colors.white, fontSize: 18),
                               ),
                             ),
                           );

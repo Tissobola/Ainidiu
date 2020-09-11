@@ -171,73 +171,12 @@ class _ChatState extends State<Chat> {
                   },
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 5, top: 5),
-                child: Center(
-                  child: Container(
-                    child: Form(
-                      key: _formKey,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Container(
-                              width: 300,
-                              child: TextFormField(
-                                validator: (text) {
-                                  return null;
-                                },
-                                controller: msg,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide.none)),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: Container(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5),
-                                child: IconButton(
-                                    icon: Icon(
-                                      Icons.send,
-                                      size: 25,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () async {
-                                      //_formKey.currentState.validate();
-                                      if (podeEnviar) {
-                                        await repository.mandarMensagem(
-                                            msg.text, id, myId);
-                                       // msg.text = '';
-                                      }
-                                    }),
-                              ),
-                              height: 48,
-                              width: 48,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.blue,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    width: MediaQuery.of(context).size.width - 20,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(40)),
-                        border: Border.all(
-                            width: 1,
-                            color: Colors.grey,
-                            style: BorderStyle.solid)),
-                  ),
-                ),
-              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  digitar()
+                ],
+              )
             ],
           ),
         )

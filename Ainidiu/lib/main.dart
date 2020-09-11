@@ -1,4 +1,6 @@
+
 import 'package:ainidiu/src/page/login_home.dart';
+
 
 import 'package:flutter/material.dart';
 
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
       //IntroPage() para a introdução
       //LoginHome para login
       
-      //home: HomePage(),
+      //home: HomePage()
       //home: IntroPage(),
       home: LoginHome(),
     );

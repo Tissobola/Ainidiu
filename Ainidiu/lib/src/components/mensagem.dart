@@ -21,7 +21,7 @@ class Mensagem extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(40)),
     );
 
-    var cWidth = null;
+    var cWidth;
 
     if (texto.length > 40) {
       cWidth = MediaQuery.of(context).size.width * 0.8;

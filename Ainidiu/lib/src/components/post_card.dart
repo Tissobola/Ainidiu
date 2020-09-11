@@ -1,6 +1,5 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/page/chat_home.dart';
 import 'package:ainidiu/src/page/comentar_page.dart';
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';

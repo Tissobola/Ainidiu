@@ -48,9 +48,12 @@ class _PrincipalPageState extends State<PrincipalPage> {
     return Scaffold(
       ///Usando o componente ListViewPostCard, passando como parâmetro a fonte de dados
       body: RefreshIndicator(
-        child:
-            ListViewPostCard(usuario: usuario, handleGetDataSoource: postagens),
         onRefresh: _reload,
+              child: Container(
+          color: Colors.white,
+          height: MediaQuery.of(context).size.height,
+          child: ListViewPostCard(usuario: usuario, handleGetDataSoource: postagens),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
