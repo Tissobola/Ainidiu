@@ -56,6 +56,10 @@ class _ConfiguracoesState extends State<Configuracoes> {
               onPressed: () async {
                 await repository.resetPosts(usuario);
                 Navigator.of(context).pop();
+                Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginHome()),
+                (route) => false);
               },
             ),
           ],

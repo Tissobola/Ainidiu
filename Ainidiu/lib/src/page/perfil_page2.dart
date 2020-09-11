@@ -116,7 +116,15 @@ class _PerfilPageState extends State<PerfilPage> {
                           )
                         ],
                       ),
-                      Center(child: buildAvatar()),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Center(child: buildAvatar()),
+                          SizedBox(height: 5,),
+                          Text(apelido.apelido, style: TextStyle(color: Colors.white, fontSize: 30),)
+                          ],
+                      )
+                      
                     ],
                   ),
                 ),
