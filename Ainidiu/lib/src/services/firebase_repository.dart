@@ -9,7 +9,6 @@ class FbRepository {
   }
 
   criarChat(int myId, int outroId) async {
-    
     if (!(myId == outroId)) {
       print('oi');
       QuerySnapshot dados =
@@ -121,16 +120,53 @@ class FbRepository {
     return blacklist;
   }
 
-  resetPosts() async {
-    QuerySnapshot dados =
-        await getConexao().collection('postagens').getDocuments();
+  resetPosts(User usuario) async {
+    await getConexao().collection('usuarios').doc('user${usuario.id}').update({
+      'apelido': '',
+      'email': '',
+      'genero': '',
+      'senha': '',
+      'id': '',
+      'ImageURL': ''
+    });
 
-    for (var item in dados.documents) {
-      await getConexao()
-          .collection('postagens')
-          .document('${item.documentID}')
-          .delete();
+    QuerySnapshot dados = await getConexao().collection('postagens').get();
+
+    for (var item in dados.docs) {
+      if (item.data()['postadoPorId'] == usuario.id) {
+        getConexao()
+            .collection('postagens')
+            .doc('post${item.data()['id']}')
+            .delete();
+      }
     }
+
+    dados = await getConexao().collection('chat').get();
+
+    for (var item in dados.docs) {
+      if (item.id.contains(usuario.id.toString())) {
+        await getConexao().collection('chat').doc(item.id).delete();
+
+        var data = await getConexao()
+            .collection('chat')
+            .doc('conversas')
+            .collection(item.id)
+            .get();
+
+        for (var it in data.docs) {
+          print('a = ${it.id}');
+          await getConexao()
+              .collection('chat')
+              .doc('conversas')
+              .collection(item.id)
+              .doc(it.id)
+              .delete();
+        }
+      }
+    }
+
+    await cadastro(
+        usuario.email, usuario.senha, usuario.genero, usuario.imageURL);
   }
 
   Future<User> carregarDadosDoUsuario(user) async {
@@ -178,8 +214,10 @@ class FbRepository {
   }
 
   Future<List<ItemData>> carregarPostagens() async {
-    QuerySnapshot dados =
-        await getConexao().collection('postagens').orderBy('id', descending: true).getDocuments();
+    QuerySnapshot dados = await getConexao()
+        .collection('postagens')
+        .orderBy('id', descending: true)
+        .getDocuments();
 
     var postagens = new List<ItemData>();
 
