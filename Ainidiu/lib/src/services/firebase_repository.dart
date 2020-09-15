@@ -2,10 +2,25 @@ import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/conversas.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FbRepository {
   FirebaseFirestore getConexao() {
     return Firestore.instance;
+  }
+
+  Future<User> loginAuto() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    User user;
+    print('get = ${preferences.getString('user')}');
+
+    if (preferences.getString('user') != null) {
+      user = await carregarDadosDoUsuario(preferences.getString('user'));
+    } else {
+      return null;
+    }
+
+    return user;
   }
 
   criarChat(int myId, int outroId) async {
@@ -141,7 +156,6 @@ class FbRepository {
       }
     }
 
-
     dados = await getConexao().collection('chat').get();
 
     for (var item in dados.docs) {
@@ -174,19 +188,22 @@ class FbRepository {
     QuerySnapshot dados =
         await getConexao().collection('usuarios').getDocuments();
 
-    User usuario;
+    User aux;
+
+    print('apelid: $user');
 
     for (var item in dados.documents) {
       var data = item.data();
 
       if (user == data['apelido']) {
-        //print(dataem.data.values.toList()[5]);
-        usuario = new User(data['ImageURL'], data['apelido'], data['email'],
-            data['genero'], data['id'], data['senha']);
+        print('test = ${data['id']}');
+        User usuario = new User(data['ImageURL'], data['apelido'],
+            data['email'], data['genero'], data['id'], data['senha']);
+        return usuario;
       }
     }
 
-    return usuario;
+    return aux;
   }
 
   escreverPostagens(DateTime data, imagemURL, parentId, postadoPorId,

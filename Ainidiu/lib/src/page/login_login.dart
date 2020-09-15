@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -42,7 +43,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
         Text(
           'AINIDIU',
-          style: TextStyle(fontSize: 20,),
+          style: TextStyle(
+            fontSize: 20,
+          ),
         )
       ],
     );
@@ -140,11 +143,11 @@ class _LoginPageState extends State<LoginPage> {
                               if (_formKey.currentState.validate()) {
                                 setState(() {
                                   _loading = true;
-                                
                                 });
-                                
-                                FirebaseApp  app = await Firebase.initializeApp();
-                                
+
+                                FirebaseApp app =
+                                    await Firebase.initializeApp();
+
                                 String aux = await repository.login(
                                     _controladorEmail.text,
                                     _controladorSenha.text);
@@ -153,6 +156,11 @@ class _LoginPageState extends State<LoginPage> {
                                     .carregarDadosDoUsuario(aux);
 
                                 if (aux != '1' && aux != '2') {
+                                  var prefs =
+                                      await SharedPreferences.getInstance();
+
+                                  prefs.setString('user', user.apelido);
+
                                   FocusScope.of(context)
                                       .requestFocus(new FocusNode());
                                   Navigator.pushAndRemoveUntil(
@@ -161,8 +169,6 @@ class _LoginPageState extends State<LoginPage> {
                                           builder: (context) =>
                                               HomePage(usuario: user)),
                                       (route) => false);
-
-                                  
                                 } else if (aux == '1') {
                                   FocusScope.of(context)
                                       .requestFocus(new FocusNode());

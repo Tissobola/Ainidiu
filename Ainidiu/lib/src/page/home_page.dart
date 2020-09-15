@@ -2,20 +2,28 @@ import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/chat_home.dart';
 import 'package:ainidiu/src/page/perfil_page2.dart';
 import 'package:ainidiu/src/page/principal_page.dart';
+import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   User usuario;
-  HomePage({Key key, this.usuario}) : super(key: key);
+  String apelido;
+  HomePage({Key key, this.usuario, this.apelido}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState(usuario: usuario);
+  _HomePageState createState() =>
+      _HomePageState(usuario: usuario, apelido: apelido);
 }
 
 class _HomePageState extends State<HomePage> {
   int bottomSelectedIndex = 0;
   User usuario;
-  _HomePageState({this.usuario});
+  String apelido;
+
+  FbRepository repository = new FbRepository();
+
+  _HomePageState({this.usuario, this.apelido});
 
   String namePage(bottomSelectedIndex) {
     String name;
@@ -36,17 +44,26 @@ class _HomePageState extends State<HomePage> {
   );
 
   Widget buildPageView() {
-    return PageView(
-      controller: pageController,
-      onPageChanged: (index) {
-        pageChanged(index);
-      },
-      children: <Widget>[
-        ChatHome(usuario: usuario,),
-        PrincipalPage(usuario: usuario,),
-        PerfilPage(usuario: usuario,),
-      ],
-    );
+    
+      print('asd');
+      return PageView(
+        controller: pageController,
+        onPageChanged: (index) {
+          pageChanged(index);
+        },
+        children: <Widget>[
+          ChatHome(
+            usuario: usuario,
+          ),
+          PrincipalPage(
+            usuario: usuario,
+          ),
+          PerfilPage(
+            usuario: usuario,
+          ),
+        ],
+      );
+    
   }
 
   void pageChanged(int index) {
@@ -65,8 +82,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print('testes = $usuario');
+
     return Scaffold(
-      appBar: AppBar(title: Text(namePage(bottomSelectedIndex), style: TextStyle(color: Colors.white),)),
+      appBar: AppBar(
+          title: Text(
+        namePage(bottomSelectedIndex),
+        style: TextStyle(color: Colors.white),
+      )),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: bottomSelectedIndex,
         items: const <BottomNavigationBarItem>[
@@ -80,7 +103,46 @@ class _HomePageState extends State<HomePage> {
           bottomTapped(index);
         },
       ),
-      body: buildPageView(),
+      body: buildPageView()
+    );
+  }
+}
+
+class Home extends StatefulWidget {
+  String apelido;
+
+  Home({this.apelido});
+
+  @override
+  _HomeState createState() => _HomeState(apelido: apelido);
+}
+
+class _HomeState extends State<Home> {
+  String apelido;
+
+  _HomeState({this.apelido});
+
+  FbRepository repository = new FbRepository();
+
+  @override
+  Widget build(BuildContext context) {
+    print('apelido = $apelido');
+
+    return FutureBuilder(
+      future: repository.carregarDadosDoUsuario(apelido),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        return HomePage(
+          usuario: snapshot.data,
+        );
+      },
     );
   }
 }
