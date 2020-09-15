@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Firebase.initializeApp().whenComplete(() { 
+    Firebase.initializeApp().whenComplete(() {
       print("completed");
       setState(() {});
     });
@@ -49,17 +49,17 @@ class _MyAppState extends State<MyApp> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Scaffold(
-                              body: Center(
+                body: Center(
                   child: CircularProgressIndicator(),
                 ),
               );
             } else {
               if (snapshot.data == null) {
-                return Center(
-                  child: Text('null'),
-                );
+                return LoginHome();
               } else {
-                return HomePage(usuario: snapshot.data,);
+                return HomePage(
+                  usuario: snapshot.data,
+                );
               }
             }
           },

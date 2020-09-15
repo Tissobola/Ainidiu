@@ -3,6 +3,7 @@ import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/page/sobre_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Configuracoes extends StatefulWidget {
   User usuario;
@@ -57,9 +58,9 @@ class _ConfiguracoesState extends State<Configuracoes> {
                 await repository.resetPosts(usuario);
                 Navigator.of(context).pop();
                 Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => LoginHome()),
-                (route) => false);
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginHome()),
+                    (route) => false);
               },
             ),
           ],
@@ -81,7 +82,10 @@ class _ConfiguracoesState extends State<Configuracoes> {
         ListTile(
           leading: Icon(Icons.exit_to_app),
           title: Text('Sair'),
-          onTap: () {
+          onTap: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('user', null);
+
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => LoginHome()),
