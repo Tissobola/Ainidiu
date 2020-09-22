@@ -12,7 +12,6 @@ class FbRepository {
   Future<User> loginAuto() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     User user;
-    print('get = ${preferences.getString('user')}');
 
     if (preferences.getString('user') != null) {
       user = await carregarDadosDoUsuario(preferences.getString('user'));
@@ -40,8 +39,8 @@ class FbRepository {
       if (ok) {
         getConexao()
             .collection('chat')
-            .document('${myId}_$outroId')
-            .setData({'conversa': 'Última Mensagem'});
+            .document('${outroId}_$myId')
+            .setData({'conversa': ''});
       }
     }
   }
@@ -85,12 +84,31 @@ class FbRepository {
 
       if (await teste(myId, item.documentID) != 1) {
         User outro = await teste(myId, item.documentID);
-        print(outro);
-        Conversas aux =
-            new Conversas(outro.apelido, data['conversa'], data['foto']);
-        conversas.add(aux);
+       
+
+        try {
+          QuerySnapshot t = await getConexao()
+              .collection('chat/conversas/${outro.id}_$myId')
+              .get();
+
+         
+          Conversas aux = new Conversas(
+              outro.apelido,
+              t.docs.last.data()['texto'],
+              data['foto'],
+              t.docs.last.data()['data']);
+          conversas.add(aux);
+        } catch (ex) {
+          print('erro = $ex');
+
+          Conversas aux = new Conversas(outro.apelido, 'erro kkk', data['foto'],
+              '${DateTime.now().hour}:${DateTime.now().minute}');
+          conversas.add(aux);
+        }
       }
     }
+
+    print('conversas = ${conversas[0].conversa}');
 
     return conversas;
   }
@@ -111,7 +129,12 @@ class FbRepository {
     getConexao()
         .collection('/chat/conversas/${primeiro}_$segundo')
         .document('${id + 1}')
-        .setData({'env': myId, 'texto': texto, 'id': id + 1});
+        .setData({
+      'env': myId,
+      'texto': texto,
+      'id': id + 1,
+      'data': '${DateTime.now().hour}:${DateTime.now().minute}'
+    });
   }
 
   filtro() async {
@@ -138,11 +161,12 @@ class FbRepository {
   resetPosts(User usuario) async {
     await getConexao().collection('usuarios').doc('user${usuario.id}').update({
       'apelido': '',
-      'email': '',
+      'email': usuario.email,
       'genero': '',
       'senha': '',
       'id': '',
-      'ImageURL': ''
+      'ImageURL': '',
+      'mensagem': 'Eu deletei pq'
     });
 
     QuerySnapshot dados = await getConexao().collection('postagens').get();
@@ -190,13 +214,10 @@ class FbRepository {
 
     User aux;
 
-    print('apelid: $user');
-
     for (var item in dados.documents) {
       var data = item.data();
 
       if (user == data['apelido']) {
-        print('test = ${data['id']}');
         User usuario = new User(data['ImageURL'], data['apelido'],
             data['email'], data['genero'], data['id'], data['senha']);
         return usuario;

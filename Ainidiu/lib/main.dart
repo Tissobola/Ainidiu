@@ -1,4 +1,5 @@
 import 'package:ainidiu/src/page/home_page.dart';
+import 'package:ainidiu/src/page/not.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,10 +24,19 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
     Firebase.initializeApp().whenComplete(() {
-      print("completed");
+      
       setState(() {});
     });
+
+    //notificacao();
+  }
+
+  void notificacao() async {
+    while (true) {
+      
+    }
   }
 
   @override
@@ -57,9 +67,7 @@ class _MyAppState extends State<MyApp> {
               if (snapshot.data == null) {
                 return LoginHome();
               } else {
-                return HomePage(
-                  usuario: snapshot.data,
-                );
+                return HomePage(usuario: snapshot.data,);
               }
             }
           },

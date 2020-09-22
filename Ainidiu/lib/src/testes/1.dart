@@ -1,15 +1,18 @@
-import 'package:flutter/material.dart';
+class Contato {
+  int id;
+  String nome;
+  String email;
 
-class Test extends StatefulWidget {
-  @override
-  _TestState createState() => _TestState();
-}
+  Contato(this.email, this.id, this.nome);
 
-class _TestState extends State<Test> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{'id': id, 'nome': nome, 'email': email};
+    return map;
+  }
 
-    );
+  Contato.fromMap(Map<String, dynamic> map) {
+    id = map['id'];
+    nome = map['nome'];
+    email = map['email'];
   }
 }

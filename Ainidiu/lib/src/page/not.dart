@@ -1,38 +1,38 @@
+import 'package:ainidiu/helpers/database_helper.dart';
+import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:ainidiu/src/testes/1.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqlite_api.dart';
 
-class HomePage extends StatefulWidget {
+class HomeTest extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeTestState createState() => _HomeTestState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final FirebaseMessaging _fcm = FirebaseMessaging();
+class _HomeTestState extends State<HomeTest> {
+  FbRepository repository = new FbRepository();
 
+  @override
   void initState() {
     super.initState();
-    
-    _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        //this callback happens when you are in the app and notification is received
-        print("onMessage: $message");
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        //this callback happens when you launch app after a notification received
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        //this callbakc happens when you open the app after a notification received AND
-        //app was running in the background
-        print("onResume: $message");
-      },
-    );
-  }
   
+    Firebase.initializeApp().whenComplete(() {
+     
+      setState(() {});
+    });
+  }
+
+  DatabaseHelper db = DatabaseHelper();
+
+  List<Contato> contatos = List<Contato>();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(body: Container());
   }
 }

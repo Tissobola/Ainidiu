@@ -191,57 +191,64 @@ class _PostCardState extends State<PostCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      FlatButton(
-                          onPressed: () {
-                            print(current.id);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Comentar(
-                                          usuario: current.postadoPorNome,
-                                          current: current,
-                                        )));
-                            print('Clicou em comentar');
-                          },
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.insert_comment,
-                                
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              getTotalComentarios()
-                            ],
-                          )),
-                      FlatButton(
-                          onPressed: () async {
-                            if (usuario.id == this.current.postadoPorId) {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text(
-                                      'Você não pode falar com você mesmo ;-;')));
-                            } else {
-                              await repository.criarChat(
-                                  usuario.id, this.current.postadoPorId);
-
-                              Navigator.pushAndRemoveUntil(
+                      Tooltip(
+                        message: "Comentar",
+                                              child: FlatButton(
+                          
+                            onPressed: () {
+                              print(current.id);
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          HomePage(usuario: usuario)),
-                                  (route) => false);
-                            }
-                          },
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.reply,
-                                textDirection: TextDirection.rtl,
-                                
-                              )
-                            ],
-                          ))
+                                      builder: (context) => Comentar(
+                                            usuario: current.postadoPorNome,
+                                            current: current,
+                                          )));
+                              print('Clicou em comentar');
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.chat_bubble_outline,
+                                  
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                getTotalComentarios()
+                              ],
+                            )),
+                      ),
+                      Tooltip(
+                        message: "Novo Chat",
+                                              child: FlatButton(
+                            onPressed: () async {
+                              if (usuario.id == this.current.postadoPorId) {
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text(
+                                        'Você não pode falar com você mesmo ;-;')));
+                              } else {
+                                await repository.criarChat(
+                                    usuario.id, this.current.postadoPorId);
+
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            HomePage(usuario: usuario)),
+                                    (route) => false);
+                              }
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.label_outline,
+                                  //textDirection: TextDirection.rtl,
+                                  
+                                )
+                              ],
+                            )),
+                      )
                     ],
                   )
                 ],

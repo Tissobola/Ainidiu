@@ -1,4 +1,5 @@
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/components/conversas.dart';
 import 'package:ainidiu/src/page/chat_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   Widget build(BuildContext context) {
     FbRepository repository = new FbRepository();
+   
 
     return Container(
       //color: Colors.pink,
@@ -25,6 +27,10 @@ class _ChatHomeState extends State<ChatHome> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.data.length == 0) {
+            return Center(
+              child: Text('Você ainda não tem nenhuma conversa :('),
             );
           } else {
             return Container(
@@ -36,17 +42,10 @@ class _ChatHomeState extends State<ChatHome> {
 
                   return Container(
                     decoration: BoxDecoration(
-                  
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Colors.grey
-                          ,width: 0.5
-                        )
-                      )
-                    ),
-                    
+                        border: Border(
+                            bottom:
+                                BorderSide(color: Colors.grey, width: 0.5))),
                     child: ListTile(
-                    
                       onTap: () {
                         Navigator.push(
                             context,
@@ -72,16 +71,19 @@ class _ChatHomeState extends State<ChatHome> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            '12:00',
-                            style: new TextStyle(color: Colors.grey, fontSize: 14.0),
+                            snapshot.data[index].data,
+                            style: TextStyle(
+                                color: Colors.grey, fontSize: 14.0),
                           )
                         ],
                       ),
                       subtitle: Container(
                         padding: EdgeInsets.only(top: 5.0),
                         child: Text(
-                          snapshot.data[index].conversa,
-                          style: new TextStyle(color: Colors.grey, fontSize: 15.0),
+                          snapshot.data[index].conversa.toString(),
+                          
+                          style:
+                              new TextStyle(color: Colors.grey, fontSize: 15.0),
                         ),
                       ),
                     ),

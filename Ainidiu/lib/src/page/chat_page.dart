@@ -135,48 +135,13 @@ class _ChatState extends State<Chat> {
           title: Text(apelido),
         ),
         body: Container(
-          child: Column(
+          child: Stack(
             children: [
-              Expanded(
-                child: StreamBuilder(
-                  stream: repository
-                      .getConexao()
-                      .collection('/chat/conversas/${primeiro}_$segundo')
-                      .orderBy('id')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    var item = snapshot.data.documents;
-
-                    //print('item = ${item[0].data()['texto']}');
-                    print(item.length);
-                    if (old < item.length) {
-                      notifica(item.length, item[(item.length - 1)]);
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else {
-                      //_mostrarNotificacao();
-                      return ListView.builder(
-                        controller: scrollController,
-                        itemCount: item.length,
-                        itemBuilder: (context, index) {
-                          //print('item = ${item[index]['texto']}');
-
-                          //print('$index = ${item[index]['env']}');
-                          return Mensagem('${item[index].data()['texto']}',
-                              item[index].data()['env'], myId);
-                        },
-                      );
-                    }
-                  },
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  digitar()
-                ],
-              )
+              chatMessages(),
+              Container(
+                  alignment: Alignment.bottomCenter,
+                  width: MediaQuery.of(context).size.width,
+                  child: digitar())
             ],
           ),
         )
@@ -184,81 +149,107 @@ class _ChatState extends State<Chat> {
         );
   }
 
+  Widget chatMessages() {
+    return StreamBuilder(
+      stream: repository
+          .getConexao()
+          .collection('/chat/conversas/${primeiro}_$segundo')
+          .orderBy('id')
+          .snapshots(),
+      builder: (context, snapshot) {
+        var item;
+        try {
+          item = snapshot.data.documents;
+        } catch (ex) {
+          print('ex = $ex');
+        }
+
+        return snapshot.hasData
+            ? ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) {
+                  return Mensagem('${item[index].data()['texto']}',
+                      item[index].data()['env'], myId);
+                })
+            : Container(
+                child: CircularProgressIndicator(),
+              );
+      },
+    );
+  }
+
   digitar() {
     FbRepository repository = new FbRepository();
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 5, top: 5),
-      child: Center(
-        child: Container(
-          child: Form(
-            key: _formKey,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Container(
-                    width: 300,
-                    child: TextFormField(
-                      validator: (text) {
-                        if (text.isEmpty) {
-                          setState(() {
-                            podeEnviar = false;
-                          });
-                          return null;
-                        }
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: Form(
+          key: _formKey,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Container(
+                  width: 300,
+                  child: TextFormField(
+                    validator: (text) {
+                      if (text.isEmpty) {
                         setState(() {
-                          podeEnviar = true;
+                          podeEnviar = false;
                         });
                         return null;
-                      },
-                      controller: msg,
-                      decoration: InputDecoration(
-                          border:
-                              OutlineInputBorder(borderSide: BorderSide.none)),
-                    ),
+                      }
+                      setState(() {
+                        podeEnviar = true;
+                      });
+                      return null;
+                    },
+                    controller: msg,
+                    decoration: InputDecoration(
+                        border:
+                            OutlineInputBorder(borderSide: BorderSide.none)),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.send,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                          onPressed: () async {
-                            _formKey.currentState.validate();
-                            if (podeEnviar) {
-                              await repository.mandarMensagem(
-                                  msg.text, id, myId);
-                              msg.text = '';
-                            }
-                          }),
-                    ),
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue,
-                    ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.send,
+                          size: 25,
+                          color: Colors.white,
+                        ),
+                        onPressed: () async {
+                          _formKey.currentState.validate();
+                          if (podeEnviar) {
+                            await repository.mandarMensagem(msg.text, id, myId);
+                            msg.text = '';
+                          }
+                        }),
                   ),
-                )
-              ],
-            ),
+                  height: 48,
+                  width: 48,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.blue,
+                  ),
+                ),
+              )
+            ],
           ),
-          width: MediaQuery.of(context).size.width - 20,
-          height: 60,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(40)),
-              border: Border.all(
-                  width: 1, color: Colors.grey, style: BorderStyle.solid)),
         ),
+        width: MediaQuery.of(context).size.width - 20,
+        height: 60,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(40)),
+            border: Border.all(
+                width: 1, color: Colors.grey, style: BorderStyle.solid)),
       ),
     );
   }
