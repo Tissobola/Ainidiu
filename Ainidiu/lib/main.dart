@@ -2,16 +2,22 @@ import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/not.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-a() async {
-  SharedPreferences a = await SharedPreferences.getInstance();
-  // a.setString(key, value)
+
+void printHello() {
+  final DateTime now = DateTime.now();
+  
+  print("[$now] Hello, world!  function='$printHello'");
 }
 
-void main() => runApp(MyApp());
+void main() async {
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -24,19 +30,15 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
     Firebase.initializeApp().whenComplete(() {
-      
       setState(() {});
     });
-
+    
     //notificacao();
   }
 
   void notificacao() async {
-    while (true) {
-      
-    }
+    while (true) {}
   }
 
   @override
@@ -67,7 +69,9 @@ class _MyAppState extends State<MyApp> {
               if (snapshot.data == null) {
                 return LoginHome();
               } else {
-                return HomePage(usuario: snapshot.data,);
+                return HomePage(
+                  usuario: snapshot.data,
+                );
               }
             }
           },

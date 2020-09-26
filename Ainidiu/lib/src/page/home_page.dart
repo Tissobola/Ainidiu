@@ -3,6 +3,7 @@ import 'package:ainidiu/src/page/chat_home.dart';
 import 'package:ainidiu/src/page/perfil_page2.dart';
 import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
@@ -44,26 +45,24 @@ class _HomePageState extends State<HomePage> {
   );
 
   Widget buildPageView() {
-    
-      print('asd');
-      return PageView(
-        controller: pageController,
-        onPageChanged: (index) {
-          pageChanged(index);
-        },
-        children: <Widget>[
-          ChatHome(
-            usuario: usuario,
-          ),
-          PrincipalPage(
-            usuario: usuario,
-          ),
-          PerfilPage(
-            usuario: usuario,
-          ),
-        ],
-      );
-    
+    print('asd');
+    return PageView(
+      controller: pageController,
+      onPageChanged: (index) {
+        pageChanged(index);
+      },
+      children: <Widget>[
+        ChatHome(
+          usuario: usuario,
+        ),
+        PrincipalPage(
+          usuario: usuario,
+        ),
+        PerfilPage(
+          usuario: usuario,
+        ),
+      ],
+    );
   }
 
   void pageChanged(int index) {
@@ -80,31 +79,41 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void lucasgay() {
+    print('Lucas não é gay');
+  }
+
   @override
   Widget build(BuildContext context) {
     print('testes = $usuario');
 
     return Scaffold(
-      appBar: AppBar(
-          title: Text(
-        namePage(bottomSelectedIndex),
-        style: TextStyle(color: Colors.white),
-      )),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: bottomSelectedIndex,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.message), title: Text('Chat')),
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), title: Text('Perfil'))
-        ],
-        onTap: (index) {
-          bottomTapped(index);
-        },
-      ),
-      body: buildPageView()
-    );
+        floatingActionButton: FloatingActionButton(onPressed: () async {
+          //await AndroidAlarmManager.initialize();
+          print('a');
+          await AndroidAlarmManager.periodic(Duration(seconds: 2), 0, lucasgay);
+          print('passoi');
+        }),
+        appBar: AppBar(
+            title: Text(
+          namePage(bottomSelectedIndex),
+          style: TextStyle(color: Colors.white),
+        )),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: bottomSelectedIndex,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: Icon(Icons.message), title: Text('Chat')),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home), title: Text('Home')),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person), title: Text('Perfil'))
+          ],
+          onTap: (index) {
+            bottomTapped(index);
+          },
+        ),
+        body: buildPageView());
   }
 }
 
