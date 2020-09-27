@@ -1,12 +1,8 @@
 import 'package:ainidiu/src/page/home_page.dart';
-import 'package:ainidiu/src/page/not.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
-import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 void printHello() {

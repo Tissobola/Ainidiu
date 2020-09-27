@@ -40,10 +40,10 @@ class _ChatState extends State<Chat> {
   String texto;
 
   void _mostrarNotificacao() async {
-    await _simularNovaNotificacao();
+    _simularNovaNotificacao();
   }
 
-  Future<void> _simularNovaNotificacao() {
+  void _simularNovaNotificacao() {
     var notificacaoAndroid = AndroidNotificationDetails(
         'channel_id', 'channel Name', 'channel Description',
         importance: Importance.Max, priority: Priority.High, ticker: 'Teste');

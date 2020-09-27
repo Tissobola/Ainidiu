@@ -1,7 +1,6 @@
 import 'package:ainidiu/src/page/login_login.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -420,8 +419,6 @@ class _CadastroState extends State<Cadastro> {
                                   _currText = "Neutro";
                                 });
                               }
-
-                              FirebaseApp app = await Firebase.initializeApp();
 
                               int aux = await repository.cadastro(
                                   _controladorEmail.text,

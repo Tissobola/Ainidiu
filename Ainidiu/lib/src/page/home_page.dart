@@ -4,7 +4,6 @@ import 'package:ainidiu/src/page/perfil_page2.dart';
 import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:android_alarm_manager/android_alarm_manager.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

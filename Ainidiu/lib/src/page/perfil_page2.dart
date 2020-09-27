@@ -2,7 +2,6 @@ import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
 import 'package:ainidiu/src/page/configuracoes_page.dart';
-import 'package:ainidiu/src/page/meus_posts.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -72,7 +71,6 @@ class _PerfilPageState extends State<PerfilPage> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData localTheme = Theme.of(context);
     return Container(
       child: Column(
         children: [

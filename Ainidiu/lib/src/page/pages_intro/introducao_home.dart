@@ -9,7 +9,6 @@ class IntroPage extends StatefulWidget {
 
 class _IntroPageState extends State<IntroPage> {
   int _page = 1;
-  String _backgroundURL = '';
 
   @override
   initState() {
@@ -30,8 +29,6 @@ class _IntroPageState extends State<IntroPage> {
   }
 
   Widget filho() {
-    final larguraTela = MediaQuery.of(context).size.width;
-    final alturaTela = MediaQuery.of(context).size.height;
 
     Widget background() {
       altura(p, h) {
