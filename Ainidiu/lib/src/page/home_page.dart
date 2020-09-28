@@ -87,12 +87,7 @@ class _HomePageState extends State<HomePage> {
     print('testes = $usuario');
 
     return Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: () async {
-          //await AndroidAlarmManager.initialize();
-          print('a');
-          await AndroidAlarmManager.periodic(Duration(seconds: 2), 0, lucasgay);
-          print('passoi');
-        }),
+        
         appBar: AppBar(
             title: Text(
           namePage(bottomSelectedIndex),

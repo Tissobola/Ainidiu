@@ -96,6 +96,8 @@ class _ChatHomeState extends State<ChatHome> {
     );
   }
 
+
+  //arruma isso ai por favor
   outroid(String apelido) {
     String id = '';
     bool jaPassou = false;
@@ -108,7 +110,7 @@ class _ChatHomeState extends State<ChatHome> {
         }
       }
     }
-    print('id = $id');
+
     return int.parse(id);
   }
 }

@@ -25,14 +25,12 @@ class FbRepository {
   criarChat(int myId, int outroId) async {
     if (!(myId == outroId)) {
       print('oi');
-      QuerySnapshot dados =
-          await getConexao().collection('chat').get();
+      QuerySnapshot dados = await getConexao().collection('chat').get();
 
       var ok = true;
 
       for (var item in dados.docs) {
-        if (item.id == '${myId}_$outroId' ||
-            item.id == '${outroId}_$myId') {
+        if (item.id == '${myId}_$outroId' || item.id == '${outroId}_$myId') {
           ok = false;
         } else {}
       }
@@ -84,14 +82,12 @@ class FbRepository {
 
       if (await teste(myId, item.id) != 1) {
         User outro = await teste(myId, item.id);
-       
 
         try {
           QuerySnapshot t = await getConexao()
               .collection('chat/conversas/${outro.id}_$myId')
               .get();
 
-         
           Conversas aux = new Conversas(
               outro.apelido,
               t.docs.last.data()['texto'],
@@ -99,16 +95,12 @@ class FbRepository {
               t.docs.last.data()['data']);
           conversas.add(aux);
         } catch (ex) {
-          print('erro = $ex');
-
           Conversas aux = new Conversas(outro.apelido, 'erro kkk', data['foto'],
               '${DateTime.now().hour}:${DateTime.now().minute}');
           conversas.add(aux);
         }
       }
     }
-
-    print('conversas = ${conversas[0].conversa}');
 
     return conversas;
   }
@@ -138,8 +130,7 @@ class FbRepository {
   }
 
   filtro() async {
-    QuerySnapshot dados =
-        await getConexao().collection('blacklist').get();
+    QuerySnapshot dados = await getConexao().collection('blacklist').get();
 
     List aux = new List();
 
@@ -159,16 +150,6 @@ class FbRepository {
   }
 
   resetPosts(User usuario) async {
-    await getConexao().collection('usuarios').doc('user${usuario.id}').update({
-      'apelido': '',
-      'email': usuario.email,
-      'genero': '',
-      'senha': '',
-      'id': '',
-      'ImageURL': '',
-      'mensagem': 'Eu deletei pq'
-    });
-
     QuerySnapshot dados = await getConexao().collection('postagens').get();
 
     for (var item in dados.docs) {
@@ -193,7 +174,6 @@ class FbRepository {
             .get();
 
         for (var it in data.docs) {
-          print('a = ${it.id}');
           await getConexao()
               .collection('chat')
               .doc('conversas')
@@ -206,11 +186,17 @@ class FbRepository {
 
     await cadastro(
         usuario.email, usuario.senha, usuario.genero, usuario.imageURL);
+    //encontrando o usuário que queremos deletar
+    var userWithId = await getConexao()
+        .collection('usuarios')
+        .where('id', isEqualTo: usuario.id)
+        .get();
+
+    getConexao().collection('usuarios').doc(userWithId.docs[0].id).delete();
   }
 
   Future<User> carregarDadosDoUsuario(user) async {
-    QuerySnapshot dados =
-        await getConexao().collection('usuarios').get();
+    QuerySnapshot dados = await getConexao().collection('usuarios').get();
 
     User aux;
 
@@ -229,8 +215,7 @@ class FbRepository {
 
   escreverPostagens(DateTime data, imagemURL, parentId, postadoPorId,
       postadoPorNome, texto) async {
-    QuerySnapshot dados =
-        await getConexao().collection('postagens').get();
+    QuerySnapshot dados = await getConexao().collection('postagens').get();
 
     var hora = '${data.hour}:${data.minute}';
     int lastId = 0;
@@ -287,13 +272,11 @@ class FbRepository {
   }
 
   carregarMinhasPostagens(authorId) async {
-    QuerySnapshot dados =
-        await getConexao().collection('postagens').get();
+    QuerySnapshot dados = await getConexao().collection('postagens').get();
 
     var postagens = new List<ItemData>();
 
     for (var item in dados.docs) {
-
       if (item.data()['parentId'] == 0) {
         if (authorId == item.data()['postadoPorId']) {
           var post = item.data();
@@ -321,8 +304,7 @@ class FbRepository {
   }
 
   carregarPost(com) async {
-    QuerySnapshot dados =
-        await getConexao().collection('postagens').get();
+    QuerySnapshot dados = await getConexao().collection('postagens').get();
 
     ItemData aux;
 
@@ -352,8 +334,7 @@ class FbRepository {
   }
 
   carregarComentario(id) async {
-    QuerySnapshot dados =
-        await getConexao().collection('postagens').get();
+    QuerySnapshot dados = await getConexao().collection('postagens').get();
 
     ItemData comentario;
     List<ItemData> aux = new List<ItemData>();
@@ -432,8 +413,7 @@ class FbRepository {
   }
 
   Future<String> login(email, senha) async {
-    QuerySnapshot dados =
-        await getConexao().collection('usuarios').get();
+    QuerySnapshot dados = await getConexao().collection('usuarios').get();
 
     for (var item in dados.docs) {
       if (email == item.data()['email']) {
@@ -451,8 +431,8 @@ class FbRepository {
   }
 
   Future<int> cadastro(email, senha, genero, imageURL) async {
-    QuerySnapshot dados =
-        await getConexao().collection('usuarios').get();
+    QuerySnapshot dados = await getConexao().collection('usuarios').get();
+    int id = dados.docs.length + 1;
 
     for (var item in dados.docs) {
       if (email == item.data()['email']) {
@@ -460,15 +440,12 @@ class FbRepository {
       }
     }
 
-    getConexao()
-        .collection('usuarios')
-        .doc('user${dados.docs.length + 1}')
-        .set({
-      'apelido': 'Usuário ${dados.docs.length + 1}',
+    getConexao().collection('usuarios').doc().set({
+      'apelido': 'Usuário $id',
       'email': email,
       'genero': genero,
       'senha': senha,
-      'id': dados.docs.length + 1,
+      'id': id,
       'ImageURL': imageURL
     });
 
@@ -477,8 +454,7 @@ class FbRepository {
 
   Future acharPost(int idDoPost) async {
     String nomeDoPost;
-    QuerySnapshot dados =
-        await getConexao().collection('postagens').get();
+    QuerySnapshot dados = await getConexao().collection('postagens').get();
 
     for (var item in dados.docs) {
       var data = item.data();
@@ -491,8 +467,7 @@ class FbRepository {
   }
 
   void denunciar(int idDoPost, String texto, User autor) async {
-    QuerySnapshot dados =
-        await getConexao().collection('postagens').get();
+    QuerySnapshot dados = await getConexao().collection('postagens').get();
 
     for (var item in dados.docs) {
       var data = item.data();
@@ -527,8 +502,6 @@ class FbRepository {
 
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
-    print('object');
-
     String time = '${DateTime.now().hour}:${DateTime.now().minute}';
 
     getConexao().collection('denuncias').doc('denuncia$idDoPost').set({
@@ -542,6 +515,5 @@ class FbRepository {
     });
 
     getConexao().collection('postagens').doc('post$idDoPost').delete();
-    print('ok');
   }
 }
