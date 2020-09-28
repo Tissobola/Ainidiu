@@ -1,4 +1,5 @@
 import 'package:ainidiu/src/api/item.dart';
+import 'dart:math';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/conversas.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -152,6 +153,7 @@ class FbRepository {
   resetPosts(User usuario) async {
     QuerySnapshot dados = await getConexao().collection('postagens').get();
 
+    //Deleta as postagens
     for (var item in dados.docs) {
       if (item.data()['postadoPorId'] == usuario.id) {
         getConexao()
@@ -161,6 +163,7 @@ class FbRepository {
       }
     }
 
+    //Deleta os chats
     dados = await getConexao().collection('chat').get();
 
     for (var item in dados.docs) {
@@ -184,14 +187,21 @@ class FbRepository {
       }
     }
 
-    await cadastro(
-        usuario.email, usuario.senha, usuario.genero, usuario.imageURL);
+    //Fazendo uma cópia dos dados do usuário
+    User userCopia = new User(usuario.imageURL, '', usuario.email,
+        usuario.genero, usuario.id, usuario.senha);
+
     //encontrando o usuário que queremos deletar
     var userWithId = await getConexao()
         .collection('usuarios')
         .where('id', isEqualTo: usuario.id)
         .get();
 
+    //Recasdastrando a pesso com um apelido diferente
+    await reCadastro(
+        userCopia.email, userCopia.senha, userCopia.genero, userCopia.imageURL);
+
+    //Deletando conta antiga
     getConexao().collection('usuarios').doc(userWithId.docs[0].id).delete();
   }
 
@@ -432,13 +442,51 @@ class FbRepository {
 
   Future<int> cadastro(email, senha, genero, imageURL) async {
     QuerySnapshot dados = await getConexao().collection('usuarios').get();
-    int id = dados.docs.length + 1;
+
+    QuerySnapshot test;
+    int id;
+
+    do {
+      id = Random().nextInt(1000);
+
+      test = await getConexao()
+          .collection('usuarios')
+          .where('id', isEqualTo: id)
+          .get();
+    } while (test.docs.isNotEmpty);
 
     for (var item in dados.docs) {
       if (email == item.data()['email']) {
         return 1;
       }
     }
+
+    getConexao().collection('usuarios').doc().set({
+      'apelido': 'Usuário $id',
+      'email': email,
+      'genero': genero,
+      'senha': senha,
+      'id': id,
+      'ImageURL': imageURL
+    });
+
+    return 0;
+  }
+
+  Future<int> reCadastro(email, senha, genero, imageURL) async {
+    QuerySnapshot dados = await getConexao().collection('usuarios').get();
+    
+    QuerySnapshot test;
+    int id;
+
+    do {
+      id = Random().nextInt(1000);
+
+      test = await getConexao()
+          .collection('usuarios')
+          .where('id', isEqualTo: id)
+          .get();
+    } while (test.docs.isNotEmpty);
 
     getConexao().collection('usuarios').doc().set({
       'apelido': 'Usuário $id',
