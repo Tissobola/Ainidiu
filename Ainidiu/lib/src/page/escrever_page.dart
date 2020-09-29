@@ -67,7 +67,7 @@ class _EscreverState extends State<Escrever> {
                 left: larguraTela - 70 - 12,
                 child: GestureDetector(
                   onTap: () async {
-                    //print('usuario = $usuario');
+                    
                     if (_formKey.currentState.validate()) {
                       bool ehOfensivo = await Filtrar().filtrarTexto(msg.text);
 

@@ -74,66 +74,79 @@ class _PerfilPageState extends State<PerfilPage> {
     return Container(
       child: Column(
         children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: Container(
-                  height: 220.0,
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.only(
-                      bottom: 6.0), //Same as `blurRadius` i guess
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.lightBlue,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        offset: Offset(0.0, 1.0), //(x,y)
-                        blurRadius: 6.0,
-                      ),
-                    ],
+          ClipRRect(
+            borderRadius: BorderRadius.circular(5.0),
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 3.0),
+              width: MediaQuery.of(context).size.width,
+              height: 180,
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(0.0, 1.0), //(x,y)
+                  blurRadius: 6.0,
+                )
+              ]),
+              child: Row(
+                //crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  CircleAvatar(
+                    radius: 58,
+                    backgroundImage: NetworkImage(apelido.imageURL),
+                    backgroundColor: Colors.white,
+                    
                   ),
-                  child: Column(
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: IconButton(
-                                icon: Icon(
-                                  Icons.settings,
-                                  size: 40,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => Configuracoes(usuario: apelido,)));
-                                }),
-                          )
-                        ],
+                      Text(
+                        'Hello,',
+                        style: TextStyle(fontSize: 28),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Center(child: buildAvatar()),
-                          SizedBox(height: 5,),
-                          Text(apelido.apelido, style: TextStyle(color: Colors.white, fontSize: 30),)
-                          ],
+                      Text(
+                        apelido.apelido,
+                        style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue),
                       )
-                      
                     ],
-                  ),
-                ),
+                  )
+                ],
               ),
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height - 451,
-            child: ListViewMeusPostCards(
-              usuario: apelido,
-              handleGetDataSoource: getFuruteDados(),
+          Expanded(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                  //color: Colors.blue,
+                  //borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50))
+                  ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 18, left: 20, bottom: 18),
+                      child: Text(
+                        'Minhas Postagens',
+                        style: TextStyle(fontSize: 24, color: Colors.black),
+                      ),
+                    ),
+                    Container(
+                      child: ListViewMeusPostCards(
+                        usuario: apelido,
+                        handleGetDataSoource: getFuruteDados(),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           )
         ],

@@ -59,7 +59,7 @@ class _ComentarState extends State<Comentar> {
                 left: larguraTela - 70 - 12,
                 child: GestureDetector(
                   onTap: () async {
-                    //print('usuario = $usuario');
+                    
                     User user =
                         await repository.carregarDadosDoUsuario(usuario);
 

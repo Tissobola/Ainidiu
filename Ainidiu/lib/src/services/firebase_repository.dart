@@ -25,7 +25,7 @@ class FbRepository {
 
   criarChat(int myId, int outroId) async {
     if (!(myId == outroId)) {
-      print('oi');
+      
       QuerySnapshot dados = await getConexao().collection('chat').get();
 
       var ok = true;
@@ -145,7 +145,6 @@ class FbRepository {
       blacklist.add(element);
     });
 
-    print(blacklist);
 
     return blacklist;
   }

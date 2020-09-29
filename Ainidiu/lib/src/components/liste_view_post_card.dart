@@ -159,8 +159,9 @@ class _ListViewMeusPostCardsState extends State<ListViewMeusPostCards> {
             );
           } else {
             return ListView.builder(
-              shrinkWrap: true,
-              itemCount: (snapshot.data.length >= 3) ? 3 : snapshot.data.length,
+              physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+              itemCount: (snapshot.data.length >= 3) ? snapshot.data.length : snapshot.data.length,
               itemBuilder: (context, i) {
                 return Dismissible(
                   background: Container(
@@ -169,7 +170,7 @@ class _ListViewMeusPostCardsState extends State<ListViewMeusPostCards> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Icon(Icons.delete_sweep),
-                        Text('Me senti ofendido...'),
+                        Text('Me senti ofendido...', style: TextStyle(color: Colors.white),),
                       ],
                     ),
                   ),
