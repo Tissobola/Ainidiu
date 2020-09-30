@@ -87,34 +87,49 @@ class _PerfilPageState extends State<PerfilPage> {
                   blurRadius: 6.0,
                 )
               ]),
-              child: Row(
-                //crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  CircleAvatar(
-                    radius: 58,
-                    backgroundImage: NetworkImage(apelido.imageURL),
-                    backgroundColor: Colors.white,
-                    
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hello,',
-                        style: TextStyle(fontSize: 28),
-                      ),
-                      Text(
-                        apelido.apelido,
-                        style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue),
-                      )
-                    ],
+              child: Stack(
+                              children: 
+                              [
+                              Row(
+                  //crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    CircleAvatar(
+                      radius: 58,
+                      backgroundImage: NetworkImage(apelido.imageURL),
+                      backgroundColor: Colors.white,
+                      
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hello,',
+                          style: TextStyle(fontSize: 28),
+                        ),
+                        Text(
+                          apelido.apelido,
+                          style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: IconButton(icon: Icon(Icons.settings, size: 35,), onPressed: () {
+                    Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Configuracoes(usuario: apelido,)));
+                  })
                   )
-                ],
+                ]
               ),
             ),
           ),

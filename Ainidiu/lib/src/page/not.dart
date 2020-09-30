@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -38,11 +39,25 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+    if (message.containsKey('data')) {
+      // Handle data message
+      final dynamic data = message['data'];
+    }
+
+    if (message.containsKey('notification')) {
+      // Handle notification message
+      final dynamic notification = message['notification'];
+    }
+
+    // Or do other work.
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('widget.title'),
       ),
       body: Center(
         child: Column(
@@ -87,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('Send a message to Android',
                   style: TextStyle(fontSize: 20)),
               onPressed: () async {
-                await Future.delayed(Duration(seconds: 5));
+                await Future.delayed(Duration(seconds: 4));
                 sendAndRetrieveMessage(androidSimul);
               },
             ),
@@ -141,16 +156,14 @@ class _MyHomePageState extends State<MyHomePage> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         completer.complete(message);
-        print('aqui 1');
       },
       onLaunch: (Map<String, dynamic> message) async {
         completer.complete(message);
-        print('aqui 2');
       },
       onResume: (Map<String, dynamic> message) async {
         completer.complete(message);
-        print('aqui 3');
       },
+      //onBackgroundMessage: myBackgroundMessageHandler
     );
 
     return completer.future;

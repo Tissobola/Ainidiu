@@ -1,6 +1,8 @@
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_cadastro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
@@ -139,7 +141,6 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(50),
                                 side: BorderSide(color: Colors.blue)),
                             onPressed: () async {
-                              
                               if (_formKey.currentState.validate()) {
                                 setState(() {
                                   _loading = true;
@@ -157,6 +158,24 @@ class _LoginPageState extends State<LoginPage> {
                                       await SharedPreferences.getInstance();
 
                                   prefs.setString('user', user.apelido);
+
+                                  final FirebaseMessaging _firebaseMessaging =
+                                      FirebaseMessaging();
+                                  var token =
+                                      await _firebaseMessaging.getToken();
+
+                                  QuerySnapshot userDoc = await repository
+                                      .getConexao()
+                                      .collection('usuarios')
+                                      .where('id', isEqualTo: user.id)
+                                      .get();
+
+                                  userDoc.docs[0].id;
+                                  repository
+                                      .getConexao()
+                                      .collection('usuarios')
+                                      .doc(userDoc.docs[0].id)
+                                      .update({'token': token});
 
                                   FocusScope.of(context)
                                       .requestFocus(new FocusNode());

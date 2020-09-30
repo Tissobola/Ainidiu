@@ -1,3 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io' show Platform;
+import 'package:ainidiu/src/api/user.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
 import 'package:ainidiu/src/components/mensagem.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
@@ -6,16 +12,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Chat extends StatefulWidget {
-  String apelido;
+  User user;
+  User userEu;
   int id;
   int myId;
-  Chat({this.apelido, this.id, this.myId});
+  Chat({this.user, this.userEu, this.id, this.myId});
   @override
-  _ChatState createState() => _ChatState(apelido: apelido, id: id, myId: myId);
+  _ChatState createState() =>
+      _ChatState(user: user, userEu: userEu, id: id, myId: myId);
 }
 
 class _ChatState extends State<Chat> {
-  _ChatState({this.apelido, this.id, this.myId});
+  _ChatState({this.user, this.userEu, this.id, this.myId});
 
   TextEditingController msg = new TextEditingController();
   final _formKey = new GlobalKey<FormState>();
@@ -24,10 +32,15 @@ class _ChatState extends State<Chat> {
       new ScrollController(initialScrollOffset: 5000);
 
   FbRepository repository = new FbRepository();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  var serverToken =
+      'AAAABtx9LIo:APA91bH6u2CwSsFvSFY0rnreRC6TrQTXMVIuBto8nyxgCdmxefrmhmaIrE-fsw6WtvC_Tk-XitERzgYhupdB9kdUn29PuxgBS-n_anwwjQW1_azNjfzU7AWl7nODEoNPrhAn7srHuAFr';
 
   int myId;
   int id;
-  String apelido;
+  User user;
+  User userEu;
   int primeiro;
   int segundo;
 
@@ -103,22 +116,6 @@ class _ChatState extends State<Chat> {
             ));
   }
 
-  int old = 0;
-
-  notifica(int now, lastData) {
-    if (old == 0) {
-      old = now;
-    } else if (old < now) {
-      if (lastData.data()['env'] != myId) {
-        texto = lastData.data()['texto'];
-
-        _mostrarNotificacao();
-      }
-
-      old = now;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     primeiro = id;
@@ -129,11 +126,7 @@ class _ChatState extends State<Chat> {
     }
 
     return Scaffold(
-        //floatingActionButton:
-        //FloatingActionButton(onPressed: _mostrarNotificacao),
-        appBar: AppBar(
-          title: Text(apelido),
-        ),
+        appBar: AppBar(title: Text(user.apelido)),
         body: Container(
           child: Stack(
             children: [
@@ -174,6 +167,46 @@ class _ChatState extends State<Chat> {
             : Container(
                 child: CircularProgressIndicator(),
               );
+      },
+    );
+  }
+
+  mandarNotification(String token, texto) async {
+    await http.post('https://fcm.googleapis.com/fcm/send',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=$serverToken',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': texto,
+              'title': userEu.apelido,
+            },
+            'priority': 'high',
+            'to': token,
+            'data': <String, dynamic>{
+              "click_action": "FLUTTER_NOTIFICATION_CLICK",
+              "id": "1",
+              "status": "done",
+              "message": "My Message",
+              "title": "Meu Title"
+            },
+          },
+        ));
+
+    final Completer<Map<String, dynamic>> completer =
+        Completer<Map<String, dynamic>>();
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        completer.complete(message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        completer.complete(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        completer.complete(message);
       },
     );
   }
@@ -228,7 +261,12 @@ class _ChatState extends State<Chat> {
                           _formKey.currentState.validate();
                           if (podeEnviar) {
                             await repository.mandarMensagem(msg.text, id, myId);
+
+                            String textoDaNotificacao = msg.text;
                             msg.text = '';
+
+                            await mandarNotification(
+                                user.token, textoDaNotificacao);
                           }
                         }),
                   ),

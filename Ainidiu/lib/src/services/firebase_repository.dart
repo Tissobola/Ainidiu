@@ -25,7 +25,6 @@ class FbRepository {
 
   criarChat(int myId, int outroId) async {
     if (!(myId == outroId)) {
-      
       QuerySnapshot dados = await getConexao().collection('chat').get();
 
       var ok = true;
@@ -96,8 +95,15 @@ class FbRepository {
               t.docs.last.data()['data']);
           conversas.add(aux);
         } catch (ex) {
-          Conversas aux = new Conversas(outro.apelido, 'erro kkk', data['foto'],
-              '${DateTime.now().hour}:${DateTime.now().minute}');
+          QuerySnapshot t = await getConexao()
+              .collection('chat/conversas/${myId}_${outro.id}')
+              .get();
+
+          Conversas aux = new Conversas(
+              outro.apelido,
+              t.docs.last.data()['texto'],
+              data['foto'],
+              t.docs.last.data()['data']);
           conversas.add(aux);
         }
       }
@@ -145,7 +151,6 @@ class FbRepository {
       blacklist.add(element);
     });
 
-
     return blacklist;
   }
 
@@ -187,8 +192,8 @@ class FbRepository {
     }
 
     //Fazendo uma cópia dos dados do usuário
-    User userCopia = new User(usuario.imageURL, '', usuario.email,
-        usuario.genero, usuario.id, usuario.senha);
+    User userCopia = new User(usuario.token, usuario.imageURL, '',
+        usuario.email, usuario.genero, usuario.id, usuario.senha);
 
     //encontrando o usuário que queremos deletar
     var userWithId = await getConexao()
@@ -197,8 +202,8 @@ class FbRepository {
         .get();
 
     //Recasdastrando a pesso com um apelido diferente
-    await reCadastro(
-        userCopia.email, userCopia.senha, userCopia.genero, userCopia.imageURL);
+    await reCadastro(userCopia.token, userCopia.email, userCopia.senha,
+        userCopia.genero, userCopia.imageURL);
 
     //Deletando conta antiga
     getConexao().collection('usuarios').doc(userWithId.docs[0].id).delete();
@@ -213,8 +218,14 @@ class FbRepository {
       var data = item.data();
 
       if (user == data['apelido']) {
-        User usuario = new User(data['ImageURL'], data['apelido'],
-            data['email'], data['genero'], data['id'], data['senha']);
+        User usuario = new User(
+            data['token'],
+            data['ImageURL'],
+            data['apelido'],
+            data['email'],
+            data['genero'],
+            data['id'],
+            data['senha']);
         return usuario;
       }
     }
@@ -439,7 +450,7 @@ class FbRepository {
     return '1';
   }
 
-  Future<int> cadastro(email, senha, genero, imageURL) async {
+  Future<int> cadastro(token, email, senha, genero, imageURL) async {
     QuerySnapshot dados = await getConexao().collection('usuarios').get();
 
     QuerySnapshot test;
@@ -466,15 +477,14 @@ class FbRepository {
       'genero': genero,
       'senha': senha,
       'id': id,
-      'ImageURL': imageURL
+      'ImageURL': imageURL,
+      'token': token
     });
 
     return 0;
   }
 
-  Future<int> reCadastro(email, senha, genero, imageURL) async {
-    QuerySnapshot dados = await getConexao().collection('usuarios').get();
-    
+  Future<int> reCadastro(token, email, senha, genero, imageURL) async {
     QuerySnapshot test;
     int id;
 
@@ -493,7 +503,8 @@ class FbRepository {
       'genero': genero,
       'senha': senha,
       'id': id,
-      'ImageURL': imageURL
+      'ImageURL': imageURL,
+      'token': ''
     });
 
     return 0;

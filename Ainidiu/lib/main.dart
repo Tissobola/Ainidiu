@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 
@@ -22,6 +25,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   FbRepository repository = new FbRepository();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   @override
   void initState() {
@@ -30,11 +34,17 @@ class _MyAppState extends State<MyApp> {
       setState(() {});
     });
     
-    //notificacao();
-  }
+    if (Platform.isIOS) {
+      _firebaseMessaging
+          .requestNotificationPermissions(IosNotificationSettings());
+    }
 
-  void notificacao() async {
-    while (true) {}
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+    );
+
   }
 
   @override

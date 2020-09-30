@@ -1,9 +1,9 @@
 import 'package:ainidiu/src/page/login_login.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-
 
 class Cadastro extends StatefulWidget {
   @override
@@ -420,7 +420,12 @@ class _CadastroState extends State<Cadastro> {
                                 });
                               }
 
+                              final FirebaseMessaging _firebaseMessaging =
+                                  FirebaseMessaging();
+                              var token = await _firebaseMessaging.getToken();
+
                               int aux = await repository.cadastro(
+                                  token,
                                   _controladorEmail.text,
                                   _controladorSenha.text,
                                   _currText,

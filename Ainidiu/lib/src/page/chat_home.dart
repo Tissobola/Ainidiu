@@ -16,7 +16,6 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   Widget build(BuildContext context) {
     FbRepository repository = new FbRepository();
-   
 
     return Container(
       //color: Colors.pink,
@@ -45,12 +44,18 @@ class _ChatHomeState extends State<ChatHome> {
                             bottom:
                                 BorderSide(color: Colors.grey, width: 0.5))),
                     child: ListTile(
-                      onTap: () {
+                      onTap: () async {
+                        //outro
+                        User user = await repository.carregarDadosDoUsuario(
+                            snapshot.data[index].apelido);
+
+
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => Chat(
-                                      apelido: snapshot.data[index].apelido,
+                                      user: user,
+                                      userEu: usuario,
                                       myId: usuario.id,
                                       id: outroId,
                                     )));
@@ -71,8 +76,8 @@ class _ChatHomeState extends State<ChatHome> {
                           ),
                           Text(
                             snapshot.data[index].data,
-                            style: TextStyle(
-                                color: Colors.grey, fontSize: 14.0),
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 14.0),
                           )
                         ],
                       ),
@@ -80,7 +85,6 @@ class _ChatHomeState extends State<ChatHome> {
                         padding: EdgeInsets.only(top: 5.0),
                         child: Text(
                           snapshot.data[index].conversa.toString(),
-                          
                           style:
                               new TextStyle(color: Colors.grey, fontSize: 15.0),
                         ),
@@ -95,7 +99,6 @@ class _ChatHomeState extends State<ChatHome> {
       ),
     );
   }
-
 
   //arruma isso ai por favor
   outroid(String apelido) {

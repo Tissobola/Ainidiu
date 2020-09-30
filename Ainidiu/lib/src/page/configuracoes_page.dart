@@ -2,6 +2,7 @@ import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/page/sobre_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -63,7 +64,6 @@ class _ConfiguracoesState extends State<Configuracoes> {
                     context,
                     MaterialPageRoute(builder: (context) => LoginHome()),
                     (route) => false);
-              
               },
             ),
           ],
@@ -88,6 +88,20 @@ class _ConfiguracoesState extends State<Configuracoes> {
           onTap: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('user', null);
+
+            print("Usuário -> $usuario");
+
+            QuerySnapshot userDoc = await repository
+                .getConexao()
+                .collection('usuarios')
+                .where('id', isEqualTo: usuario.id)
+                .get();
+
+            repository
+                .getConexao()
+                .collection('usuarios')
+                .doc(userDoc.docs[0].id)
+                .update({'token': ''});
 
             Navigator.pushAndRemoveUntil(
                 context,
