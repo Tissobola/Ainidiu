@@ -10,6 +10,29 @@ class FbRepository {
     return FirebaseFirestore.instance;
   }
 
+  Future<void> updateDados(User usuario, String option) async {
+    switch (option) {
+      case 'foto':
+        print('Voce quer editar $option');
+        break;
+
+      case 'genero':
+        print('Voce quer editar $option');
+        break;
+
+      case 'email':
+        print('Voce quer editar $option');
+        break;
+
+      case 'senha':
+        print('Voce quer editar $option');
+        break;
+
+      default:
+        print("Opção inválida");
+    }
+  }
+
   Future<User> loginAuto() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     User user;
@@ -38,7 +61,7 @@ class FbRepository {
         getConexao()
             .collection('chat')
             .doc('${outroId}_$myId')
-            .set({'conversa': ''});
+            .set({'conversa': '', 'data': Timestamp.now()});
       }
     }
   }
@@ -84,30 +107,38 @@ class FbRepository {
         User outro = await teste(myId, item.id);
 
         try {
-          QuerySnapshot t = await getConexao()
-              .collection('chat/conversas/${outro.id}_$myId')
+          DocumentSnapshot t = await getConexao()
+              .collection('chat')
+              .doc('${myId}_${outro.id}')
               .get();
 
-          Conversas aux = new Conversas(
-              outro.apelido,
-              t.docs.last.data()['texto'],
-              data['foto'],
-              t.docs.last.data()['data']);
+          DateTime hora = t.data()['data'].toDate();
+
+          Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
+              outro.imageURL, '${hora.hour}:${hora.minute}');
           conversas.add(aux);
         } catch (ex) {
-          QuerySnapshot t = await getConexao()
-              .collection('chat/conversas/${myId}_${outro.id}')
-              .get();
+          print('ex = $ex');
+          print('chat/${myId}_${outro.id}');
+          try {
+            DocumentSnapshot t = await getConexao()
+                .collection('chat')
+                .doc('${outro.id}_$myId')
+                .get();
 
-          Conversas aux = new Conversas(
-              outro.apelido,
-              t.docs.last.data()['texto'],
-              data['foto'],
-              t.docs.last.data()['data']);
-          conversas.add(aux);
+            DateTime hora = t.data()['data'].toDate();
+
+            Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
+                outro.imageURL, '${hora.hour}:${hora.minute}');
+            conversas.add(aux);
+          } catch (ex) {
+            print('ex2 = $ex');
+          }
         }
       }
     }
+
+    print('Conversas = $conversas');
 
     return conversas;
   }
@@ -125,6 +156,10 @@ class FbRepository {
         .get();
     int id = dados.docs.length;
 
+    var minute = DateTime.now().minute;
+
+    minute = (minute < 10) ? "0$minute" : minute;
+
     getConexao()
         .collection('/chat/conversas/${primeiro}_$segundo')
         .doc('${id + 1}')
@@ -134,6 +169,17 @@ class FbRepository {
       'id': id + 1,
       'data': '${DateTime.now().hour}:${DateTime.now().minute}'
     });
+
+    
+
+    try {
+      getConexao().collection('chat').doc('${primeiro}_$segundo').update({
+        'conversa': texto,
+        'data': Timestamp.now()
+      });
+    } catch (ex) {
+      //
+    }
   }
 
   filtro() async {

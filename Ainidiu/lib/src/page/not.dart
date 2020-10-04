@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
+        _mostrarNotificacao();
       },
     );
   }
@@ -50,7 +50,33 @@ class _MyHomePageState extends State<MyHomePage> {
       final dynamic notification = message['notification'];
     }
 
-    // Or do other work.
+    _mostrarNotificacao();
+  }
+
+  FlutterLocalNotificationsPlugin _flnNotificacao =
+      new FlutterLocalNotificationsPlugin();
+
+  //Configurações das plataformas de notificação
+  var configuracaoInitAndroid;
+  var configuracaoInitIOs;
+  var configuracaoInit;
+
+  void _mostrarNotificacao() async {
+    await _simularNovaNotificacao();
+  }
+
+  Future<void> _simularNovaNotificacao() {
+    var notificacaoAndroid = AndroidNotificationDetails(
+        'channel_Id', 'channel Name', 'channel Description',
+        importance: Importance.Max, priority: Priority.High, ticker: 'Teste');
+
+    var notificacaoIOs = IOSNotificationDetails();
+
+    var notificacao = NotificationDetails(notificacaoAndroid, notificacaoIOs);
+
+    _flnNotificacao.show(
+        0, 'Nome do meu App', 'Ola, sou um teste de notificação', notificacao,
+        payload: 'teste onload');
   }
 
   @override
@@ -102,16 +128,15 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('Send a message to Android',
                   style: TextStyle(fontSize: 20)),
               onPressed: () async {
-                await Future.delayed(Duration(seconds: 4));
+                await Future.delayed(Duration(seconds: 3));
                 sendAndRetrieveMessage(androidSimul);
               },
             ),
             SizedBox(height: 20),
             RaisedButton(
-              child:
-                  Text('Send a message to iOS', style: TextStyle(fontSize: 20)),
+              child: Text('Send a message ', style: TextStyle(fontSize: 20)),
               onPressed: () {
-                sendAndRetrieveMessage(iOSDevice);
+                _mostrarNotificacao();
               },
             )
           ],
@@ -156,6 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         completer.complete(message);
+        _mostrarNotificacao();
       },
       onLaunch: (Map<String, dynamic> message) async {
         completer.complete(message);

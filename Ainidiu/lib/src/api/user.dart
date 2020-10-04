@@ -6,7 +6,7 @@ class User {
   int id;
   String senha;
   String token;
-
+  
   User(this.token ,this.imageURL, this.apelido, this.email, this.genero, this.id,
       this.senha);
 }

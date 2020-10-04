@@ -1,4 +1,5 @@
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/page/dados_pessoais.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/page/sobre_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
@@ -75,6 +76,14 @@ class _ConfiguracoesState extends State<Configuracoes> {
   opcoesListView() {
     return ListView(
       children: <Widget>[
+        ListTile(
+          leading: Icon(Icons.people),
+          title: Text('Dados Pessoais'),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => DadosPessoais(usuario: usuario,)));
+          },
+        ),
         ListTile(
             leading: Icon(Icons.info),
             title: Text('Sobre'),

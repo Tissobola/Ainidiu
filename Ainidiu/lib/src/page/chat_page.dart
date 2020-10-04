@@ -201,6 +201,7 @@ class _ChatState extends State<Chat> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         completer.complete(message);
+        _mostrarNotificacao();
       },
       onLaunch: (Map<String, dynamic> message) async {
         completer.complete(message);
