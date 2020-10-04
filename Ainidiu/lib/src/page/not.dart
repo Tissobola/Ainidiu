@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+  void myBackgroundMessageHandler(Map<String, dynamic> message) {
     if (message.containsKey('data')) {
       // Handle data message
       final dynamic data = message['data'];
@@ -61,11 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
   var configuracaoInitIOs;
   var configuracaoInit;
 
-  void _mostrarNotificacao() async {
-    await _simularNovaNotificacao();
+  void _mostrarNotificacao() {
+    _simularNovaNotificacao();
   }
 
-  Future<void> _simularNovaNotificacao() {
+  void _simularNovaNotificacao() {
     var notificacaoAndroid = AndroidNotificationDetails(
         'channel_Id', 'channel Name', 'channel Description',
         importance: Importance.Max, priority: Priority.High, ticker: 'Teste');

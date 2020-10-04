@@ -37,6 +37,8 @@ class _ChatHomeState extends State<ChatHome> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   var outroId = outroid(snapshot.data[index].apelido);
+                  print("oi: " +
+                      profilePicture(snapshot.data[index].apelido).toString());
 
                   return Container(
                     decoration: BoxDecoration(
@@ -49,7 +51,6 @@ class _ChatHomeState extends State<ChatHome> {
                         User user = await repository.carregarDadosDoUsuario(
                             snapshot.data[index].apelido);
 
-
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -61,10 +62,11 @@ class _ChatHomeState extends State<ChatHome> {
                                     )));
                       },
                       leading: CircleAvatar(
-                        foregroundColor: Colors.blue,
-                        backgroundColor: Colors.grey,
+                        //foregroundColor: Colors.blue,
+                        //backgroundColor: Colors.grey,
                         backgroundImage: NetworkImage(
-                            'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png'),
+                            profilePicture(snapshot.data[index].apelido)
+                                .toString()),
                         radius: 25,
                       ),
                       title: Row(
@@ -98,6 +100,12 @@ class _ChatHomeState extends State<ChatHome> {
         },
       ),
     );
+  }
+
+  Future<String> profilePicture(String apelido) async {
+    FbRepository repository = new FbRepository();
+    User user = await repository.carregarDadosDoUsuario(apelido);
+    return user.imageURL;
   }
 
   //arruma isso ai por favor
