@@ -12,11 +12,12 @@ class ChatHome extends StatefulWidget {
 
 class _ChatHomeState extends State<ChatHome> {
   User usuario;
+
+  FbRepository repository = new FbRepository();
   _ChatHomeState({this.usuario});
+
   @override
   Widget build(BuildContext context) {
-    FbRepository repository = new FbRepository();
-
     return Container(
       //color: Colors.pink,
       child: FutureBuilder(
@@ -37,9 +38,10 @@ class _ChatHomeState extends State<ChatHome> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   var outroId = outroid(snapshot.data[index].apelido);
-                  print("oi: " +
-                      profilePicture(snapshot.data[index].apelido).toString());
+                  
 
+                  
+                
                   return Container(
                     decoration: BoxDecoration(
                         border: Border(
@@ -62,12 +64,14 @@ class _ChatHomeState extends State<ChatHome> {
                                     )));
                       },
                       leading: CircleAvatar(
-                        //foregroundColor: Colors.blue,
-                        //backgroundColor: Colors.grey,
-                        backgroundImage: NetworkImage(
-                            profilePicture(snapshot.data[index].apelido)
-                                .toString()),
-                        radius: 25,
+                        backgroundColor: Colors.black,
+                        radius: 27,
+                                              child: CircleAvatar(
+                          foregroundColor: Colors.blue,
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(snapshot.data[index].foto),
+                          radius: 25,
+                        ),
                       ),
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

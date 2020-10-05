@@ -127,9 +127,9 @@ class _ChatState extends State<Chat> {
     return Scaffold(
         appBar: AppBar(title: Text(user.apelido)),
         body: Container(
-          child: Stack(
+          child: Column(
             children: [
-              chatMessages(),
+              Expanded(child: chatMessages()),
               Container(
                   alignment: Alignment.bottomCenter,
                   width: MediaQuery.of(context).size.width,
@@ -159,6 +159,7 @@ class _ChatState extends State<Chat> {
         return snapshot.hasData
             ? ListView.builder(
                 itemCount: snapshot.data.documents.length,
+                controller: scrollController,
                 itemBuilder: (context, index) {
                   return Mensagem('${item[index].data()['texto']}',
                       item[index].data()['env'], myId);
@@ -194,21 +195,7 @@ class _ChatState extends State<Chat> {
           },
         ));
 
-    final Completer<Map<String, dynamic>> completer =
-        Completer<Map<String, dynamic>>();
-
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        completer.complete(message);
-        _mostrarNotificacao();
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        completer.complete(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        completer.complete(message);
-      },
-    );
+    
   }
 
   digitar() {
@@ -262,8 +249,12 @@ class _ChatState extends State<Chat> {
                           if (podeEnviar) {
                             await repository.mandarMensagem(msg.text, id, myId);
 
+
                             String textoDaNotificacao = msg.text;
                             msg.text = '';
+
+                            FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
 
                             await mandarNotification(
                                 user.token, textoDaNotificacao);
