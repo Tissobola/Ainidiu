@@ -10,7 +10,8 @@ class FbRepository {
     return FirebaseFirestore.instance;
   }
 
-  Future<void> updateDados(User usuario, String option) async {
+  Future<int> updateDados(User usuario, String option,
+      {String senhaAntiga, String senhaNova}) async {
     switch (option) {
       case 'foto':
         print('Voce quer editar $option');
@@ -25,7 +26,22 @@ class FbRepository {
         break;
 
       case 'senha':
-        print('Voce quer editar $option');
+        QuerySnapshot userDoc = await getConexao()
+            .collection('usuarios')
+            .where('id', isEqualTo: usuario.id)
+            .get();
+
+        if (userDoc.docs[0].data()['senha'] == senhaAntiga) {
+          getConexao()
+              .collection('usuarios')
+              .doc(userDoc.docs[0].id)
+              .update({'senha': senhaNova});
+          return 0;
+        } else {
+          //Senha antiga incorreta
+          return 1;
+        }
+
         break;
 
       default:
@@ -170,13 +186,11 @@ class FbRepository {
       'data': '${DateTime.now().hour}:${DateTime.now().minute}'
     });
 
-    
-
     try {
-      getConexao().collection('chat').doc('${primeiro}_$segundo').update({
-        'conversa': texto,
-        'data': Timestamp.now()
-      });
+      getConexao()
+          .collection('chat')
+          .doc('${primeiro}_$segundo')
+          .update({'conversa': texto, 'data': Timestamp.now()});
     } catch (ex) {
       //
     }

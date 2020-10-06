@@ -165,7 +165,7 @@ class _ChatState extends State<Chat> {
                       item[index].data()['env'], myId);
                 })
             : Container(
-                child: CircularProgressIndicator(),
+                child: Center(child: CircularProgressIndicator()),
               );
       },
     );
