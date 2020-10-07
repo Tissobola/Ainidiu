@@ -265,6 +265,7 @@ class _CadastroState extends State<Cadastro> {
                         const EdgeInsets.only(top: 80.0, left: 20, right: 20),
                     child: TextFormField(
                       controller: _controladorEmail,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                           labelText: 'Email', border: OutlineInputBorder()),
                       validator: (value) {

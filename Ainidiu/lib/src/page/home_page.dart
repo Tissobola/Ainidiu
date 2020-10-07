@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   );
 
   Widget buildPageView() {
-    print('asd');
+  
     return PageView(
       controller: pageController,
       onPageChanged: (index) {
@@ -77,13 +77,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void lucasgay() {
-    print('Lucas não é gay');
-  }
-
+  
   @override
   Widget build(BuildContext context) {
-    print('testes = $usuario');
+    
 
     return Scaffold(
         
@@ -128,8 +125,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    print('apelido = $apelido');
-
+    
     return FutureBuilder(
       future: repository.carregarDadosDoUsuario(apelido),
       builder: (context, snapshot) {

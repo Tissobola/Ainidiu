@@ -11,7 +11,12 @@ class FbRepository {
   }
 
   Future<int> updateDados(User usuario, String option,
-      {String senhaAntiga, String senhaNova}) async {
+      {String senhaAntiga, String senhaNova, String email}) async {
+    QuerySnapshot userDoc = await getConexao()
+        .collection('usuarios')
+        .where('id', isEqualTo: usuario.id)
+        .get();
+
     switch (option) {
       case 'foto':
         print('Voce quer editar $option');
@@ -22,15 +27,16 @@ class FbRepository {
         break;
 
       case 'email':
-        print('Voce quer editar $option');
+        getConexao()
+            .collection('usuarios')
+            .doc(userDoc.docs.last.id)
+            .update({'email': email});
+
+        return 0;
+
         break;
 
       case 'senha':
-        QuerySnapshot userDoc = await getConexao()
-            .collection('usuarios')
-            .where('id', isEqualTo: usuario.id)
-            .get();
-
         if (userDoc.docs[0].data()['senha'] == senhaAntiga) {
           getConexao()
               .collection('usuarios')
@@ -45,7 +51,7 @@ class FbRepository {
         break;
 
       default:
-        print("Opção inválida");
+        return 1;
     }
   }
 
@@ -134,8 +140,6 @@ class FbRepository {
               outro.imageURL, '${hora.hour}:${hora.minute}');
           conversas.add(aux);
         } catch (ex) {
-          print('ex = $ex');
-          print('chat/${myId}_${outro.id}');
           try {
             DocumentSnapshot t = await getConexao()
                 .collection('chat')
@@ -147,14 +151,10 @@ class FbRepository {
             Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
                 outro.imageURL, '${hora.hour}:${hora.minute}');
             conversas.add(aux);
-          } catch (ex) {
-            print('ex2 = $ex');
-          }
+          } catch (ex) {}
         }
       }
     }
-
-    print('Conversas = $conversas');
 
     return conversas;
   }

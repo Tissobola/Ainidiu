@@ -98,7 +98,7 @@ class _ConfiguracoesState extends State<Configuracoes> {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('user', null);
 
-            print("Usuário -> $usuario");
+            
 
             QuerySnapshot userDoc = await repository
                 .getConexao()

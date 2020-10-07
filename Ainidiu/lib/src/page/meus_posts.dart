@@ -42,7 +42,7 @@ class _MeusPostsState extends State<MeusPosts> {
 
   @override
   Widget build(BuildContext context) {
-    print('AAAAAAAAAAAAAAAAAAAAAAA ${usuario.apelido}}');
+    
 
     return Scaffold(
       appBar: AppBar(

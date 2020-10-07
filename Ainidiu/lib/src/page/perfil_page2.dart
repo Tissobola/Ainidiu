@@ -34,7 +34,7 @@ class _PerfilPageState extends State<PerfilPage> {
       try {
         return NetworkImage(caminho);
       } catch (ex) {
-        print(ex);
+        
         return AssetImage('assets/img/img (7).jpg');
       }
     }

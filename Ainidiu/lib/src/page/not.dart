@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () async {
                 await Future.delayed(Duration(seconds: 10));
                 _firebaseMessaging.getToken().then((val) {
-                  print('Token: ' + val);
+                  
                 });
               },
             ),

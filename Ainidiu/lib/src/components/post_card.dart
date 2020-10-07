@@ -84,7 +84,7 @@ class _PostCardState extends State<PostCard> {
           ///Verifica se tem comentários para exibir os detalhes
           ///Métod executado sempre que clicar no card
           if (this.getCurrent().getComentarios().length > 0) {
-            print('user = ${usuario.apelido}');
+            
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -196,7 +196,7 @@ class _PostCardState extends State<PostCard> {
                                               child: FlatButton(
                           
                             onPressed: () {
-                              print(current.id);
+                            
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -204,7 +204,7 @@ class _PostCardState extends State<PostCard> {
                                             usuario: current.postadoPorNome,
                                             current: current,
                                           )));
-                              print('Clicou em comentar');
+                              
                             },
                             child: Row(
                               children: <Widget>[

@@ -1,8 +1,11 @@
 import 'dart:ffi';
 
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DadosPessoais extends StatefulWidget {
   User usuario;
@@ -12,6 +15,11 @@ class DadosPessoais extends StatefulWidget {
 }
 
 class _DadosPessoaisState extends State<DadosPessoais> {
+  String senhaText = 'oi';
+  bool senhaVisivel = true;
+  Icon senhaVisivelIcon = Icon(Icons.visibility_off);
+  TextEditingController exibirSenhaController = new TextEditingController();
+
   User usuario;
   _DadosPessoaisState({this.usuario});
 
@@ -21,11 +29,15 @@ class _DadosPessoaisState extends State<DadosPessoais> {
 
   var contextScaffold;
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKeySenha = GlobalKey<FormState>();
+  final _formKeyEmail = GlobalKey<FormState>();
 
   TextEditingController _senhaAntigaController = new TextEditingController();
   TextEditingController _senhaNovaController = new TextEditingController();
   TextEditingController _senhaConfirmarController = new TextEditingController();
+
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _emailConfirmarController = new TextEditingController();
 
   String senha(String senha) {
     String password = '';
@@ -34,10 +46,110 @@ class _DadosPessoaisState extends State<DadosPessoais> {
       password += '*';
     }
 
-    return password;
+    return senha;
   }
 
   double senhaDialogHeight = 340.0;
+
+  emailDialog() {
+    return AlertDialog(
+      title: Text('Redefinir Email'),
+      content: Container(
+        height: 300,
+        width: 300,
+        child: Form(
+          key: _formKeyEmail,
+          child: Column(
+            children: [
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Campo obrigatório';
+                  } else if (EmailValidator.validate(value)) {
+                    if (value == usuario.email) {
+                      return 'Email igual ao atual';
+                    }
+                  } else {
+                    return 'Email Inválido';
+                  }
+                },
+                controller: _emailController,
+                decoration: InputDecoration(
+                    labelText: 'Novo Email',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white))),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailConfirmarController,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Campo Obrigátorio';
+                  } else if (value != _emailController.text) {
+                    return 'Os emails não coincidem';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                    labelText: 'Confirmar Email',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white))),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Center(
+                child: RaisedButton(
+                    child: Text(
+                      'Confirmar',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.blue,
+                    onPressed: () async {
+                      if (_formKeyEmail.currentState.validate()) {
+                        var res = await repository.updateDados(usuario, 'email',
+                            email: _emailConfirmarController.text);
+
+                        if (res == 0) {
+                          _emailConfirmarController.clear();
+                          _emailController.clear();
+
+                          showDialog(
+                              context: context,
+                              child: AlertDialog(
+                                content: Container(
+                                  height: 400,
+                                  width: 300,
+                                  color: Colors.white,
+                                  child: Center(
+                                      child: Text(
+                                    'Email alterado com sucesso',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 21),
+                                  )),
+                                ),
+                              ));
+
+                          await Future.delayed(Duration(seconds: 3));
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) => LoginHome()),
+                              (route) => false);
+                        }
+                      }
+                    }),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   senhaDialog() {
     senhaDialogHeight = 340.0;
@@ -47,9 +159,8 @@ class _DadosPessoaisState extends State<DadosPessoais> {
       content: Container(
         height: 400,
         width: 300,
-        //color: Colors.blue[100],
         child: Form(
-          key: _formKey,
+          key: _formKeySenha,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -121,7 +232,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                   ),
                   color: Colors.blue,
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
+                    if (_formKeySenha.currentState.validate()) {
                       var res = await repository.updateDados(usuario, 'senha',
                           senhaAntiga: _senhaAntigaController.text,
                           senhaNova: _senhaNovaController.text);
@@ -182,13 +293,9 @@ class _DadosPessoaisState extends State<DadosPessoais> {
     );
   }
 
-  bool senhaVisivel = false;
-  Icon senhaVisivelIcon = Icon(Icons.visibility_off);
-  String senhaText;
-
   @override
   void initState() {
-    senhaText = senha(usuario.senha);
+    exibirSenhaController.text = usuario.senha;
 
     dados = [
       ListTile(
@@ -272,7 +379,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                 top: 10,
                 child: FlatButton(
                   onPressed: () async {
-                    await repository.updateDados(usuario, 'email');
+                    showDialog(context: context, child: emailDialog());
                   },
                   child: Text(
                     'Editar',
@@ -292,7 +399,12 @@ class _DadosPessoaisState extends State<DadosPessoais> {
             children: [
               ListTile(
                 title: Text('Senha'),
-                subtitle: Text(senhaText),
+                subtitle: TextField(
+                  controller: exibirSenhaController,
+                  readOnly: true,
+                  obscureText: senhaVisivel,
+                  decoration: null,
+                ),
                 focusColor: Colors.red,
                 hoverColor: Colors.red,
               ),
@@ -300,25 +412,13 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                 child: IconButton(
                     icon: senhaVisivelIcon,
                     onPressed: () {
-                      print(senhaText);
-                      this.setState(() {
-                        print('a');
+                      setState(() {
+                        if (senhaVisivel) {
                           senhaVisivel = false;
-                          senhaVisivelIcon = Icon(Icons.visibility_off);
-                          senhaText = 'senha(usuario.senha)';
-                      });
-                      if (senhaVisivel) {
-                        setState(() {
-                          
-                        });
-                      } else {
-                        setState(() {
-                          print('b');
+                        } else {
                           senhaVisivel = true;
-                          senhaVisivelIcon = Icon(Icons.visibility);
-                          senhaText = 'usuario.senha';
-                        });
-                      }
+                        }
+                      });
                     }),
                 right: 120,
                 top: 12,

@@ -10,11 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
-void printHello() {
-  final DateTime now = DateTime.now();
-  
-  print("[$now] Hello, world!  function='$printHello'");
-}
+
 
 void main() async {
   runApp(MyApp());
