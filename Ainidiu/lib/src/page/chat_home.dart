@@ -19,7 +19,6 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //color: Colors.pink,
       child: FutureBuilder(
         future: repository.minhasConversas(usuario.id),
         builder: (context, snapshot) {
@@ -37,11 +36,10 @@ class _ChatHomeState extends State<ChatHome> {
               child: ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
-                  var outroId = outroid(snapshot.data[index].apelido);
-                  
+                  var outroId = (snapshot.data[index].ids[0] == usuario.id)
+                      ? snapshot.data[index].ids[1]
+                      : snapshot.data[index].ids[0];
 
-                  
-                
                   return Container(
                     decoration: BoxDecoration(
                         border: Border(
@@ -52,7 +50,7 @@ class _ChatHomeState extends State<ChatHome> {
                         //outro
                         User user = await repository.carregarDadosDoUsuario(
                             snapshot.data[index].apelido);
-
+                      
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -66,10 +64,11 @@ class _ChatHomeState extends State<ChatHome> {
                       leading: CircleAvatar(
                         backgroundColor: Colors.black,
                         radius: 27,
-                                              child: CircleAvatar(
+                        child: CircleAvatar(
                           foregroundColor: Colors.blue,
                           backgroundColor: Colors.white,
-                          backgroundImage: NetworkImage(snapshot.data[index].foto),
+                          backgroundImage:
+                              NetworkImage(snapshot.data[index].foto),
                           radius: 25,
                         ),
                       ),
@@ -112,20 +111,5 @@ class _ChatHomeState extends State<ChatHome> {
     return user.imageURL;
   }
 
-  //arruma isso ai por favor
-  outroid(String apelido) {
-    String id = '';
-    bool jaPassou = false;
-    for (int i = 0; i < apelido.length; i++) {
-      if (apelido[i] == ' ') {
-        jaPassou = true;
-      } else {
-        if (jaPassou) {
-          id += apelido[i];
-        }
-      }
-    }
 
-    return int.parse(id);
-  }
 }

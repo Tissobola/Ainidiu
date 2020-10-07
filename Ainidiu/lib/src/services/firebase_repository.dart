@@ -80,10 +80,11 @@ class FbRepository {
         } else {}
       }
       if (ok) {
-        getConexao()
-            .collection('chat')
-            .doc('${outroId}_$myId')
-            .set({'conversa': '', 'data': Timestamp.now()});
+        getConexao().collection('chat').doc('${outroId}_$myId').set({
+          'conversa': '',
+          'data': Timestamp.now(),
+          'ids': [myId, outroId]
+        });
       }
     }
   }
@@ -137,7 +138,7 @@ class FbRepository {
           DateTime hora = t.data()['data'].toDate();
 
           Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
-              outro.imageURL, '${hora.hour}:${hora.minute}');
+              outro.imageURL, '${hora.hour}:${hora.minute}', t.data()['ids']);
           conversas.add(aux);
         } catch (ex) {
           try {
@@ -149,7 +150,7 @@ class FbRepository {
             DateTime hora = t.data()['data'].toDate();
 
             Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
-                outro.imageURL, '${hora.hour}:${hora.minute}');
+                outro.imageURL, '${hora.hour}:${hora.minute}', t.data()['ids']);
             conversas.add(aux);
           } catch (ex) {}
         }
@@ -186,14 +187,22 @@ class FbRepository {
       'data': '${DateTime.now().hour}:${DateTime.now().minute}'
     });
 
-    try {
+    //Testa se o documento existe
+    var test =
+        await getConexao().collection('chat').doc('${primeiro}_$segundo').get();
+
+    if (test.data() == null) {
+      getConexao()
+          .collection('chat')
+          .doc('${segundo}_$primeiro')
+          .update({'conversa': texto, 'data': Timestamp.now()});
+    } else {
       getConexao()
           .collection('chat')
           .doc('${primeiro}_$segundo')
           .update({'conversa': texto, 'data': Timestamp.now()});
-    } catch (ex) {
-      //
     }
+
   }
 
   filtro() async {
