@@ -35,7 +35,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
   }
 
   Future<void> _reload() async {
-    
     Future<List<ItemData>> aux =
         await Future.delayed(Duration(seconds: 1), () => getFutureDados());
     setState(() {
@@ -49,10 +48,11 @@ class _PrincipalPageState extends State<PrincipalPage> {
       ///Usando o componente ListViewPostCard, passando como parâmetro a fonte de dados
       body: RefreshIndicator(
         onRefresh: _reload,
-              child: Container(
+        child: Container(
           color: Colors.white,
           height: MediaQuery.of(context).size.height,
-          child: ListViewPostCard(usuario: usuario, handleGetDataSoource: postagens),
+          child: ListViewPostCard(
+              usuario: usuario, handleGetDataSoource: postagens),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -65,7 +65,10 @@ class _PrincipalPageState extends State<PrincipalPage> {
                       )));
         },
         tooltip: 'Increment',
-        child: Icon(Icons.add_comment, color: Colors.white,),
+        child: Icon(
+          Icons.add_comment,
+          color: Colors.white,
+        ),
       ),
     );
   }

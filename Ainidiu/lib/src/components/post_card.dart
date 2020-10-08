@@ -2,6 +2,7 @@ import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/comentar_page.dart';
 import 'package:ainidiu/src/page/home_page.dart';
+import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -84,15 +85,28 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
+        onTap: () async {
           ///Verifica se tem comentários para exibir os detalhes
           ///Métod executado sempre que clicar no card
           if (this.getCurrent().getComentarios().length > 0) {
-            Navigator.push(
+            final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => DetalhePostagemPage(
                         usuario: usuario, postagem: this.getCurrent())));
+
+            try{
+              if (result) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePage(
+                        1,
+                            usuario: usuario,
+                            apelido: usuario.apelido,
+                          )));
+            }
+            }catch(ex) {}
           }
         },
         child: Container(
@@ -344,7 +358,7 @@ class _PostCardState extends State<PostCard> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            HomePage(usuario: usuario)),
+                                            HomePage(0,usuario: usuario)),
                                     (route) => false);
                               }
                             },

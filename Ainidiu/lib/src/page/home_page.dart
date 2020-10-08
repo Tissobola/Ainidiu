@@ -6,9 +6,11 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+  int inicio;
   User usuario;
   String apelido;
-  HomePage({Key key, this.usuario, this.apelido}) : super(key: key);
+  HomePage(this.inicio, {Key key, this.usuario, this.apelido})
+      : super(key: key);
 
   @override
   _HomePageState createState() =>
@@ -16,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int bottomSelectedIndex = 0;
+  int bottomSelectedIndex;
   User usuario;
   String apelido;
 
@@ -37,13 +39,19 @@ class _HomePageState extends State<HomePage> {
     return name;
   }
 
-  PageController pageController = PageController(
-    initialPage: 0,
-    keepPage: true,
-  );
+  PageController pageController;
+
+  @override
+  @override
+  void initState() {
+    bottomSelectedIndex = this.widget.inicio;
+    pageController = PageController(
+      initialPage: bottomSelectedIndex,
+    );
+    super.initState();
+  }
 
   Widget buildPageView() {
-  
     return PageView(
       controller: pageController,
       onPageChanged: (index) {
@@ -77,13 +85,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  
   @override
   Widget build(BuildContext context) {
-    
-
     return Scaffold(
-        
         appBar: AppBar(
             title: Text(
           namePage(bottomSelectedIndex),
@@ -125,7 +129,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    
     return FutureBuilder(
       future: repository.carregarDadosDoUsuario(apelido),
       builder: (context, snapshot) {
@@ -138,6 +141,7 @@ class _HomeState extends State<Home> {
         }
 
         return HomePage(
+          0,
           usuario: snapshot.data,
         );
       },

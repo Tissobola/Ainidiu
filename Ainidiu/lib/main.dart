@@ -9,9 +9,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-
-
-
 void main() async {
   runApp(MyApp());
 }
@@ -49,7 +46,7 @@ class _MyAppState extends State<MyApp> {
     Firebase.initializeApp().whenComplete(() {
       setState(() {});
     });
-    
+
     if (Platform.isIOS) {
       _firebaseMessaging
           .requestNotificationPermissions(IosNotificationSettings());
@@ -70,7 +67,6 @@ class _MyAppState extends State<MyApp> {
         completer.complete(message);
       },
     );
-
   }
 
   @override
@@ -102,6 +98,7 @@ class _MyAppState extends State<MyApp> {
                 return LoginHome();
               } else {
                 return HomePage(
+                  0,
                   usuario: snapshot.data,
                 );
               }
