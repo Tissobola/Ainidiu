@@ -3,6 +3,7 @@ import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
 import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class PrincipalPage extends StatefulWidget {
@@ -34,6 +35,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
   }
 
   Future<void> _reload() async {
+    
     Future<List<ItemData>> aux =
         await Future.delayed(Duration(seconds: 1), () => getFutureDados());
     setState(() {

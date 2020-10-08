@@ -27,6 +27,16 @@ class FbRepository {
         break;
 
       case 'email':
+        var emails = await getConexao()
+            .collection('usuarios')
+            .where('email', isEqualTo: email)
+            .get();
+
+        if (emails.docs.length > 0) {
+          //Email já existente
+          return 1;
+        }
+
         getConexao()
             .collection('usuarios')
             .doc(userDoc.docs.last.id)
@@ -202,7 +212,6 @@ class FbRepository {
           .doc('${primeiro}_$segundo')
           .update({'conversa': texto, 'data': Timestamp.now()});
     }
-
   }
 
   filtro() async {

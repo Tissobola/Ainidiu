@@ -3,6 +3,7 @@ import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/comentar_page.dart';
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'detalhe_postagem_page.dart';
 
@@ -76,6 +77,9 @@ class _PostCardState extends State<PostCard> {
   }
 
   FbRepository repository = FbRepository();
+  ShapeBorder shapeBorder;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController msg = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,6 @@ class _PostCardState extends State<PostCard> {
           ///Verifica se tem comentários para exibir os detalhes
           ///Métod executado sempre que clicar no card
           if (this.getCurrent().getComentarios().length > 0) {
-            
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -94,12 +97,8 @@ class _PostCardState extends State<PostCard> {
         },
         child: Container(
           decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 1, color: Colors.grey)
-            )
-          ),
+              border: Border(bottom: BorderSide(width: 1, color: Colors.grey))),
           child: Card(
-            
             shape: exibeTarjaAzul(),
             elevation: 0,
             child: Padding(
@@ -156,13 +155,14 @@ class _PostCardState extends State<PostCard> {
                             width: (MediaQuery.of(context).size.width -
                                 espacamento +
                                 45),
-
-                          
                             child: TextField(
                                 onTap: () {
                                   ///Verifica se tem comentários para exibir os detalhes
                                   ///Métod executado sempre que clicar no card
-                                  if (this.getCurrent().getComentarios().length >
+                                  if (this
+                                          .getCurrent()
+                                          .getComentarios()
+                                          .length >
                                       0) {
                                     Navigator.push(
                                         context,
@@ -193,24 +193,133 @@ class _PostCardState extends State<PostCard> {
                     children: <Widget>[
                       Tooltip(
                         message: "Comentar",
-                                              child: FlatButton(
-                          
+                        child: FlatButton(
                             onPressed: () {
-                            
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Comentar(
-                                            usuario: current.postadoPorNome,
-                                            current: current,
-                                          )));
-                              
+                              Scaffold.of(context).hideCurrentSnackBar();
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: Colors.grey, width: 1.0),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(40),
+                                          topRight: Radius.circular(40))),
+                                  elevation: 50.0,
+                                  duration: Duration(minutes: 5),
+                                  backgroundColor: Colors.white,
+                                  content: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Container(
+                                      width: double.infinity,
+                                      height:
+                                          (MediaQuery.of(context).size.height *
+                                                  0.15) +
+                                              14,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Em resposta a ',
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 16),
+                                                ),
+                                                Text(
+                                                  this
+                                                      .widget
+                                                      .current
+                                                      .postadoPorNome,
+                                                  style: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                )
+                                              ],
+                                            ),
+                                            Form(
+                                              key: _formKey,
+                                              child: TextFormField(
+                                                minLines: 2,
+                                                maxLines: 3,
+                                                controller: msg,
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Escreva algo';
+                                                  }
+                                                  return null;
+                                                },
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                                decoration: new InputDecoration(
+                                                    labelStyle: TextStyle(
+                                                        color: Colors.black),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.blue,
+                                                          width: 2.0),
+                                                    ),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.blue,
+                                                          width: 2.0),
+                                                    ),
+                                                    hintText:
+                                                        'Digite seu comentário',
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.grey)),
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                RaisedButton(
+                                                  child: Text('Comentar'),
+                                                  onPressed: () {
+                                                    if (_formKey.currentState
+                                                        .validate()) {
+                                                      repository
+                                                          .escreverComentario(
+                                                              current.id,
+                                                              msg.text,
+                                                              this
+                                                                  .widget
+                                                                  .usuario);
+
+                                                      msg.clear();
+                                                      Scaffold.of(context)
+                                                          .hideCurrentSnackBar();
+                                                    }
+                                                  },
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )));
                             },
                             child: Row(
                               children: <Widget>[
                                 Icon(
                                   Icons.chat_bubble_outline,
-                                  
                                 ),
                                 SizedBox(
                                   width: 10,
@@ -221,7 +330,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                       Tooltip(
                         message: "Novo Chat",
-                                              child: FlatButton(
+                        child: FlatButton(
                             onPressed: () async {
                               if (usuario.id == this.current.postadoPorId) {
                                 Scaffold.of(context).showSnackBar(SnackBar(
@@ -244,7 +353,6 @@ class _PostCardState extends State<PostCard> {
                                 Icon(
                                   Icons.label_outline,
                                   //textDirection: TextDirection.rtl,
-                                  
                                 )
                               ],
                             )),

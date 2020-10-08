@@ -141,6 +141,31 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                                     builder: (BuildContext context) =>
                                         LoginHome()),
                                 (route) => false);
+                          }else{
+                            showDialog(
+                              
+                              context: context,
+                              child: AlertDialog(
+                                
+                                title: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      }),
+                                ),
+                                content: Container(
+                                  height: 100,
+                                  width: 300,
+                                  color: Colors.white,
+                                  child: Text(
+                                    'Email não disponível',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 21),
+                                  ),
+                                ),
+                              ));
                           }
                         }
                       }),
