@@ -10,6 +10,24 @@ class FbRepository {
     return FirebaseFirestore.instance;
   }
 
+  String formatarHora(DateTime hora) {
+    String horaFormatada;
+
+    if (hora.hour < 10) {
+      if (hora.minute < 10) {
+        horaFormatada = '0${hora.hour}:0${hora.minute}';
+      } else {
+        horaFormatada = '0${hora.hour}:${hora.minute}';
+      }
+    } else if (hora.minute < 10) {
+      horaFormatada = '${hora.hour}:0${hora.minute}';
+    } else {
+      horaFormatada = '${hora.hour}:${hora.minute}';
+    }
+
+    return horaFormatada;
+  }
+
   Future<int> updateDados(User usuario, String option,
       {String senhaAntiga, String senhaNova, String email}) async {
     QuerySnapshot userDoc = await getConexao()
@@ -160,7 +178,7 @@ class FbRepository {
             DateTime hora = t.data()['data'].toDate();
 
             Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
-                outro.imageURL, '${hora.hour}:${hora.minute}', t.data()['ids']);
+                outro.imageURL, formatarHora(hora), t.data()['ids']);
             conversas.add(aux);
           } catch (ex) {}
         }
@@ -194,7 +212,7 @@ class FbRepository {
       'env': myId,
       'texto': texto,
       'id': id + 1,
-      'data': '${DateTime.now().hour}:${DateTime.now().minute}'
+      'data': formatarHora(DateTime.now())
     });
 
     //Testa se o documento existe
@@ -315,7 +333,7 @@ class FbRepository {
       postadoPorNome, texto) async {
     QuerySnapshot dados = await getConexao().collection('postagens').get();
 
-    var hora = '${data.hour}:${data.minute}';
+
     int lastId = 0;
 
     for (var item in dados.docs) {
@@ -324,7 +342,7 @@ class FbRepository {
       }
     }
     getConexao().collection('postagens').doc('post${lastId + 1}').set({
-      'dataHora': hora,
+      'dataHora': formatarHora(data),
       'id': lastId + 1,
       'imagemURL': imagemURL,
       'parentId': parentId,
@@ -470,10 +488,8 @@ class FbRepository {
 
     lastId++;
 
-    var hora = '${DateTime.now().hour}:${DateTime.now().minute}';
-
     getConexao().collection('postagens').doc('post$lastId').set({
-      'dataHora': hora,
+      'dataHora': formatarHora(DateTime.now()),
       'id': lastId,
       'imagemURL': user.imageURL,
       'parentId': idPost,
@@ -638,10 +654,9 @@ class FbRepository {
 
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
-    String time = '${DateTime.now().hour}:${DateTime.now().minute}';
-
+    
     getConexao().collection('denuncias').doc('denuncia$idDoPost').set({
-      'dataHora': time,
+      'dataHora': formatarHora(DateTime.now()),
       'id': idDoPost,
       'parentId': data['id'],
       'textoDaPostagem': data['texto'],
