@@ -58,7 +58,7 @@ class FbRepository {
         getConexao()
             .collection('usuarios')
             .doc(userDoc.docs.last.id)
-            .update({'email': email});
+            .update({'email': email, 'token': ''});
 
         return 0;
 
@@ -111,7 +111,10 @@ class FbRepository {
         getConexao().collection('chat').doc('${outroId}_$myId').set({
           'conversa': '',
           'data': Timestamp.now(),
-          'ids': [myId, outroId]
+          'ids': [myId, outroId],
+          //ID de quem enviou a última mensagem
+          'ultimaMensagemId': 0,
+          'lidaPor': []
         });
       }
     }
@@ -166,7 +169,7 @@ class FbRepository {
           DateTime hora = t.data()['data'].toDate();
 
           Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
-              outro.imageURL, '${hora.hour}:${hora.minute}', t.data()['ids']);
+              outro.imageURL, '${hora.hour}:${hora.minute}', t.data()['ids'], t.data()['ultimaMensagemId'], t.data()['lidaPor']);
           conversas.add(aux);
         } catch (ex) {
           try {
@@ -178,7 +181,7 @@ class FbRepository {
             DateTime hora = t.data()['data'].toDate();
 
             Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
-                outro.imageURL, formatarHora(hora), t.data()['ids']);
+                outro.imageURL, formatarHora(hora), t.data()['ids'], t.data()['ultimaMensagemId'], t.data()['lidaPor']);
             conversas.add(aux);
           } catch (ex) {}
         }
@@ -201,9 +204,8 @@ class FbRepository {
         .get();
     int id = dados.docs.length;
 
-    var minute = DateTime.now().minute;
+  
 
-    minute = (minute < 10) ? "0$minute" : minute;
 
     getConexao()
         .collection('/chat/conversas/${primeiro}_$segundo')
@@ -223,12 +225,12 @@ class FbRepository {
       getConexao()
           .collection('chat')
           .doc('${segundo}_$primeiro')
-          .update({'conversa': texto, 'data': Timestamp.now()});
+          .update({'conversa': texto, 'data': Timestamp.now(), 'ultimaMensagemId': myId, 'lidaPor': [myId]});
     } else {
       getConexao()
           .collection('chat')
           .doc('${primeiro}_$segundo')
-          .update({'conversa': texto, 'data': Timestamp.now()});
+          .update({'conversa': texto, 'data': Timestamp.now(), 'ultimaMensagemId': myId, 'lidaPor': [myId]});
     }
   }
 

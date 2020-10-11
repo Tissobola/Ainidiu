@@ -134,6 +134,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                                   ),
                                 ));
 
+                            
                             await Future.delayed(Duration(seconds: 3));
                             Navigator.pushAndRemoveUntil(
                                 context,
