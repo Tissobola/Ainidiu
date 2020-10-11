@@ -77,39 +77,26 @@ class _CadastroState extends State<Cadastro> {
   }
 
   Widget escolherFoto() {
-    if (_currText == "Neutro") {
+    if (_currText == "Feminino") {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
-              exibirFoto(_urls[0]),
-              exibirFoto(_urls[1]),
-              exibirFoto(_urls[2]),
+              exibirFoto(_urlsWoman[0]),
+              exibirFoto(_urlsWoman[1]),
+              exibirFoto(_urlsWoman[2]),
             ],
           ),
           Row(
             children: [
-              exibirFoto(_urls[3]),
-              exibirFoto(_urls[4]),
-              exibirFoto(_urls[5]),
-            ],
-          ),
-          Row(
-            children: [
-              exibirFoto(_urls[6]),
-              exibirFoto(_urls[7]),
-              exibirFoto(_urls[8]),
-            ],
-          ),
-          Row(
-            children: [
-              exibirFoto(_urls[9]),
-              exibirFoto(_urls[10]),
-              exibirFoto(_urls[11]),
+              exibirFoto(_urlsWoman[3]),
+              exibirFoto(_urlsWoman[4]),
+              exibirFoto(_urlsWoman[5]),
             ],
           ),
           
+         
         ],
       );
     } else if (_currText == "Masculino") {
@@ -144,20 +131,33 @@ class _CadastroState extends State<Cadastro> {
         children: [
           Row(
             children: [
-              exibirFoto(_urlsWoman[0]),
-              exibirFoto(_urlsWoman[1]),
-              exibirFoto(_urlsWoman[2]),
+              exibirFoto(_urls[0]),
+              exibirFoto(_urls[1]),
+              exibirFoto(_urls[2]),
             ],
           ),
           Row(
             children: [
-              exibirFoto(_urlsWoman[3]),
-              exibirFoto(_urlsWoman[4]),
-              exibirFoto(_urlsWoman[5]),
+              exibirFoto(_urls[3]),
+              exibirFoto(_urls[4]),
+              exibirFoto(_urls[5]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urls[6]),
+              exibirFoto(_urls[7]),
+              exibirFoto(_urls[8]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urls[9]),
+              exibirFoto(_urls[10]),
+              exibirFoto(_urls[11]),
             ],
           ),
           
-         
         ],
       );
     }
@@ -389,8 +389,7 @@ class _CadastroState extends State<Cadastro> {
                             FlatButton(
                               child: Text('Selecionar Foto'),
                               onPressed: () {
-                                print('u = $_urls');
-                                print('uMan = $_urlsMan');
+                                
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {

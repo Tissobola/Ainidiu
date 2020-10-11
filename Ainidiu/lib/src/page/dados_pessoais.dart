@@ -1,9 +1,11 @@
 import 'dart:ffi';
 
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -49,7 +51,183 @@ class _DadosPessoaisState extends State<DadosPessoais> {
     return senha;
   }
 
-  double senhaDialogHeight = 340.0;
+  List<String> _urls = new List<String>();
+  List<String> _urlsMan = new List<String>();
+  List<String> _urlsWoman = new List<String>();
+
+  getUrl() async {
+    var storage = FirebaseStorage.instance;
+
+    for (var i = 1; i <= 7; i++) {
+      String aux = await storage
+          .ref()
+          .child('avatares/man/man ($i).png')
+          .getDownloadURL();
+      _urls.add(aux);
+      _urlsMan.add(aux);
+    }
+
+    for (var i = 1; i <= 6; i++) {
+      String aux = await storage
+          .ref()
+          .child('avatares/woman/woman ($i).png')
+          .getDownloadURL();
+      _urls.add(aux);
+      _urlsWoman.add(aux);
+    }
+
+    return _urls;
+  }
+
+  Widget exibirFoto(url) {
+    return FlatButton(
+      onPressed: () async {
+        await repository.updateDados(usuario, 'foto');
+
+        setState(() {
+          usuario.imageURL = url;
+        });
+
+        showDialog(
+            context: context,
+            child: AlertDialog(
+              content: Container(
+                height: 400,
+                width: 300,
+                color: Colors.white,
+                child: Center(
+                    child: Text(
+                  'Foto alterada com sucesso\n(Suas postagens já enviadas continuam com a foto antiga)',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 21),
+                )),
+              ),
+            ));
+
+        await Future.delayed(Duration(seconds: 3));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => HomePage(
+                      0,
+                      usuario: usuario,
+                    )),
+            (route) => false);
+      },
+      child: CircleAvatar(
+        radius: 30,
+        backgroundColor: Colors.white,
+        backgroundImage: NetworkImage(url),
+      ),
+    );
+  }
+
+  Widget escolherFoto() {
+    if (usuario.genero == "Feminino") {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              exibirFoto(_urlsWoman[0]),
+              exibirFoto(_urlsWoman[1]),
+              exibirFoto(_urlsWoman[2]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urlsWoman[3]),
+              exibirFoto(_urlsWoman[4]),
+              exibirFoto(_urlsWoman[5]),
+            ],
+          ),
+        ],
+      );
+    } else if (usuario.genero == "Masculino") {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              exibirFoto(_urlsMan[0]),
+              exibirFoto(_urlsMan[1]),
+              exibirFoto(_urlsMan[2]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urlsMan[3]),
+              exibirFoto(_urlsMan[4]),
+              exibirFoto(_urlsMan[5]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urlsMan[6]),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              exibirFoto(_urls[0]),
+              exibirFoto(_urls[1]),
+              exibirFoto(_urls[2]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urls[3]),
+              exibirFoto(_urls[4]),
+              exibirFoto(_urls[5]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urls[6]),
+              exibirFoto(_urls[7]),
+              exibirFoto(_urls[8]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urls[9]),
+              exibirFoto(_urls[10]),
+              exibirFoto(_urls[11]),
+            ],
+          ),
+        ],
+      );
+    }
+  }
+
+  fotoDialog() {
+    return AlertDialog(
+      content: FutureBuilder(
+        future: getUrl(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: CircularProgressIndicator(),
+                )
+              ],
+            );
+          }
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [escolherFoto()],
+          );
+        },
+      ),
+    );
+  }
 
   emailDialog() {
     return AlertDialog(
@@ -111,7 +289,8 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                       color: Colors.blue,
                       onPressed: () async {
                         if (_formKeyEmail.currentState.validate()) {
-                          var res = await repository.updateDados(usuario, 'email',
+                          var res = await repository.updateDados(
+                              usuario, 'email',
                               email: _emailConfirmarController.text);
 
                           if (res == 0) {
@@ -134,7 +313,6 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                                   ),
                                 ));
 
-                            
                             await Future.delayed(Duration(seconds: 3));
                             Navigator.pushAndRemoveUntil(
                                 context,
@@ -142,31 +320,29 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                                     builder: (BuildContext context) =>
                                         LoginHome()),
                                 (route) => false);
-                          }else{
+                          } else {
                             showDialog(
-                              
-                              context: context,
-                              child: AlertDialog(
-                                
-                                title: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: IconButton(
-                                      icon: Icon(Icons.arrow_back),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      }),
-                                ),
-                                content: Container(
-                                  height: 100,
-                                  width: 300,
-                                  color: Colors.white,
-                                  child: Text(
-                                    'Email não disponível',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 21),
+                                context: context,
+                                child: AlertDialog(
+                                  title: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: IconButton(
+                                        icon: Icon(Icons.arrow_back),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        }),
                                   ),
-                                ),
-                              ));
+                                  content: Container(
+                                    height: 100,
+                                    width: 300,
+                                    color: Colors.white,
+                                    child: Text(
+                                      'Email não disponível',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 21),
+                                    ),
+                                  ),
+                                ));
                           }
                         }
                       }),
@@ -179,18 +355,11 @@ class _DadosPessoaisState extends State<DadosPessoais> {
     );
   }
 
-  double alturaSenhaDialog = 310;
-
   senhaDialog() {
-    senhaDialogHeight = 340.0;
-
     return AlertDialog(
-      
-      
       title: Text('Redefinir Senha'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        
         children: [
           Form(
             key: _formKeySenha,
@@ -315,7 +484,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                                 ),
                               ));
                         }
-                      } 
+                      }
                     },
                   ),
                 ),
@@ -366,7 +535,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
-                      await repository.updateDados(usuario, 'foto');
+                      showDialog(context: context, child: fotoDialog());
                     }),
               ),
             ),
