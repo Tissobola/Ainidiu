@@ -9,10 +9,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-
 void printHello() {
   final DateTime now = DateTime.now();
-  
+
   print("[$now] Hello, world!  function='$printHello'");
 }
 
@@ -53,7 +52,7 @@ class _MyAppState extends State<MyApp> {
     Firebase.initializeApp().whenComplete(() {
       setState(() {});
     });
-    
+
     if (Platform.isIOS) {
       _firebaseMessaging
           .requestNotificationPermissions(IosNotificationSettings());
@@ -74,7 +73,6 @@ class _MyAppState extends State<MyApp> {
         completer.complete(message);
       },
     );
-
   }
 
   @override
