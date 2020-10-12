@@ -20,13 +20,15 @@ class _CadastroState extends State<Cadastro> {
   final TextEditingController _controladorSenha = TextEditingController();
   final TextEditingController _controladorConfirmarSenha =
       TextEditingController();
+  final TextEditingController _controladorCidade = TextEditingController();
+  final TextEditingController _controladorNascimento = TextEditingController();
 
   bool mas = false;
   bool fem = false;
   bool neu = false;
 
   String _currText = 'Selecionar';
-  List<String> generos = ["Masculino", "Feminino", "Neutro", "Selecionar"];
+  List<String> generos = ["Masculino", "Feminino", "Outro", "Selecionar"];
 
   String _avatar =
       'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png';
@@ -95,8 +97,6 @@ class _CadastroState extends State<Cadastro> {
               exibirFoto(_urlsWoman[5]),
             ],
           ),
-          
-         
         ],
       );
     } else if (_currText == "Masculino") {
@@ -122,7 +122,6 @@ class _CadastroState extends State<Cadastro> {
               exibirFoto(_urlsMan[6]),
             ],
           ),
-         
         ],
       );
     } else {
@@ -157,7 +156,6 @@ class _CadastroState extends State<Cadastro> {
               exibirFoto(_urls[11]),
             ],
           ),
-          
         ],
       );
     }
@@ -343,6 +341,40 @@ class _CadastroState extends State<Cadastro> {
                   Padding(
                     padding:
                         const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+                    child: TextFormField(
+                      controller: _controladorCidade,
+                      decoration: InputDecoration(
+                          labelText: 'Cidade', border: OutlineInputBorder()),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Campo obrigatório';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 10.0, left: 20, right: 20),
+                    child: TextFormField(
+                      controller: _controladorNascimento,
+                      keyboardType: TextInputType.datetime,
+                      decoration: InputDecoration(
+                          labelText: 'Data de Nascimento',
+                          border: OutlineInputBorder()),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Campo obrigatório';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 10.0, left: 20, right: 20),
                     child: Container(
                       height: 60,
                       decoration: BoxDecoration(
@@ -389,7 +421,6 @@ class _CadastroState extends State<Cadastro> {
                             FlatButton(
                               child: Text('Selecionar Foto'),
                               onPressed: () {
-                                
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -452,7 +483,7 @@ class _CadastroState extends State<Cadastro> {
 
                               if (_currText == "Selecionar") {
                                 setState(() {
-                                  _currText = "Neutro";
+                                  _currText = "Outro";
                                 });
                               }
 
@@ -465,7 +496,9 @@ class _CadastroState extends State<Cadastro> {
                                   _controladorEmail.text,
                                   _controladorSenha.text,
                                   _currText,
-                                  _avatar);
+                                  _avatar,
+                                  _controladorCidade.text,
+                                  _controladorNascimento.text);
                               if (aux == 0) {
                                 FocusScope.of(context)
                                     .requestFocus(new FocusNode());

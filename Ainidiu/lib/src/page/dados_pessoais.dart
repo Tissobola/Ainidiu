@@ -554,6 +554,44 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               subtitle: Text(usuario.id.toString()),
             ),
 
+            //Cidade
+
+            ListTile(
+              title: Text('Cidade'),
+              subtitle: Text(usuario.cidade),
+              focusColor: Colors.red,
+              hoverColor: Colors.red,
+              trailing: FlatButton(
+                onPressed: () async {
+                  await repository.updateDados(usuario, 'cidade');
+                },
+                child: Text(
+                  'Editar',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.blue,
+              ),
+            ),
+
+            //Nascimento
+
+            ListTile(
+              title: Text('Data de Nascimento'),
+              subtitle: Text(usuario.nascimento),
+              focusColor: Colors.red,
+              hoverColor: Colors.red,
+              trailing: FlatButton(
+                onPressed: () async {
+                  await repository.updateDados(usuario, 'nascimento');
+                },
+                child: Text(
+                  'Editar',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.blue,
+              ),
+            ),
+
             //Gênero
 
             ListTile(

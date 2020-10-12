@@ -1,17 +1,12 @@
 import 'dart:convert';
-import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/page/comentar_page.dart';
 import 'package:ainidiu/src/page/home_page.dart';
-import 'package:ainidiu/src/page/login_home.dart';
-import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'detalhe_postagem_page.dart';
 
 ///Componente de Card, compoente que monta e apresenta a postagem

@@ -304,7 +304,7 @@ class FbRepository {
 
     //Fazendo uma cópia dos dados do usuário
     User userCopia = new User(usuario.token, usuario.imageURL, '',
-        usuario.email, usuario.genero, usuario.id, usuario.senha);
+        usuario.email, usuario.genero, usuario.id, usuario.senha, usuario.cidade, usuario.nascimento);
 
     //encontrando o usuário que queremos deletar
     var userWithId = await getConexao()
@@ -336,7 +336,9 @@ class FbRepository {
             data['email'],
             data['genero'],
             data['id'],
-            data['senha']);
+            data['senha'],
+            data['cidade'],
+            data['nascimento']);
         return usuario;
       }
     }
@@ -352,7 +354,7 @@ class FbRepository {
     Map<String, dynamic> dados = userDoc.docs.last.data();
 
     User user = new User(dados['token'], dados['imageURL'], dados['apelido'],
-        dados['email'], dados['genero'], dados['id'], dados['senha']);
+        dados['email'], dados['genero'], dados['id'], dados['senha'], dados['cidade'], dados['nascimento']);
 
     return user;
   }
@@ -571,7 +573,7 @@ class FbRepository {
     return '1';
   }
 
-  Future<int> cadastro(token, email, senha, genero, imageURL) async {
+  Future<int> cadastro(token, email, senha, genero, imageURL, cidade, nascimento) async {
     QuerySnapshot dados = await getConexao().collection('usuarios').get();
 
     QuerySnapshot test;
@@ -599,7 +601,9 @@ class FbRepository {
       'senha': senha,
       'id': id,
       'ImageURL': imageURL,
-      'token': token
+      'token': token,
+      'cidade' : cidade,
+      'nascimento' : nascimento
     });
 
     return 0;
