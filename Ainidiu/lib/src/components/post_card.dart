@@ -1,11 +1,17 @@
+import 'dart:convert';
+import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/comentar_page.dart';
 import 'package:ainidiu/src/page/home_page.dart';
+import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'detalhe_postagem_page.dart';
 
 ///Componente de Card, compoente que monta e apresenta a postagem
@@ -35,6 +41,39 @@ class _PostCardState extends State<PostCard> {
 
   ///Altura do card
   var alturaDoCard = 120.0;
+
+  var configuracaoInitAndroid;
+  var configuracaoInitIOs;
+  var configuracaoInit;
+
+  var serverToken =
+      'AAAABtx9LIo:APA91bH6u2CwSsFvSFY0rnreRC6TrQTXMVIuBto8nyxgCdmxefrmhmaIrE-fsw6WtvC_Tk-XitERzgYhupdB9kdUn29PuxgBS-n_anwwjQW1_azNjfzU7AWl7nODEoNPrhAn7srHuAFr';
+
+  
+  mandarNotification(String token, texto) async {
+    await http.post('https://fcm.googleapis.com/fcm/send',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=$serverToken',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': texto,
+              'title': 'Comentário no seu post!',
+            },
+            'priority': 'high',
+            'to': token,
+            'data': <String, dynamic>{
+              "click_action": "FLUTTER_NOTIFICATION_CLICK",
+              "id": "1",
+              "status": "done",
+              "message": "My Message",
+              "title": "Meu Title"
+            },
+          },
+        ));
+  }
 
   @override
   void initState() {
@@ -95,18 +134,18 @@ class _PostCardState extends State<PostCard> {
                     builder: (context) => DetalhePostagemPage(
                         usuario: usuario, postagem: this.getCurrent())));
 
-            try{
+            try {
               if (result) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePage(
-                        1,
-                            usuario: usuario,
-                            apelido: usuario.apelido,
-                          )));
-            }
-            }catch(ex) {}
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              1,
+                              usuario: usuario,
+                              apelido: usuario.apelido,
+                            )));
+              }
+            } catch (ex) {}
           }
         },
         child: Container(
@@ -131,8 +170,7 @@ class _PostCardState extends State<PostCard> {
                         radius: 30,
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
-                        backgroundImage:
-                            NetworkImage(this.getCurrent().imagemURL),
+                        backgroundImage: NetworkImage(usuario.imageURL),
                       ),
 
                       SizedBox(width: 10),
@@ -305,16 +343,37 @@ class _PostCardState extends State<PostCard> {
                                               children: [
                                                 RaisedButton(
                                                   child: Text('Comentar'),
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     if (_formKey.currentState
                                                         .validate()) {
+                                                      
                                                       repository
                                                           .escreverComentario(
                                                               current.id,
                                                               msg.text,
                                                               this
                                                                   .widget
-                                                                  .usuario);
+                                                                  .usuario); 
+                                                      QuerySnapshot postPai =
+                                                          await repository
+                                                              .getConexao()
+                                                              .collection(
+                                                                  'postagens')
+                                                              .where('id',
+                                                                  isEqualTo:
+                                                                      current
+                                                                          .id)
+                                                              .get();
+
+                                                      User userPai = await repository
+                                                          .carregarDadosPorId(
+                                                              postPai.docs.last
+                                                                      .data()[
+                                                                  'postadoPorId']);
+
+                                                      mandarNotification(
+                                                          userPai.token,
+                                                          msg.text);
 
                                                       msg.clear();
                                                       Scaffold.of(context)
@@ -358,7 +417,7 @@ class _PostCardState extends State<PostCard> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            HomePage(0,usuario: usuario)),
+                                            HomePage(0, usuario: usuario)),
                                     (route) => false);
                               }
                             },

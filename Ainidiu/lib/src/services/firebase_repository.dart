@@ -168,8 +168,14 @@ class FbRepository {
 
           DateTime hora = t.data()['data'].toDate();
 
-          Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
-              outro.imageURL, '${hora.hour}:${hora.minute}', t.data()['ids'], t.data()['ultimaMensagemId'], t.data()['lidaPor']);
+          Conversas aux = new Conversas(
+              outro.apelido,
+              t.data()['conversa'],
+              outro.imageURL,
+              '${hora.hour}:${hora.minute}',
+              t.data()['ids'],
+              t.data()['ultimaMensagemId'],
+              t.data()['lidaPor']);
           conversas.add(aux);
         } catch (ex) {
           try {
@@ -180,8 +186,14 @@ class FbRepository {
 
             DateTime hora = t.data()['data'].toDate();
 
-            Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
-                outro.imageURL, formatarHora(hora), t.data()['ids'], t.data()['ultimaMensagemId'], t.data()['lidaPor']);
+            Conversas aux = new Conversas(
+                outro.apelido,
+                t.data()['conversa'],
+                outro.imageURL,
+                formatarHora(hora),
+                t.data()['ids'],
+                t.data()['ultimaMensagemId'],
+                t.data()['lidaPor']);
             conversas.add(aux);
           } catch (ex) {}
         }
@@ -204,9 +216,6 @@ class FbRepository {
         .get();
     int id = dados.docs.length;
 
-  
-
-
     getConexao()
         .collection('/chat/conversas/${primeiro}_$segundo')
         .doc('${id + 1}')
@@ -222,15 +231,19 @@ class FbRepository {
         await getConexao().collection('chat').doc('${primeiro}_$segundo').get();
 
     if (test.data() == null) {
-      getConexao()
-          .collection('chat')
-          .doc('${segundo}_$primeiro')
-          .update({'conversa': texto, 'data': Timestamp.now(), 'ultimaMensagemId': myId, 'lidaPor': [myId]});
+      getConexao().collection('chat').doc('${segundo}_$primeiro').update({
+        'conversa': texto,
+        'data': Timestamp.now(),
+        'ultimaMensagemId': myId,
+        'lidaPor': [myId]
+      });
     } else {
-      getConexao()
-          .collection('chat')
-          .doc('${primeiro}_$segundo')
-          .update({'conversa': texto, 'data': Timestamp.now(), 'ultimaMensagemId': myId, 'lidaPor': [myId]});
+      getConexao().collection('chat').doc('${primeiro}_$segundo').update({
+        'conversa': texto,
+        'data': Timestamp.now(),
+        'ultimaMensagemId': myId,
+        'lidaPor': [myId]
+      });
     }
   }
 
@@ -331,10 +344,22 @@ class FbRepository {
     return aux;
   }
 
+  Future<User> carregarDadosPorId(int id) async {
+    QuerySnapshot userDoc = await getConexao()
+        .collection('usuarios')
+        .where('id', isEqualTo: id)
+        .get();
+    Map<String, dynamic> dados = userDoc.docs.last.data();
+
+    User user = new User(dados['token'], dados['imageURL'], dados['apelido'],
+        dados['email'], dados['genero'], dados['id'], dados['senha']);
+
+    return user;
+  }
+
   escreverPostagens(DateTime data, imagemURL, parentId, postadoPorId,
       postadoPorNome, texto) async {
     QuerySnapshot dados = await getConexao().collection('postagens').get();
-
 
     int lastId = 0;
 
@@ -656,7 +681,6 @@ class FbRepository {
 
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
-    
     getConexao().collection('denuncias').doc('denuncia$idDoPost').set({
       'dataHora': formatarHora(DateTime.now()),
       'id': idDoPost,

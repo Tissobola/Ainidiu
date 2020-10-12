@@ -194,8 +194,6 @@ class _ChatState extends State<Chat> {
             },
           },
         ));
-
-    
   }
 
   digitar() {

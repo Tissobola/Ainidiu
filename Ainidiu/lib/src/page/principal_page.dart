@@ -61,7 +61,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => Escrever(
-                        usuario: usuario.apelido,
+                        usuario: usuario,
                       )));
         },
         tooltip: 'Increment',

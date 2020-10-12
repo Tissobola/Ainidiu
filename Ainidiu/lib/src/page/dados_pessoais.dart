@@ -97,7 +97,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                 color: Colors.white,
                 child: Center(
                     child: Text(
-                  'Foto alterada com sucesso\n(Suas postagens já enviadas continuam com a foto antiga)',
+                  'Foto alterada com sucesso\n',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 21),
                 )),
