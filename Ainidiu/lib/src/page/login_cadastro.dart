@@ -49,78 +49,116 @@ class _CadastroState extends State<Cadastro> {
   }
 
   List<String> _urls = new List<String>();
+  List<String> _urlsMan = new List<String>();
+  List<String> _urlsWoman = new List<String>();
 
-  a() async {
+  getUrl() async {
     var storage = FirebaseStorage.instance;
 
-    for (var i = 1; i < 7; i++) {
-      String aux =
-          await storage.ref().child('avatares/img ($i).png').getDownloadURL();
+    for (var i = 1; i <= 7; i++) {
+      String aux = await storage
+          .ref()
+          .child('avatares/man/man ($i).png')
+          .getDownloadURL();
       _urls.add(aux);
+      _urlsMan.add(aux);
+    }
+
+    for (var i = 1; i <= 6; i++) {
+      String aux = await storage
+          .ref()
+          .child('avatares/woman/woman ($i).png')
+          .getDownloadURL();
+      _urls.add(aux);
+      _urlsWoman.add(aux);
     }
 
     return _urls;
   }
 
   Widget escolherFoto() {
-    if (_currText == "Neutro") {
-      return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                exibirFoto(_urls[0]),
-                exibirFoto(_urls[1]),
-                exibirFoto(_urls[2]),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                exibirFoto(_urls[3]),
-                exibirFoto(_urls[4]),
-                exibirFoto(_urls[5]),
-              ],
-            ),
-          ],
-        ),
+    if (_currText == "Feminino") {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              exibirFoto(_urlsWoman[0]),
+              exibirFoto(_urlsWoman[1]),
+              exibirFoto(_urlsWoman[2]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urlsWoman[3]),
+              exibirFoto(_urlsWoman[4]),
+              exibirFoto(_urlsWoman[5]),
+            ],
+          ),
+          
+         
+        ],
       );
     } else if (_currText == "Masculino") {
-      return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                exibirFoto(_urls[0]),
-                exibirFoto(_urls[1]),
-                exibirFoto(_urls[2]),
-              ],
-            ),
-          ],
-        ),
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              exibirFoto(_urlsMan[0]),
+              exibirFoto(_urlsMan[1]),
+              exibirFoto(_urlsMan[2]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urlsMan[3]),
+              exibirFoto(_urlsMan[4]),
+              exibirFoto(_urlsMan[5]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urlsMan[6]),
+            ],
+          ),
+         
+        ],
       );
     } else {
-      return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                exibirFoto(_urls[3]),
-                exibirFoto(_urls[4]),
-                exibirFoto(_urls[5]),
-              ],
-            ),
-          ],
-        ),
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              exibirFoto(_urls[0]),
+              exibirFoto(_urls[1]),
+              exibirFoto(_urls[2]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urls[3]),
+              exibirFoto(_urls[4]),
+              exibirFoto(_urls[5]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urls[6]),
+              exibirFoto(_urls[7]),
+              exibirFoto(_urls[8]),
+            ],
+          ),
+          Row(
+            children: [
+              exibirFoto(_urls[9]),
+              exibirFoto(_urls[10]),
+              exibirFoto(_urls[11]),
+            ],
+          ),
+          
+        ],
       );
     }
   }
@@ -265,6 +303,7 @@ class _CadastroState extends State<Cadastro> {
                         const EdgeInsets.only(top: 80.0, left: 20, right: 20),
                     child: TextFormField(
                       controller: _controladorEmail,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                           labelText: 'Email', border: OutlineInputBorder()),
                       validator: (value) {
@@ -350,35 +389,32 @@ class _CadastroState extends State<Cadastro> {
                             FlatButton(
                               child: Text('Selecionar Foto'),
                               onPressed: () {
+                                
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return FutureBuilder(
-                                        future: a(),
+                                        future: getUrl(),
                                         builder: (context, snapshot) {
                                           if (!snapshot.hasData) {
                                             return AlertDialog(
-                                              content: Container(
-                                                height: _tamanhoAlert,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Text('Carregando Imagens'),
-                                                    SizedBox(
-                                                      height: 20,
-                                                    ),
-                                                    CircularProgressIndicator()
-                                                  ],
-                                                ),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Text('Carregando Imagens'),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  CircularProgressIndicator()
+                                                ],
                                               ),
                                             );
                                           } else {
                                             return AlertDialog(
                                               elevation: 5,
-                                              content: Container(
-                                                child: escolherFoto(),
-                                              ),
+                                              content: escolherFoto(),
                                             );
                                           }
                                         },

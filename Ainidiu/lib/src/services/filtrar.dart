@@ -14,7 +14,7 @@ class Filtrar {
     bool ehOfensivo = false;
     for (int i = 0; i < listaDePalavras.length; i++) {
       bool aux = msg.contains(listaDePalavras[i]);
-      print(' palavra: ${listaDePalavras[i]}');
+    
       if (aux == true) {
         ehOfensivo = true;
       }

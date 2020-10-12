@@ -3,6 +3,7 @@ import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
 import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class PrincipalPage extends StatefulWidget {
@@ -47,10 +48,11 @@ class _PrincipalPageState extends State<PrincipalPage> {
       ///Usando o componente ListViewPostCard, passando como parâmetro a fonte de dados
       body: RefreshIndicator(
         onRefresh: _reload,
-              child: Container(
+        child: Container(
           color: Colors.white,
           height: MediaQuery.of(context).size.height,
-          child: ListViewPostCard(usuario: usuario, handleGetDataSoource: postagens),
+          child: ListViewPostCard(
+              usuario: usuario, handleGetDataSoource: postagens),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -59,11 +61,14 @@ class _PrincipalPageState extends State<PrincipalPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => Escrever(
-                        usuario: usuario.apelido,
+                        usuario: usuario,
                       )));
         },
         tooltip: 'Increment',
-        child: Icon(Icons.add_comment, color: Colors.white,),
+        child: Icon(
+          Icons.add_comment,
+          color: Colors.white,
+        ),
       ),
     );
   }

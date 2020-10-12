@@ -4,7 +4,7 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class Escrever extends StatefulWidget {
-  String usuario;
+  User usuario;
   Escrever({Key key, this.usuario}) : super(key: key);
 
   @override
@@ -12,7 +12,7 @@ class Escrever extends StatefulWidget {
 }
 
 class _EscreverState extends State<Escrever> {
-  String usuario;
+  User usuario;
   bool temConteudo = true;
   _EscreverState({this.usuario});
   TextEditingController msg = TextEditingController();
@@ -78,11 +78,10 @@ class _EscreverState extends State<Escrever> {
                           backgroundColor: Colors.red,
                         ));
                       } else {
-                        User user =
-                            await repository.carregarDadosDoUsuario(usuario);
+                        
 
                         repository.escreverPostagens(DateTime.now(),
-                            user.imageURL, 0, user.id, user.apelido, msg.text);
+                            usuario.imageURL, 0, usuario.id, usuario.apelido, msg.text);
 
                         Navigator.pop(context);
                         

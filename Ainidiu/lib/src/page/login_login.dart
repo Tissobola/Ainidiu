@@ -100,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding:
                           const EdgeInsets.only(top: 80.0, left: 20, right: 20),
                       child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
                         controller: _controladorEmail,
                         decoration: InputDecoration(
                             labelText: 'Email', border: OutlineInputBorder()),
@@ -183,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              HomePage(usuario: user)),
+                                              HomePage(0,usuario: user)),
                                       (route) => false);
                                 } else if (aux == '1') {
                                   FocusScope.of(context)

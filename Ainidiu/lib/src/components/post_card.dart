@@ -1,9 +1,17 @@
+import 'dart:convert';
+import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/comentar_page.dart';
 import 'package:ainidiu/src/page/home_page.dart';
+import 'package:ainidiu/src/page/login_home.dart';
+import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'detalhe_postagem_page.dart';
 
 ///Componente de Card, compoente que monta e apresenta a postagem
@@ -33,6 +41,39 @@ class _PostCardState extends State<PostCard> {
 
   ///Altura do card
   var alturaDoCard = 120.0;
+
+  var configuracaoInitAndroid;
+  var configuracaoInitIOs;
+  var configuracaoInit;
+
+  var serverToken =
+      'AAAABtx9LIo:APA91bH6u2CwSsFvSFY0rnreRC6TrQTXMVIuBto8nyxgCdmxefrmhmaIrE-fsw6WtvC_Tk-XitERzgYhupdB9kdUn29PuxgBS-n_anwwjQW1_azNjfzU7AWl7nODEoNPrhAn7srHuAFr';
+
+  
+  mandarNotification(String token, texto) async {
+    await http.post('https://fcm.googleapis.com/fcm/send',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=$serverToken',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': texto,
+              'title': 'Comentário no seu post!',
+            },
+            'priority': 'high',
+            'to': token,
+            'data': <String, dynamic>{
+              "click_action": "FLUTTER_NOTIFICATION_CLICK",
+              "id": "1",
+              "status": "done",
+              "message": "My Message",
+              "title": "Meu Title"
+            },
+          },
+        ));
+  }
 
   @override
   void initState() {
@@ -76,30 +117,41 @@ class _PostCardState extends State<PostCard> {
   }
 
   FbRepository repository = FbRepository();
+  ShapeBorder shapeBorder;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController msg = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
+        onTap: () async {
           ///Verifica se tem comentários para exibir os detalhes
           ///Métod executado sempre que clicar no card
           if (this.getCurrent().getComentarios().length > 0) {
-            print('user = ${usuario.apelido}');
-            Navigator.push(
+            final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => DetalhePostagemPage(
                         usuario: usuario, postagem: this.getCurrent())));
+
+            try {
+              if (result) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              1,
+                              usuario: usuario,
+                              apelido: usuario.apelido,
+                            )));
+              }
+            } catch (ex) {}
           }
         },
         child: Container(
           decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 1, color: Colors.grey)
-            )
-          ),
+              border: Border(bottom: BorderSide(width: 1, color: Colors.grey))),
           child: Card(
-            
             shape: exibeTarjaAzul(),
             elevation: 0,
             child: Padding(
@@ -118,8 +170,7 @@ class _PostCardState extends State<PostCard> {
                         radius: 30,
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
-                        backgroundImage:
-                            NetworkImage(this.getCurrent().imagemURL),
+                        backgroundImage: NetworkImage(usuario.imageURL),
                       ),
 
                       SizedBox(width: 10),
@@ -156,13 +207,14 @@ class _PostCardState extends State<PostCard> {
                             width: (MediaQuery.of(context).size.width -
                                 espacamento +
                                 45),
-
-                          
                             child: TextField(
                                 onTap: () {
                                   ///Verifica se tem comentários para exibir os detalhes
                                   ///Métod executado sempre que clicar no card
-                                  if (this.getCurrent().getComentarios().length >
+                                  if (this
+                                          .getCurrent()
+                                          .getComentarios()
+                                          .length >
                                       0) {
                                     Navigator.push(
                                         context,
@@ -193,24 +245,154 @@ class _PostCardState extends State<PostCard> {
                     children: <Widget>[
                       Tooltip(
                         message: "Comentar",
-                                              child: FlatButton(
-                          
+                        child: FlatButton(
                             onPressed: () {
-                              print(current.id);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Comentar(
-                                            usuario: current.postadoPorNome,
-                                            current: current,
-                                          )));
-                              print('Clicou em comentar');
+                              Scaffold.of(context).hideCurrentSnackBar();
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: Colors.grey, width: 1.0),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(40),
+                                          topRight: Radius.circular(40))),
+                                  elevation: 50.0,
+                                  duration: Duration(minutes: 5),
+                                  backgroundColor: Colors.white,
+                                  content: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Container(
+                                      width: double.infinity,
+                                      height:
+                                          (MediaQuery.of(context).size.height *
+                                                  0.15) +
+                                              14,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Em resposta a ',
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 16),
+                                                ),
+                                                Text(
+                                                  this
+                                                      .widget
+                                                      .current
+                                                      .postadoPorNome,
+                                                  style: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                )
+                                              ],
+                                            ),
+                                            Form(
+                                              key: _formKey,
+                                              child: TextFormField(
+                                                minLines: 2,
+                                                maxLines: 3,
+                                                controller: msg,
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Escreva algo';
+                                                  }
+                                                  return null;
+                                                },
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                                decoration: new InputDecoration(
+                                                    labelStyle: TextStyle(
+                                                        color: Colors.black),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.blue,
+                                                          width: 2.0),
+                                                    ),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.blue,
+                                                          width: 2.0),
+                                                    ),
+                                                    hintText:
+                                                        'Digite seu comentário',
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.grey)),
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                RaisedButton(
+                                                  child: Text('Comentar'),
+                                                  onPressed: () async {
+                                                    if (_formKey.currentState
+                                                        .validate()) {
+                                                      
+                                                      repository
+                                                          .escreverComentario(
+                                                              current.id,
+                                                              msg.text,
+                                                              this
+                                                                  .widget
+                                                                  .usuario); 
+                                                      QuerySnapshot postPai =
+                                                          await repository
+                                                              .getConexao()
+                                                              .collection(
+                                                                  'postagens')
+                                                              .where('id',
+                                                                  isEqualTo:
+                                                                      current
+                                                                          .id)
+                                                              .get();
+
+                                                      User userPai = await repository
+                                                          .carregarDadosPorId(
+                                                              postPai.docs.last
+                                                                      .data()[
+                                                                  'postadoPorId']);
+
+                                                      mandarNotification(
+                                                          userPai.token,
+                                                          msg.text);
+
+                                                      msg.clear();
+                                                      Scaffold.of(context)
+                                                          .hideCurrentSnackBar();
+                                                    }
+                                                  },
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )));
                             },
                             child: Row(
                               children: <Widget>[
                                 Icon(
                                   Icons.chat_bubble_outline,
-                                  
                                 ),
                                 SizedBox(
                                   width: 10,
@@ -221,7 +403,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                       Tooltip(
                         message: "Novo Chat",
-                                              child: FlatButton(
+                        child: FlatButton(
                             onPressed: () async {
                               if (usuario.id == this.current.postadoPorId) {
                                 Scaffold.of(context).showSnackBar(SnackBar(
@@ -235,7 +417,7 @@ class _PostCardState extends State<PostCard> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            HomePage(usuario: usuario)),
+                                            HomePage(0, usuario: usuario)),
                                     (route) => false);
                               }
                             },
@@ -244,7 +426,6 @@ class _PostCardState extends State<PostCard> {
                                 Icon(
                                   Icons.label_outline,
                                   //textDirection: TextDirection.rtl,
-                                  
                                 )
                               ],
                             )),

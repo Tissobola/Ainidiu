@@ -57,7 +57,7 @@ class _DenunciarState extends State<Denunciar> {
                 left: larguraTela - 70 - 12,
                 child: GestureDetector(
                   onTap: () async {
-                    print('user = ${usuario.apelido}');
+                  
                     repository.denunciar(id, msg.text, usuario);
                     Navigator.pop(context);
                   },

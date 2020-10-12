@@ -2,6 +2,7 @@ import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
 import 'package:ainidiu/src/components/post_card.dart';
+import 'package:ainidiu/src/page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 
@@ -32,19 +33,39 @@ class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
         return getCurrent().getComentarios();
       });
 
+  Future<List<ItemData>> postagens;
+
+  @override
+  void initState() {
+    postagens = getFutureDados();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Comentários')),
-      body: Column(
-        children: <Widget>[
-          PostCard(context, this.widget.postagem, usuario),
-          Expanded(
-              child: ListViewPostCard(
-            usuario: usuario,
-            handleGetDataSoource: getFutureDados(),
-          ))
-        ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomePage(
+                    1,
+                        usuario: usuario,
+                      )),
+              (route) => false);
+        },
+        child: Column(
+          children: <Widget>[
+            PostCard(context, this.widget.postagem, usuario),
+            Expanded(
+                child: ListViewPostCard(
+              usuario: usuario,
+              handleGetDataSoource: postagens,
+            ))
+          ],
+        ),
       ),
     );
   }

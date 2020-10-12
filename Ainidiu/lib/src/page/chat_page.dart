@@ -88,7 +88,7 @@ class _ChatState extends State<Chat> {
 
   Future _onSelectNotification(String playload) async {
     if (playload != null) {
-      print('Notificação $playload');
+     
       await Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginHome()));
     }
@@ -137,7 +137,7 @@ class _ChatState extends State<Chat> {
             ],
           ),
         )
-        //persistentFooterButtons: <Widget>[IconButton(icon: Icon(Icons.send), onPressed:() {print('OK');})],
+        
         );
   }
 
@@ -153,7 +153,7 @@ class _ChatState extends State<Chat> {
         try {
           item = snapshot.data.documents;
         } catch (ex) {
-          print('ex = $ex');
+          
         }
 
         return snapshot.hasData
@@ -165,7 +165,7 @@ class _ChatState extends State<Chat> {
                       item[index].data()['env'], myId);
                 })
             : Container(
-                child: CircularProgressIndicator(),
+                child: Center(child: CircularProgressIndicator()),
               );
       },
     );
@@ -194,8 +194,6 @@ class _ChatState extends State<Chat> {
             },
           },
         ));
-
-    
   }
 
   digitar() {

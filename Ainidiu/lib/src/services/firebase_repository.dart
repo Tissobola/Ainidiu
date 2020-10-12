@@ -10,7 +10,31 @@ class FbRepository {
     return FirebaseFirestore.instance;
   }
 
-  Future<void> updateDados(User usuario, String option) async {
+  String formatarHora(DateTime hora) {
+    String horaFormatada;
+
+    if (hora.hour < 10) {
+      if (hora.minute < 10) {
+        horaFormatada = '0${hora.hour}:0${hora.minute}';
+      } else {
+        horaFormatada = '0${hora.hour}:${hora.minute}';
+      }
+    } else if (hora.minute < 10) {
+      horaFormatada = '${hora.hour}:0${hora.minute}';
+    } else {
+      horaFormatada = '${hora.hour}:${hora.minute}';
+    }
+
+    return horaFormatada;
+  }
+
+  Future<int> updateDados(User usuario, String option,
+      {String senhaAntiga, String senhaNova, String email}) async {
+    QuerySnapshot userDoc = await getConexao()
+        .collection('usuarios')
+        .where('id', isEqualTo: usuario.id)
+        .get();
+
     switch (option) {
       case 'foto':
         print('Voce quer editar $option');
@@ -21,15 +45,41 @@ class FbRepository {
         break;
 
       case 'email':
-        print('Voce quer editar $option');
+        var emails = await getConexao()
+            .collection('usuarios')
+            .where('email', isEqualTo: email)
+            .get();
+
+        if (emails.docs.length > 0) {
+          //Email já existente
+          return 1;
+        }
+
+        getConexao()
+            .collection('usuarios')
+            .doc(userDoc.docs.last.id)
+            .update({'email': email, 'token': ''});
+
+        return 0;
+
         break;
 
       case 'senha':
-        print('Voce quer editar $option');
+        if (userDoc.docs[0].data()['senha'] == senhaAntiga) {
+          getConexao()
+              .collection('usuarios')
+              .doc(userDoc.docs[0].id)
+              .update({'senha': senhaNova});
+          return 0;
+        } else {
+          //Senha antiga incorreta
+          return 1;
+        }
+
         break;
 
       default:
-        print("Opção inválida");
+        return 1;
     }
   }
 
@@ -58,10 +108,14 @@ class FbRepository {
         } else {}
       }
       if (ok) {
-        getConexao()
-            .collection('chat')
-            .doc('${outroId}_$myId')
-            .set({'conversa': '', 'data': Timestamp.now()});
+        getConexao().collection('chat').doc('${outroId}_$myId').set({
+          'conversa': '',
+          'data': Timestamp.now(),
+          'ids': [myId, outroId],
+          //ID de quem enviou a última mensagem
+          'ultimaMensagemId': 0,
+          'lidaPor': []
+        });
       }
     }
   }
@@ -114,12 +168,16 @@ class FbRepository {
 
           DateTime hora = t.data()['data'].toDate();
 
-          Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
-              outro.imageURL, '${hora.hour}:${hora.minute}');
+          Conversas aux = new Conversas(
+              outro.apelido,
+              t.data()['conversa'],
+              outro.imageURL,
+              '${hora.hour}:${hora.minute}',
+              t.data()['ids'],
+              t.data()['ultimaMensagemId'],
+              t.data()['lidaPor']);
           conversas.add(aux);
         } catch (ex) {
-          print('ex = $ex');
-          print('chat/${myId}_${outro.id}');
           try {
             DocumentSnapshot t = await getConexao()
                 .collection('chat')
@@ -128,17 +186,19 @@ class FbRepository {
 
             DateTime hora = t.data()['data'].toDate();
 
-            Conversas aux = new Conversas(outro.apelido, t.data()['conversa'],
-                outro.imageURL, '${hora.hour}:${hora.minute}');
+            Conversas aux = new Conversas(
+                outro.apelido,
+                t.data()['conversa'],
+                outro.imageURL,
+                formatarHora(hora),
+                t.data()['ids'],
+                t.data()['ultimaMensagemId'],
+                t.data()['lidaPor']);
             conversas.add(aux);
-          } catch (ex) {
-            print('ex2 = $ex');
-          }
+          } catch (ex) {}
         }
       }
     }
-
-    print('Conversas = $conversas');
 
     return conversas;
   }
@@ -156,10 +216,6 @@ class FbRepository {
         .get();
     int id = dados.docs.length;
 
-    var minute = DateTime.now().minute;
-
-    minute = (minute < 10) ? "0$minute" : minute;
-
     getConexao()
         .collection('/chat/conversas/${primeiro}_$segundo')
         .doc('${id + 1}')
@@ -167,18 +223,27 @@ class FbRepository {
       'env': myId,
       'texto': texto,
       'id': id + 1,
-      'data': '${DateTime.now().hour}:${DateTime.now().minute}'
+      'data': formatarHora(DateTime.now())
     });
 
-    
+    //Testa se o documento existe
+    var test =
+        await getConexao().collection('chat').doc('${primeiro}_$segundo').get();
 
-    try {
+    if (test.data() == null) {
+      getConexao().collection('chat').doc('${segundo}_$primeiro').update({
+        'conversa': texto,
+        'data': Timestamp.now(),
+        'ultimaMensagemId': myId,
+        'lidaPor': [myId]
+      });
+    } else {
       getConexao().collection('chat').doc('${primeiro}_$segundo').update({
         'conversa': texto,
-        'data': Timestamp.now()
+        'data': Timestamp.now(),
+        'ultimaMensagemId': myId,
+        'lidaPor': [myId]
       });
-    } catch (ex) {
-      //
     }
   }
 
@@ -279,11 +344,23 @@ class FbRepository {
     return aux;
   }
 
+  Future<User> carregarDadosPorId(int id) async {
+    QuerySnapshot userDoc = await getConexao()
+        .collection('usuarios')
+        .where('id', isEqualTo: id)
+        .get();
+    Map<String, dynamic> dados = userDoc.docs.last.data();
+
+    User user = new User(dados['token'], dados['imageURL'], dados['apelido'],
+        dados['email'], dados['genero'], dados['id'], dados['senha']);
+
+    return user;
+  }
+
   escreverPostagens(DateTime data, imagemURL, parentId, postadoPorId,
       postadoPorNome, texto) async {
     QuerySnapshot dados = await getConexao().collection('postagens').get();
 
-    var hora = '${data.hour}:${data.minute}';
     int lastId = 0;
 
     for (var item in dados.docs) {
@@ -292,7 +369,7 @@ class FbRepository {
       }
     }
     getConexao().collection('postagens').doc('post${lastId + 1}').set({
-      'dataHora': hora,
+      'dataHora': formatarHora(data),
       'id': lastId + 1,
       'imagemURL': imagemURL,
       'parentId': parentId,
@@ -438,10 +515,8 @@ class FbRepository {
 
     lastId++;
 
-    var hora = '${DateTime.now().hour}:${DateTime.now().minute}';
-
     getConexao().collection('postagens').doc('post$lastId').set({
-      'dataHora': hora,
+      'dataHora': formatarHora(DateTime.now()),
       'id': lastId,
       'imagemURL': user.imageURL,
       'parentId': idPost,
@@ -606,10 +681,8 @@ class FbRepository {
 
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
-    String time = '${DateTime.now().hour}:${DateTime.now().minute}';
-
     getConexao().collection('denuncias').doc('denuncia$idDoPost').set({
-      'dataHora': time,
+      'dataHora': formatarHora(DateTime.now()),
       'id': idDoPost,
       'parentId': data['id'],
       'textoDaPostagem': data['texto'],
