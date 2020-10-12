@@ -4,6 +4,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class Cadastro extends StatefulWidget {
   @override
@@ -163,6 +165,7 @@ class _CadastroState extends State<Cadastro> {
 
   Column buildCheck() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         CheckboxListTile(
           title: Text(generos[0]),
@@ -198,15 +201,40 @@ class _CadastroState extends State<Cadastro> {
           title: Text(generos[2]),
           value: neu,
           onChanged: (bool value) {
-            if (value) {
-              setState(() {
-                neu = value;
-                mas = false;
-                fem = false;
-                _currText = generos[2];
-                Navigator.pop(context);
-              });
-            }
+            setState(() {
+              neu = value;
+              mas = false;
+              fem = false;
+              _currText = generos[2];
+
+              showDialog(
+                  context: context,
+                  child: AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Digite seu Gênero'),
+                          onChanged: (value) {
+                            setState(() {
+                              _currText = value;
+                            });
+                          },
+                          onSubmitted: (value) {
+                            setState(() {
+                              _currText = value;
+                            });
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    ),
+                  ));
+              //Navigator.pop(context);
+            });
           },
         ),
       ],
@@ -358,8 +386,22 @@ class _CadastroState extends State<Cadastro> {
                     padding:
                         const EdgeInsets.only(top: 10.0, left: 20, right: 20),
                     child: TextFormField(
+                      onTap: () async {
+                        DateTime date = await showDatePicker(
+                            initialEntryMode: DatePickerEntryMode.input,
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now());
+                        initializeDateFormatting();
+                        setState(() {
+                          _controladorNascimento.text =
+                              DateFormat('dd/MM/yyyy').format(date);
+                        });
+                      },
                       controller: _controladorNascimento,
                       keyboardType: TextInputType.datetime,
+                      readOnly: true,
                       decoration: InputDecoration(
                           labelText: 'Data de Nascimento',
                           border: OutlineInputBorder()),
@@ -392,14 +434,11 @@ class _CadastroState extends State<Cadastro> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        content: Container(
-                                          child: buildCheck(),
-                                          height: 180,
-                                        ),
+                                        content: buildCheck(),
                                       );
                                     });
                               },
-                            )
+                            ),
                           ],
                         ),
                       ),

@@ -19,6 +19,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
   
   connectivity: ^0.4.8+1
   email_validator: '^1.0.0'
@@ -39,6 +42,7 @@ dependencies:
   android_alarm_manager: ^0.4.5+14
   background_fetch: ^0.6.0
   #firebase_cloud_messaging: ^4.0.4+1
+  intl: ^0.16.0
 
   
 
