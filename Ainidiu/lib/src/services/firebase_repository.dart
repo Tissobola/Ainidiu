@@ -159,7 +159,7 @@ class FbRepository {
 
       if (await teste(myId, item.id) != 1) {
         User outro = await teste(myId, item.id);
-
+      
         try {
           DocumentSnapshot t = await getConexao()
               .collection('chat')
@@ -194,8 +194,11 @@ class FbRepository {
                 t.data()['ids'],
                 t.data()['ultimaMensagemId'],
                 t.data()['lidaPor']);
+
             conversas.add(aux);
-          } catch (ex) {}
+          } catch (ex) {
+            print(ex);
+          }
         }
       }
     }
@@ -303,8 +306,16 @@ class FbRepository {
     }
 
     //Fazendo uma cópia dos dados do usuário
-    User userCopia = new User(usuario.token, usuario.imageURL, '',
-        usuario.email, usuario.genero, usuario.id, usuario.senha, usuario.cidade, usuario.nascimento);
+    User userCopia = new User(
+        usuario.token,
+        usuario.imageURL,
+        '',
+        usuario.email,
+        usuario.genero,
+        usuario.id,
+        usuario.senha,
+        usuario.cidade,
+        usuario.nascimento);
 
     //encontrando o usuário que queremos deletar
     var userWithId = await getConexao()
@@ -322,7 +333,7 @@ class FbRepository {
 
   Future<User> carregarDadosDoUsuario(user) async {
     QuerySnapshot dados = await getConexao().collection('usuarios').get();
-
+    
     User aux;
 
     for (var item in dados.docs) {
@@ -353,8 +364,16 @@ class FbRepository {
         .get();
     Map<String, dynamic> dados = userDoc.docs.last.data();
 
-    User user = new User(dados['token'], dados['imageURL'], dados['apelido'],
-        dados['email'], dados['genero'], dados['id'], dados['senha'], dados['cidade'], dados['nascimento']);
+    User user = new User(
+        dados['token'],
+        dados['imageURL'],
+        dados['apelido'],
+        dados['email'],
+        dados['genero'],
+        dados['id'],
+        dados['senha'],
+        dados['cidade'],
+        dados['nascimento']);
 
     return user;
   }
@@ -573,7 +592,8 @@ class FbRepository {
     return '1';
   }
 
-  Future<int> cadastro(token, email, senha, genero, imageURL, cidade, nascimento) async {
+  Future<int> cadastro(
+      token, email, senha, genero, imageURL, cidade, nascimento) async {
     QuerySnapshot dados = await getConexao().collection('usuarios').get();
 
     QuerySnapshot test;
@@ -602,8 +622,8 @@ class FbRepository {
       'id': id,
       'ImageURL': imageURL,
       'token': token,
-      'cidade' : cidade,
-      'nascimento' : nascimento
+      'cidade': cidade,
+      'nascimento': nascimento
     });
 
     return 0;

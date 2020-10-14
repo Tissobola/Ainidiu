@@ -23,6 +23,7 @@ class _ChatHomeState extends State<ChatHome> {
       child: FutureBuilder(
         future: repository.minhasConversas(usuario.id),
         builder: (context, snapshot) {
+      
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
@@ -47,7 +48,6 @@ class _ChatHomeState extends State<ChatHome> {
                             bottom:
                                 BorderSide(color: Colors.grey, width: 0.5))),
                     child: ListTile(
-                      
                       onTap: () async {
                         //outro
                         User user = await repository.carregarDadosDoUsuario(
@@ -64,35 +64,31 @@ class _ChatHomeState extends State<ChatHome> {
 
                           if (!(lidoPor.contains(usuario.id))) {
                             await repository
-                              .getConexao()
-                              .collection('chat')
-                              .doc(userDoc.id)
-                              .update({
-                            'lidaPor': [usuario.id, outroId]
-                          });
+                                .getConexao()
+                                .collection('chat')
+                                .doc(userDoc.id)
+                                .update({
+                              'lidaPor': [usuario.id, outroId]
+                            });
                           }
-
-                          
                         } catch (ex) {
-                         
                           DocumentSnapshot userDoc = await repository
                               .getConexao()
                               .collection('chat')
                               .doc('${outroId}_${usuario.id}')
                               .get();
 
-                              List lidoPor = await userDoc.data()['lidaPor'];
+                          List lidoPor = await userDoc.data()['lidaPor'];
 
                           if (!(lidoPor.contains(usuario.id))) {
                             repository
-                              .getConexao()
-                              .collection('chat')
-                              .doc(userDoc.id)
-                              .update({
-                            'lidaPor': [usuario.id, outroId]
-                          });
+                                .getConexao()
+                                .collection('chat')
+                                .doc(userDoc.id)
+                                .update({
+                              'lidaPor': [usuario.id, outroId]
+                            });
                           }
-
                         }
 
                         Navigator.push(
@@ -104,30 +100,41 @@ class _ChatHomeState extends State<ChatHome> {
                                       myId: usuario.id,
                                       id: outroId,
                                     ))).then((value) {
-                                      setState(() {
-                                        
-                                      });
-                                    });
+                          setState(() {});
+                        });
                       },
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
-                                snapshot.data[index].data,
-                                style:
-                                    TextStyle(
-                                      color: (snapshot.data[index].lidaPor.contains(usuario.id)) ? Colors.grey : Colors.blue, 
-                                    fontSize: 14.0),
-                              ),
-                          (snapshot.data[index].lidaPor.contains(usuario.id)) ? Text('') : Container(
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                              color: (snapshot.data[index].lidaPor.contains(usuario.id))? Colors.white : Colors.blue,
-                              shape: BoxShape.circle
-                            ),
-                            child: (snapshot.data[index].lidaPor.contains(usuario.id))? null : Center(child: Text('!', style: TextStyle(color: Colors.white),)),
-                          ) 
+                            snapshot.data[index].data,
+                            style: TextStyle(
+                                color: (snapshot.data[index].lidaPor
+                                        .contains(usuario.id))
+                                    ? Colors.grey
+                                    : Colors.blue,
+                                fontSize: 14.0),
+                          ),
+                          (snapshot.data[index].lidaPor.contains(usuario.id))
+                              ? Text('')
+                              : Container(
+                                  height: 20,
+                                  width: 20,
+                                  decoration: BoxDecoration(
+                                      color: (snapshot.data[index].lidaPor
+                                              .contains(usuario.id))
+                                          ? Colors.white
+                                          : Colors.blue,
+                                      shape: BoxShape.circle),
+                                  child: (snapshot.data[index].lidaPor
+                                          .contains(usuario.id))
+                                      ? null
+                                      : Center(
+                                          child: Text(
+                                          '!',
+                                          style: TextStyle(color: Colors.white),
+                                        )),
+                                )
                         ],
                       ),
                       leading: CircleAvatar(
@@ -149,8 +156,13 @@ class _ChatHomeState extends State<ChatHome> {
                         padding: EdgeInsets.only(top: 5.0),
                         child: Text(
                           snapshot.data[index].conversa.toString(),
-                          style:
-                              (snapshot.data[index].lidaPor.contains(usuario.id)) ? TextStyle(color: Colors.grey, fontSize: 15.0) : TextStyle(color: Colors.grey, fontSize: 15.0, fontWeight: FontWeight.bold),
+                          style: (snapshot.data[index].lidaPor
+                                  .contains(usuario.id))
+                              ? TextStyle(color: Colors.grey, fontSize: 15.0)
+                              : TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
