@@ -26,29 +26,14 @@ class _LoginPageState extends State<LoginPage> {
 
   // ignore: override_on_non_overriding_member
   Widget buildLogo() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-            color: Colors.blue,
-            width: 60,
-            height: 60,
-            child: Icon(
-              Icons.favorite_border,
-              size: 90,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        Text(
-          'AINIDIU',
-          style: TextStyle(
-            fontSize: 20,
-          ),
-        )
-      ],
+    return Container(
+ 
+      width: 100,
+      height:100,
+      child: Image.asset("assets/icon/icon.png",
+     
+     
+      )
     );
   }
 
@@ -95,10 +80,13 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    buildLogo(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: buildLogo(),
+                    ),
                     Padding(
                       padding:
-                          const EdgeInsets.only(top: 80.0, left: 20, right: 20),
+                          const EdgeInsets.only(top: 60.0, left: 20, right: 20),
                       child: TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         controller: _controladorEmail,

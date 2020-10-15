@@ -257,27 +257,14 @@ class _CadastroState extends State<Cadastro> {
   }
 
   Widget buildLogo() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-            color: Colors.blue,
-            width: 60,
-            height: 60,
-            child: Icon(
-              Icons.favorite_border,
-              size: 90,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        Text(
-          'AINIDIU',
-          style: TextStyle(fontSize: 20),
-        )
-      ],
+    return Container(
+ 
+      width: 100,
+      height:100,
+      child: Image.asset("assets/icon/icon.png",
+     
+
+      )
     );
   }
 
@@ -326,7 +313,7 @@ class _CadastroState extends State<Cadastro> {
                   buildLogo(),
                   Padding(
                     padding:
-                        const EdgeInsets.only(top: 80.0, left: 20, right: 20),
+                        const EdgeInsets.only(top: 10, left: 20, right: 20),
                     child: TextFormField(
                       controller: _controladorEmail,
                       keyboardType: TextInputType.emailAddress,

@@ -51,20 +51,20 @@ class _LoginHomeState extends State<LoginHome> {
 
   Widget buildLogo() {
     return Container(
-      color: Colors.blue,
-      width: 50,
-      height: 50,
-      child: Icon(
-        Icons.favorite_border,
-        size: 80,
-        color: Colors.white,
-      ),
+ 
+      width: 100,
+      height:100,
+      child: Image.asset("assets/icon/icon.png",
+     
+     
+      )
     );
   }
 
   Widget buildText() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  
+    crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(
           height: 50,
@@ -161,11 +161,11 @@ class _LoginHomeState extends State<LoginHome> {
       body: Container(
           color: Colors.white,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+  
+    mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[buildText(), buildTest()],
               ),
             ],
