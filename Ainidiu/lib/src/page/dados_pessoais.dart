@@ -8,6 +8,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class DadosPessoais extends StatefulWidget {
   User usuario;
@@ -829,7 +831,46 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               hoverColor: Colors.red,
               trailing: FlatButton(
                 onPressed: () async {
-                  showDialog(context: context, child: nascimentoDialog());
+                  DateTime date = await showDatePicker(
+                          initialEntryMode: DatePickerEntryMode.input,
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime.now())
+                      ;
+                  initializeDateFormatting();
+                  setState(() {
+                    _nascimentoController.text =
+                        DateFormat('dd/MM/yyyy').format(date);
+                  });
+  
+                  var res = await repository.updateDados(usuario, 'nascimento',
+                      nascimento: _nascimentoController.text);
+
+                  _nascimentoController.clear();
+
+                  showDialog(
+                      context: context,
+                      child: AlertDialog(
+                        content: Container(
+                          height: 400,
+                          width: 300,
+                          color: Colors.white,
+                          child: Center(
+                              child: Text(
+                            'Data de nascimento alterada com sucesso',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 21),
+                          )),
+                        ),
+                      ));
+
+                  await Future.delayed(Duration(seconds: 3));
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => LoginHome()),
+                      (route) => false);
                 },
                 child: Text(
                   'Editar',
