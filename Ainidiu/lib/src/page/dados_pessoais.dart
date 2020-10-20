@@ -33,6 +33,15 @@ class _DadosPessoaisState extends State<DadosPessoais> {
 
   final _formKeySenha = GlobalKey<FormState>();
   final _formKeyEmail = GlobalKey<FormState>();
+  final _formKeyCidade = GlobalKey<FormState>();
+  final _formKeyNascimento = GlobalKey<FormState>();
+  final _formKeyGenero = GlobalKey<FormState>();
+
+  TextEditingController _cidadeController = new TextEditingController();
+
+  TextEditingController _nascimentoController = new TextEditingController();
+
+  TextEditingController _generoController = new TextEditingController();
 
   TextEditingController _senhaAntigaController = new TextEditingController();
   TextEditingController _senhaNovaController = new TextEditingController();
@@ -40,6 +49,13 @@ class _DadosPessoaisState extends State<DadosPessoais> {
 
   TextEditingController _emailController = new TextEditingController();
   TextEditingController _emailConfirmarController = new TextEditingController();
+
+  bool mas = false;
+  bool fem = false;
+  bool neu = false;
+
+  String _currText = 'Selecionar';
+  List<String> generos = ["Masculino", "Feminino", "Outro", "Selecionar"];
 
   String senha(String senha) {
     String password = '';
@@ -225,6 +241,237 @@ class _DadosPessoaisState extends State<DadosPessoais> {
             children: [escolherFoto()],
           );
         },
+      ),
+    );
+  }
+
+  Column buildCheck() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        CheckboxListTile(
+          title: Text(generos[0]),
+          value: mas,
+          onChanged: (bool value) {
+            if (value) {
+              setState(() {
+                mas = value;
+                fem = false;
+                neu = false;
+                _currText = generos[0];
+                Navigator.pop(context);
+              });
+            }
+          },
+        ),
+        CheckboxListTile(
+          title: Text(generos[1]),
+          value: fem,
+          onChanged: (bool value) {
+            if (value) {
+              setState(() {
+                fem = value;
+                mas = false;
+                neu = false;
+                _currText = generos[1];
+                Navigator.pop(context);
+              });
+            }
+          },
+        ),
+        CheckboxListTile(
+          title: Text(generos[2]),
+          value: neu,
+          onChanged: (bool value) {
+            setState(() {
+              neu = value;
+              mas = false;
+              fem = false;
+              _currText = generos[2];
+
+              showDialog(
+                  context: context,
+                  child: AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Digite seu Gênero'),
+                          onChanged: (value) {
+                            setState(() {
+                              _currText = value;
+                            });
+                          },
+                          onSubmitted: (value) {
+                            setState(() {
+                              _currText = value;
+                            });
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    ),
+                  ));
+              //Navigator.pop(context);
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  cidadeDialog() {
+    return AlertDialog(
+      title: Text('Redefinir Cidade'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Form(
+            key: _formKeyCidade,
+            child: Column(
+              children: [
+                TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Campo obrigatório';
+                    } else {
+                      return null;
+                    }
+                  },
+                  controller: _cidadeController,
+                  decoration: InputDecoration(
+                      labelText: 'Nova Cidade',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white))),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: RaisedButton(
+                      child: Text(
+                        'Confirmar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.blue,
+                      onPressed: () async {
+                        if (_formKeyCidade.currentState.validate()) {
+                          var res = await repository.updateDados(
+                              usuario, 'cidade',
+                              cidade: _cidadeController.text);
+
+                          _cidadeController.clear();
+
+                          showDialog(
+                              context: context,
+                              child: AlertDialog(
+                                content: Container(
+                                  height: 400,
+                                  width: 300,
+                                  color: Colors.white,
+                                  child: Center(
+                                      child: Text(
+                                    'Cidade alterada com sucesso',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 21),
+                                  )),
+                                ),
+                              ));
+
+                          await Future.delayed(Duration(seconds: 3));
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      LoginHome()),
+                              (route) => false);
+                        }
+                      }),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  nascimentoDialog() {
+    return AlertDialog(
+      title: Text('Redefinir Data de Nascimento'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Form(
+            key: _formKeyNascimento,
+            child: Column(
+              children: [
+                TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Campo obrigatório';
+                    } else {
+                      return null;
+                    }
+                  },
+                  controller: _nascimentoController,
+                  keyboardType: TextInputType.datetime,
+                  decoration: InputDecoration(
+                      labelText: 'Nova Data de Nascimento',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white))),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: RaisedButton(
+                      child: Text(
+                        'Confirmar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.blue,
+                      onPressed: () async {
+                        if (_formKeyNascimento.currentState.validate()) {
+                          var res = await repository.updateDados(
+                              usuario, 'nascimento',
+                              nascimento: _nascimentoController.text);
+
+                          _nascimentoController.clear();
+
+                          showDialog(
+                              context: context,
+                              child: AlertDialog(
+                                content: Container(
+                                  height: 400,
+                                  width: 300,
+                                  color: Colors.white,
+                                  child: Center(
+                                      child: Text(
+                                    'Data de nascimento alterada com sucesso',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 21),
+                                  )),
+                                ),
+                              ));
+
+                          await Future.delayed(Duration(seconds: 3));
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      LoginHome()),
+                              (route) => false);
+                        }
+                      }),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -563,7 +810,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               hoverColor: Colors.red,
               trailing: FlatButton(
                 onPressed: () async {
-                  await repository.updateDados(usuario, 'cidade');
+                  showDialog(context: context, child: cidadeDialog());
                 },
                 child: Text(
                   'Editar',
@@ -582,7 +829,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               hoverColor: Colors.red,
               trailing: FlatButton(
                 onPressed: () async {
-                  await repository.updateDados(usuario, 'nascimento');
+                  showDialog(context: context, child: nascimentoDialog());
                 },
                 child: Text(
                   'Editar',
@@ -601,7 +848,13 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               hoverColor: Colors.red,
               trailing: FlatButton(
                 onPressed: () async {
-                  await repository.updateDados(usuario, 'genero');
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: buildCheck(),
+                        );
+                      });
                 },
                 child: Text(
                   'Editar',

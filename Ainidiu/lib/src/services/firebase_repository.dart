@@ -29,13 +29,36 @@ class FbRepository {
   }
 
   Future<int> updateDados(User usuario, String option,
-      {String senhaAntiga, String senhaNova, String email}) async {
+      {String senhaAntiga, String senhaNova, String email, String cidade, String nascimento, String genero}) async {
     QuerySnapshot userDoc = await getConexao()
         .collection('usuarios')
         .where('id', isEqualTo: usuario.id)
         .get();
 
     switch (option) {
+
+      case 'cidade':
+        
+        getConexao()
+          .collection('usuarios')
+          .doc(userDoc.docs.last.id)
+          .update({'cidade': cidade, 'token': ''});
+
+        return 0;
+
+        break;
+
+      case 'nascimento':
+        
+        getConexao()
+          .collection('usuarios')
+          .doc(userDoc.docs.last.id)
+          .update({'nascimento': nascimento, 'token': ''});
+
+        return 0;
+
+        break;
+
       case 'foto':
         print('Voce quer editar $option');
         break;
