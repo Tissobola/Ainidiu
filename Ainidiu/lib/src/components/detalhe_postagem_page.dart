@@ -9,7 +9,7 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 ///Tela de apresentação de detalhes de uma postagem
 ///onde é apresentando os comentarios
 class DetalhePostagemPage extends StatefulWidget {
-  ItemData postagem;
+  final ItemData postagem;
   User usuario;
   DetalhePostagemPage({Key key, this.usuario, this.postagem}) : super(key: key);
 
@@ -28,10 +28,9 @@ class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
 
   FbRepository repository = FbRepository();
 
-  Future<List<ItemData>> getFutureDados() async =>
-      await Future.delayed(Duration(seconds: 1), () {
-        return getCurrent().getComentarios();
-      });
+  Future<List<ItemData>> getFutureDados() {
+    return repository.exibirComentarios(getCurrent());
+  }
 
   Future<List<ItemData>> postagens;
 
@@ -51,7 +50,7 @@ class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => HomePage(
-                    1,
+                        1,
                         usuario: usuario,
                       )),
               (route) => false);

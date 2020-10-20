@@ -30,7 +30,7 @@ class ItemData {
 
   ///Método construtor
   ItemData(this.id, this.postadoPorId, this.postadoPorNome, this.imagemURL,
-      this.texto, this.data, this.parentId);
+      this.texto, this.data, this.parentId, this.comentarios);
 
   ///Adicionar um comentario
   void addComentario(ItemData comentario) {
@@ -47,9 +47,9 @@ class ItemData {
   }
 
   /// Retorna a lista de comentários
-  List<ItemData> getComentarios() {
-    if (this._comentarios == null) this._comentarios = new List<ItemData>();
+  List getComentarios() {
+    if (this.comentarios == null) this.comentarios = new List();
 
-    return this._comentarios;
+    return this.comentarios;
   }
 }
