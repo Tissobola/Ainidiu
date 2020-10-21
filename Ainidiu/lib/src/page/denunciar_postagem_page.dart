@@ -57,8 +57,20 @@ class _DenunciarState extends State<Denunciar> {
                 left: larguraTela - 70 - 12,
                 child: GestureDetector(
                   onTap: () async {
-                  
                     repository.denunciar(id, msg.text, usuario);
+
+                    showDialog(
+                        context: context,
+                        child: AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Sua denúncia foi enviada para análise!')
+                            ],
+                          ),
+                        ));
+                    await Future.delayed(Duration(seconds: 2));
+                    Navigator.pop(context);
                     Navigator.pop(context);
                   },
                   child: ClipOval(

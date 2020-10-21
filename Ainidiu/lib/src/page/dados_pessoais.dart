@@ -383,7 +383,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                                 ),
                               ));
 
-                          await Future.delayed(Duration(seconds: 3));
+                          await Future.delayed(Duration(seconds: 2));
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
@@ -777,7 +777,9 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                     backgroundColor: Colors.white,
                   ),
                 ),
-                trailing: RaisedButton(
+                trailing: null
+                /*
+                RaisedButton(
                     color: Colors.blue,
                     child: Text(
                       'Editar',
@@ -785,7 +787,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                     ),
                     onPressed: () async {
                       showDialog(context: context, child: fotoDialog());
-                    }),
+                    })*/,
               ),
             ),
 
@@ -887,7 +889,9 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               subtitle: Text(usuario.genero),
               focusColor: Colors.red,
               hoverColor: Colors.red,
-              trailing: FlatButton(
+              trailing: null
+              /*
+               FlatButton(
                 onPressed: () async {
                   showDialog(
                       context: context,
@@ -902,7 +906,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.blue,
-              ),
+              ), */
             ),
 
             //Email

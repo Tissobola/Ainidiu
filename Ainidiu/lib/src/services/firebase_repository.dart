@@ -752,7 +752,7 @@ for (int i = 0; i < post.comentarios.length; i++) {
 
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
-    getConexao().collection('denuncias').doc('denuncia$idDoPost').set({
+    getConexao().collection('denuncias').doc('denuncia$idDoPost-${autor.id}').set({
       'dataHora': formatarHora(DateTime.now()),
       'id': idDoPost,
       'parentId': data['id'],
@@ -762,6 +762,6 @@ for (int i = 0; i < post.comentarios.length; i++) {
       'Apelido do autor da denuncia': autor.apelido
     });
 
-    getConexao().collection('postagens').doc('post$idDoPost').delete();
+    //getConexao().collection('postagens').doc('post$idDoPost').delete();
   }
 }
