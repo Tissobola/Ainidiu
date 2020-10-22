@@ -44,7 +44,6 @@ class _PostCardState extends State<PostCard> {
   var serverToken =
       'AAAABtx9LIo:APA91bH6u2CwSsFvSFY0rnreRC6TrQTXMVIuBto8nyxgCdmxefrmhmaIrE-fsw6WtvC_Tk-XitERzgYhupdB9kdUn29PuxgBS-n_anwwjQW1_azNjfzU7AWl7nODEoNPrhAn7srHuAFr';
 
-  
   mandarNotification(String token, texto) async {
     await http.post('https://fcm.googleapis.com/fcm/send',
         headers: <String, String>{
@@ -118,6 +117,7 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
+   
     return GestureDetector(
         onTap: () async {
           ///Verifica se tem comentários para exibir os detalhes
@@ -165,7 +165,7 @@ class _PostCardState extends State<PostCard> {
                         radius: 30,
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
-                        backgroundImage: NetworkImage(usuario.imageURL),
+                        backgroundImage: NetworkImage(this.getCurrent().imagemURL),
                       ),
 
                       SizedBox(width: 10),
@@ -341,14 +341,13 @@ class _PostCardState extends State<PostCard> {
                                                   onPressed: () async {
                                                     if (_formKey.currentState
                                                         .validate()) {
-                                                      
                                                       repository
                                                           .escreverComentario(
                                                               current.id,
                                                               msg.text,
                                                               this
                                                                   .widget
-                                                                  .usuario); 
+                                                                  .usuario);
                                                       QuerySnapshot postPai =
                                                           await repository
                                                               .getConexao()

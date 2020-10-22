@@ -100,7 +100,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
   Widget exibirFoto(url) {
     return FlatButton(
       onPressed: () async {
-        await repository.updateDados(usuario, 'foto');
+        await repository.updateDados(usuario, 'foto', fotoURL: url);
 
         setState(() {
           usuario.imageURL = url;
@@ -777,9 +777,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                     backgroundColor: Colors.white,
                   ),
                 ),
-                trailing: null
-                /*
-                RaisedButton(
+                trailing: RaisedButton(
                     color: Colors.blue,
                     child: Text(
                       'Editar',
@@ -787,7 +785,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                     ),
                     onPressed: () async {
                       showDialog(context: context, child: fotoDialog());
-                    })*/,
+                    }),
               ),
             ),
 
@@ -834,18 +832,17 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               trailing: FlatButton(
                 onPressed: () async {
                   DateTime date = await showDatePicker(
-                          initialEntryMode: DatePickerEntryMode.input,
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime.now())
-                      ;
+                      initialEntryMode: DatePickerEntryMode.input,
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now());
                   initializeDateFormatting();
                   setState(() {
                     _nascimentoController.text =
                         DateFormat('dd/MM/yyyy').format(date);
                   });
-  
+
                   var res = await repository.updateDados(usuario, 'nascimento',
                       nascimento: _nascimentoController.text);
 
@@ -889,9 +886,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               subtitle: Text(usuario.genero),
               focusColor: Colors.red,
               hoverColor: Colors.red,
-              trailing: null
-              /*
-               FlatButton(
+              trailing: FlatButton(
                 onPressed: () async {
                   showDialog(
                       context: context,
@@ -899,14 +894,22 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                         return AlertDialog(
                           content: buildCheck(),
                         );
-                      });
+                      }).then((value) async {
+                    await repository.updateDados(usuario, 'genero', genero: _currText);
+                    setState(() {
+                    usuario.genero = _currText;
+                  });
+                  });
+
+                  
+                  
                 },
                 child: Text(
                   'Editar',
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.blue,
-              ), */
+              ),
             ),
 
             //Email

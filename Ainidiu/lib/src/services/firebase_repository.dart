@@ -34,7 +34,8 @@ class FbRepository {
       String email,
       String cidade,
       String nascimento,
-      String genero}) async {
+      String genero,
+      String fotoURL}) async {
     QuerySnapshot userDoc = await getConexao()
         .collection('usuarios')
         .where('id', isEqualTo: usuario.id)
@@ -62,11 +63,19 @@ class FbRepository {
         break;
 
       case 'foto':
-        print('Voce quer editar $option');
+        getConexao()
+            .collection('usuarios')
+            .doc(userDoc.docs.last.id)
+            .update({"ImageURL": fotoURL});
+        return 0;
         break;
 
       case 'genero':
-        print('Voce quer editar $option');
+        getConexao()
+            .collection('usuarios')
+            .doc(userDoc.docs.last.id)
+            .update({'genero': genero});
+
         break;
 
       case 'email':
@@ -414,6 +423,7 @@ class FbRepository {
         lastId = item.data()['id'];
       }
     }
+    
     getConexao().collection('postagens').doc('post${lastId + 1}').set({
       'dataHora': formatarHora(data),
       'id': lastId + 1,
@@ -546,7 +556,7 @@ class FbRepository {
   Future<List<ItemData>> exibirComentarios(ItemData post) async {
     List<ItemData> coms = new List<ItemData>();
 
-for (int i = 0; i < post.comentarios.length; i++) {
+    for (int i = 0; i < post.comentarios.length; i++) {
       var item = await getConexao()
           .collection('postagens')
           .doc('post${post.comentarios[i]}')
@@ -752,7 +762,10 @@ for (int i = 0; i < post.comentarios.length; i++) {
 
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
-    getConexao().collection('denuncias').doc('denuncia$idDoPost-${autor.id}').set({
+    getConexao()
+        .collection('denuncias')
+        .doc('denuncia$idDoPost-${autor.id}')
+        .set({
       'dataHora': formatarHora(DateTime.now()),
       'id': idDoPost,
       'parentId': data['id'],
