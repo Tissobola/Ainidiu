@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:ainidiu/src/api/item.dart';
 import 'dart:math';
 import 'package:ainidiu/src/api/user.dart';
@@ -131,8 +133,11 @@ class FbRepository {
   }
 
   criarChat(int myId, int outroId) async {
+    User userMy = await carregarDadosPorId(myId);
+    User userOutro = await carregarDadosPorId(outroId);
+
     if (!(myId == outroId)) {
-      QuerySnapshot dados = await getConexao().collection('chat').get();
+      QuerySnapshot dados = await getConexao().collection('chatHome').get();
 
       var ok = true;
 
@@ -142,13 +147,28 @@ class FbRepository {
         } else {}
       }
       if (ok) {
-        getConexao().collection('chat').doc('${outroId}_$myId').set({
+        Map<String, String> apelido = new Map<String, String>();
+        Map<String, String> foto = new Map<String, String>();
+
+        apelido = {
+          myId.toString(): userMy.apelido,
+          outroId.toString(): userOutro.apelido
+        };
+        foto = {
+          myId.toString(): userMy.imageURL,
+          outroId.toString(): userOutro.imageURL
+        };
+
+        getConexao().collection('chatHome').doc('${outroId}_$myId').set({
           'conversa': '',
           'data': Timestamp.now(),
           'ids': [myId, outroId],
           //ID de quem enviou a última mensagem
           'ultimaMensagemId': 0,
-          'lidaPor': []
+          'lidaPor': [],
+          'apelido': apelido,
+          'foto': foto,
+        
         });
       }
     }
@@ -182,6 +202,15 @@ class FbRepository {
 
       return 1;
     }
+  }
+
+     carregarConversas(myId)  {
+    var col =  getConexao()
+        .collection('chatHome')
+        .where('ids', arrayContains: myId)
+        .snapshots();
+
+    return col;
   }
 
   minhasConversas(myId) async {
@@ -240,13 +269,25 @@ class FbRepository {
     return conversas;
   }
 
-  mandarMensagem(texto, userid, myId) async {
+  mandarMensagem(texto, userid, myId, userOutro, userMy) async {
     int primeiro = userid;
     int segundo = myId;
     if (userid > myId) {
       primeiro = myId;
       segundo = userid;
     }
+
+    Map<String, String> apelido = new Map<String, String>();
+    Map<String, String> foto = new Map<String, String>();
+
+    apelido = {
+      myId.toString(): userMy.apelido,
+      userOutro.id.toString(): userOutro.apelido
+    };
+    foto = {
+      myId.toString(): userMy.imageURL,
+      userOutro.id.toString(): userOutro.imageURL
+    };
 
     QuerySnapshot dados = await getConexao()
         .collection('/chat/conversas/${primeiro}_$segundo')
@@ -264,22 +305,30 @@ class FbRepository {
     });
 
     //Testa se o documento existe
-    var test =
-        await getConexao().collection('chat').doc('${primeiro}_$segundo').get();
+    var test = await getConexao()
+        .collection('chatHome')
+        .doc('${primeiro}_$segundo')
+        .get();
 
     if (test.data() == null) {
-      getConexao().collection('chat').doc('${segundo}_$primeiro').update({
+      getConexao().collection('chatHome').doc('${segundo}_$primeiro').update({
         'conversa': texto,
         'data': Timestamp.now(),
         'ultimaMensagemId': myId,
-        'lidaPor': [myId]
+        'lidaPor': [myId],
+        'apelido': apelido,
+        'foto': foto,
+       
       });
     } else {
-      getConexao().collection('chat').doc('${primeiro}_$segundo').update({
+      getConexao().collection('chatHome').doc('${primeiro}_$segundo').update({
         'conversa': texto,
         'data': Timestamp.now(),
         'ultimaMensagemId': myId,
-        'lidaPor': [myId]
+        'lidaPor': [myId],
+        'apelido': apelido,
+        'foto': foto,
+     
       });
     }
   }
@@ -400,7 +449,7 @@ class FbRepository {
 
     User user = new User(
         dados['token'],
-        dados['imageURL'],
+        dados['ImageURL'],
         dados['apelido'],
         dados['email'],
         dados['genero'],
@@ -423,7 +472,7 @@ class FbRepository {
         lastId = item.data()['id'];
       }
     }
-    
+
     getConexao().collection('postagens').doc('post${lastId + 1}').set({
       'dataHora': formatarHora(data),
       'id': lastId + 1,

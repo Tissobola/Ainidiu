@@ -15,20 +15,39 @@ class _ChatHomeState extends State<ChatHome> {
   User usuario;
   bool canTap = true;
 
+  String formatarHora(DateTime hora) {
+    String horaFormatada;
+
+    if (hora.hour < 10) {
+      if (hora.minute < 10) {
+        horaFormatada = '0${hora.hour}:0${hora.minute}';
+      } else {
+        horaFormatada = '0${hora.hour}:${hora.minute}';
+      }
+    } else if (hora.minute < 10) {
+      horaFormatada = '${hora.hour}:0${hora.minute}';
+    } else {
+      horaFormatada = '${hora.hour}:${hora.minute}';
+    }
+
+    return horaFormatada;
+  }
+
   FbRepository repository = new FbRepository();
   _ChatHomeState({this.usuario});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FutureBuilder(
-        future: repository.minhasConversas(usuario.id),
+      child: StreamBuilder(
+        stream: repository.carregarConversas(usuario.id),
         builder: (context, snapshot) {
+          QuerySnapshot snap = snapshot.data;
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (snapshot.data.length == 0) {
+          } else if (!snapshot.hasData) {
             return Center(
               child: Text('Você ainda não tem nenhuma conversa :('),
             );
@@ -36,11 +55,15 @@ class _ChatHomeState extends State<ChatHome> {
             return Container(
               color: Colors.white,
               child: ListView.builder(
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  var outroId = (snapshot.data[index].ids[0] == usuario.id)
-                      ? snapshot.data[index].ids[1]
-                      : snapshot.data[index].ids[0];
+                  var outroId =
+                      (snap.docs[index].data()['ids'][0] == usuario.id)
+                          ? snap.docs[index].data()['ids'][1]
+                          : snap.docs[index].data()['ids'][0];
+                          
+                  
+                  DateTime date = snap.docs[index].data()['data'].toDate();
 
                   return Container(
                     decoration: BoxDecoration(
@@ -49,16 +72,15 @@ class _ChatHomeState extends State<ChatHome> {
                                 BorderSide(color: Colors.grey, width: 0.5))),
                     child: ListTile(
                       onTap: () async {
-                        print('canTap = $canTap');
                         if (canTap) {
                           canTap = false;
-                          User user = await repository.carregarDadosDoUsuario(
-                              snapshot.data[index].apelido);
+                          User user =
+                              await repository.carregarDadosPorId(outroId);
 
                           try {
                             DocumentSnapshot userDoc = await repository
                                 .getConexao()
-                                .collection('chat')
+                                .collection('chatHome')
                                 .doc('${usuario.id}_$outroId')
                                 .get();
 
@@ -67,7 +89,7 @@ class _ChatHomeState extends State<ChatHome> {
                             if (!(lidoPor.contains(usuario.id))) {
                               await repository
                                   .getConexao()
-                                  .collection('chat')
+                                  .collection('chatHome')
                                   .doc(userDoc.id)
                                   .update({
                                 'lidaPor': [usuario.id, outroId]
@@ -76,7 +98,7 @@ class _ChatHomeState extends State<ChatHome> {
                           } catch (ex) {
                             DocumentSnapshot userDoc = await repository
                                 .getConexao()
-                                .collection('chat')
+                                .collection('chatHome')
                                 .doc('${outroId}_${usuario.id}')
                                 .get();
 
@@ -85,7 +107,7 @@ class _ChatHomeState extends State<ChatHome> {
                             if (!(lidoPor.contains(usuario.id))) {
                               repository
                                   .getConexao()
-                                  .collection('chat')
+                                  .collection('chatHome')
                                   .doc(userDoc.id)
                                   .update({
                                 'lidaPor': [usuario.id, outroId]
@@ -112,26 +134,31 @@ class _ChatHomeState extends State<ChatHome> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
-                            snapshot.data[index].data,
+                            formatarHora(date),
                             style: TextStyle(
-                                color: (snapshot.data[index].lidaPor
+                                color: (snap.docs[index]
+                                        .data()['lidaPor']
                                         .contains(usuario.id))
                                     ? Colors.grey
                                     : Colors.blue,
                                 fontSize: 14.0),
                           ),
-                          (snapshot.data[index].lidaPor.contains(usuario.id))
+                          (snap.docs[index]
+                                  .data()['lidaPor']
+                                  .contains(usuario.id))
                               ? Text('')
                               : Container(
                                   height: 20,
                                   width: 20,
                                   decoration: BoxDecoration(
-                                      color: (snapshot.data[index].lidaPor
+                                      color: (snap.docs[index]
+                                              .data()['lidaPor']
                                               .contains(usuario.id))
                                           ? Colors.white
                                           : Colors.blue,
                                       shape: BoxShape.circle),
-                                  child: (snapshot.data[index].lidaPor
+                                  child: (snap.docs[index]
+                                          .data()['lidaPor']
                                           .contains(usuario.id))
                                       ? null
                                       : Center(
@@ -148,20 +175,20 @@ class _ChatHomeState extends State<ChatHome> {
                         child: CircleAvatar(
                           foregroundColor: Colors.blue,
                           backgroundColor: Colors.white,
-                          backgroundImage:
-                              NetworkImage(snapshot.data[index].foto),
-                          radius: 25,
+                          backgroundImage: NetworkImage(snap.docs[index].data()['foto'][outroId.toString()],),
+                          radius: 25,   
                         ),
                       ),
                       title: Text(
-                        snapshot.data[index].apelido,
+                        snap.docs[index].data()['apelido'][outroId.toString()],
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Container(
                         padding: EdgeInsets.only(top: 5.0),
                         child: Text(
-                          snapshot.data[index].conversa.toString(),
-                          style: (snapshot.data[index].lidaPor
+                          snap.docs[index].data()['conversa'],
+                          style: (snap.docs[index]
+                                  .data()['lidaPor']
                                   .contains(usuario.id))
                               ? TextStyle(color: Colors.grey, fontSize: 15.0)
                               : TextStyle(

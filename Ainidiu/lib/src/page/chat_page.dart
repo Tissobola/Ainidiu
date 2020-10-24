@@ -244,7 +244,7 @@ class _ChatState extends State<Chat> {
                             String aux = msg.text;
                             msg.text = '';
 
-                            await repository.mandarMensagem(aux, id, myId);
+                            await repository.mandarMensagem(aux, id, myId, user, userEu);
 
                             String textoDaNotificacao = aux;
                             
