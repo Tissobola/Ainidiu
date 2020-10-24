@@ -88,7 +88,6 @@ class _ChatState extends State<Chat> {
 
   Future _onSelectNotification(String playload) async {
     if (playload != null) {
-     
       await Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginHome()));
     }
@@ -136,9 +135,7 @@ class _ChatState extends State<Chat> {
                   child: digitar())
             ],
           ),
-        )
-        
-        );
+        ));
   }
 
   Widget chatMessages() {
@@ -152,9 +149,7 @@ class _ChatState extends State<Chat> {
         var item;
         try {
           item = snapshot.data.documents;
-        } catch (ex) {
-          
-        }
+        } catch (ex) {}
 
         return snapshot.hasData
             ? ListView.builder(
@@ -245,15 +240,14 @@ class _ChatState extends State<Chat> {
                         onPressed: () async {
                           _formKey.currentState.validate();
                           if (podeEnviar) {
-                            await repository.mandarMensagem(msg.text, id, myId);
-
-
-                            String textoDaNotificacao = msg.text;
+                            //Vai armazenar a mensagem
+                            String aux = msg.text;
                             msg.text = '';
 
-                            FocusScope.of(context)
-                                      .requestFocus(new FocusNode());
+                            await repository.mandarMensagem(aux, id, myId);
 
+                            String textoDaNotificacao = aux;
+                            
                             await mandarNotification(
                                 user.token, textoDaNotificacao);
                           }

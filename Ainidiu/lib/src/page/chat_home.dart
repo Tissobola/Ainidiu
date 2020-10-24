@@ -13,6 +13,7 @@ class ChatHome extends StatefulWidget {
 
 class _ChatHomeState extends State<ChatHome> {
   User usuario;
+  bool canTap = true;
 
   FbRepository repository = new FbRepository();
   _ChatHomeState({this.usuario});
@@ -23,7 +24,6 @@ class _ChatHomeState extends State<ChatHome> {
       child: FutureBuilder(
         future: repository.minhasConversas(usuario.id),
         builder: (context, snapshot) {
-      
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
@@ -49,59 +49,64 @@ class _ChatHomeState extends State<ChatHome> {
                                 BorderSide(color: Colors.grey, width: 0.5))),
                     child: ListTile(
                       onTap: () async {
-                        //outro
-                        User user = await repository.carregarDadosDoUsuario(
-                            snapshot.data[index].apelido);
+                        print('canTap = $canTap');
+                        if (canTap) {
+                          canTap = false;
+                          User user = await repository.carregarDadosDoUsuario(
+                              snapshot.data[index].apelido);
 
-                        try {
-                          DocumentSnapshot userDoc = await repository
-                              .getConexao()
-                              .collection('chat')
-                              .doc('${usuario.id}_$outroId')
-                              .get();
-
-                          List lidoPor = await userDoc.data()['lidaPor'];
-
-                          if (!(lidoPor.contains(usuario.id))) {
-                            await repository
+                          try {
+                            DocumentSnapshot userDoc = await repository
                                 .getConexao()
                                 .collection('chat')
-                                .doc(userDoc.id)
-                                .update({
-                              'lidaPor': [usuario.id, outroId]
-                            });
-                          }
-                        } catch (ex) {
-                          DocumentSnapshot userDoc = await repository
-                              .getConexao()
-                              .collection('chat')
-                              .doc('${outroId}_${usuario.id}')
-                              .get();
+                                .doc('${usuario.id}_$outroId')
+                                .get();
 
-                          List lidoPor = await userDoc.data()['lidaPor'];
+                            List lidoPor = await userDoc.data()['lidaPor'];
 
-                          if (!(lidoPor.contains(usuario.id))) {
-                            repository
+                            if (!(lidoPor.contains(usuario.id))) {
+                              await repository
+                                  .getConexao()
+                                  .collection('chat')
+                                  .doc(userDoc.id)
+                                  .update({
+                                'lidaPor': [usuario.id, outroId]
+                              });
+                            }
+                          } catch (ex) {
+                            DocumentSnapshot userDoc = await repository
                                 .getConexao()
                                 .collection('chat')
-                                .doc(userDoc.id)
-                                .update({
-                              'lidaPor': [usuario.id, outroId]
-                            });
+                                .doc('${outroId}_${usuario.id}')
+                                .get();
+
+                            List lidoPor = await userDoc.data()['lidaPor'];
+
+                            if (!(lidoPor.contains(usuario.id))) {
+                              repository
+                                  .getConexao()
+                                  .collection('chat')
+                                  .doc(userDoc.id)
+                                  .update({
+                                'lidaPor': [usuario.id, outroId]
+                              });
+                            }
                           }
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Chat(
+                                        user: user,
+                                        userEu: usuario,
+                                        myId: usuario.id,
+                                        id: outroId,
+                                      ))).then((value) {
+                            setState(() {
+                              canTap = true;
+                            });
+                          });
                         }
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Chat(
-                                      user: user,
-                                      userEu: usuario,
-                                      myId: usuario.id,
-                                      id: outroId,
-                                    ))).then((value) {
-                          setState(() {});
-                        });
                       },
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
