@@ -168,7 +168,6 @@ class FbRepository {
           'lidaPor': [],
           'apelido': apelido,
           'foto': foto,
-        
         });
       }
     }
@@ -204,8 +203,8 @@ class FbRepository {
     }
   }
 
-     carregarConversas(myId)  {
-    var col =  getConexao()
+  carregarConversas(myId) {
+    var col = getConexao()
         .collection('chatHome')
         .where('ids', arrayContains: myId)
         .snapshots();
@@ -318,7 +317,6 @@ class FbRepository {
         'lidaPor': [myId],
         'apelido': apelido,
         'foto': foto,
-       
       });
     } else {
       getConexao().collection('chatHome').doc('${primeiro}_$segundo').update({
@@ -328,7 +326,6 @@ class FbRepository {
         'lidaPor': [myId],
         'apelido': apelido,
         'foto': foto,
-     
       });
     }
   }
@@ -604,24 +601,35 @@ class FbRepository {
 
   Future<List<ItemData>> exibirComentarios(ItemData post) async {
     List<ItemData> coms = new List<ItemData>();
+    DocumentSnapshot item;
 
     for (int i = 0; i < post.comentarios.length; i++) {
-      var item = await getConexao()
-          .collection('postagens')
-          .doc('post${post.comentarios[i]}')
-          .get();
+      try {
+        item = await getConexao()
+            .collection('postagens')
+            .doc('post${post.comentarios[i]}')
+            .get();
 
-      ItemData aux = new ItemData(
-          item.data()['id'],
-          item.data()['postadoPorId'],
-          item.data()['postadoPorNome'],
-          item.data()['imagemURL'],
-          item.data()['texto'],
-          item.data()['dataHora'],
-          item.data()['parentId'],
-          item.data()['comentarios']);
+        ItemData aux = new ItemData(
+            item.data()['id'],
+            item.data()['postadoPorId'],
+            item.data()['postadoPorNome'],
+            item.data()['imagemURL'],
+            item.data()['texto'],
+            item.data()['dataHora'],
+            item.data()['parentId'],
+            item.data()['comentarios']);
 
-      coms.add(aux);
+        coms.add(aux);
+      } catch (ex) {
+        List aux = post.comentarios;
+        aux.remove(post.comentarios[i]);
+        getConexao()
+            .collection('postagens')
+            .doc('post${post.id}')
+            .update({'comentarios': aux});
+       
+      }
     }
 
     return coms;

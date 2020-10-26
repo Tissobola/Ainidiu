@@ -117,7 +117,8 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-   
+    bool podeComentar = true;
+
     return GestureDetector(
         onTap: () async {
           ///Verifica se tem comentários para exibir os detalhes
@@ -165,7 +166,8 @@ class _PostCardState extends State<PostCard> {
                         radius: 30,
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
-                        backgroundImage: NetworkImage(this.getCurrent().imagemURL),
+                        backgroundImage:
+                            NetworkImage(this.getCurrent().imagemURL),
                       ),
 
                       SizedBox(width: 10),
@@ -339,39 +341,46 @@ class _PostCardState extends State<PostCard> {
                                                 RaisedButton(
                                                   child: Text('Comentar'),
                                                   onPressed: () async {
-                                                    if (_formKey.currentState
-                                                        .validate()) {
-                                                      repository
-                                                          .escreverComentario(
-                                                              current.id,
-                                                              msg.text,
-                                                              this
-                                                                  .widget
-                                                                  .usuario);
-                                                      QuerySnapshot postPai =
-                                                          await repository
-                                                              .getConexao()
-                                                              .collection(
-                                                                  'postagens')
-                                                              .where('id',
-                                                                  isEqualTo:
-                                                                      current
-                                                                          .id)
-                                                              .get();
+                                                    if (podeComentar) {
+                                                      podeComentar = false;
+                                                      if (_formKey.currentState
+                                                          .validate()) {
+                                                        await repository
+                                                            .escreverComentario(
+                                                                current.id,
+                                                                msg.text,
+                                                                this
+                                                                    .widget
+                                                                    .usuario);
 
-                                                      User userPai = await repository
-                                                          .carregarDadosPorId(
-                                                              postPai.docs.last
-                                                                      .data()[
-                                                                  'postadoPorId']);
+                                                        QuerySnapshot postPai =
+                                                            await repository
+                                                                .getConexao()
+                                                                .collection(
+                                                                    'postagens')
+                                                                .where('id',
+                                                                    isEqualTo:
+                                                                        current
+                                                                            .id)
+                                                                .get();
 
-                                                      mandarNotification(
-                                                          userPai.token,
-                                                          msg.text);
+                                                        User userPai = await repository
+                                                            .carregarDadosPorId(
+                                                                postPai.docs.last
+                                                                        .data()[
+                                                                    'postadoPorId']);
 
-                                                      msg.clear();
-                                                      Scaffold.of(context)
-                                                          .hideCurrentSnackBar();
+                                                        await mandarNotification(
+                                                            userPai.token,
+                                                            msg.text);
+
+                                                        msg.clear();
+                                                        podeComentar = true;
+                                                        Scaffold.of(this
+                                                                .widget
+                                                                .context)
+                                                            .hideCurrentSnackBar();
+                                                      }
                                                     }
                                                   },
                                                 )

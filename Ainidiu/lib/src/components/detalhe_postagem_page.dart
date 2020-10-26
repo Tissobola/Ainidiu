@@ -34,7 +34,7 @@ class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
 
   Future<List<ItemData>> postagens;
 
-  @override
+  @override 
   void initState() {
     postagens = getFutureDados();
     super.initState();
@@ -45,7 +45,7 @@ class _DetalhePostagemPageState extends State<DetalhePostagemPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Comentários')),
       body: RefreshIndicator(
-        onRefresh: () async {
+        onRefresh: () async { 
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
