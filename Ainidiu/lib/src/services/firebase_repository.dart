@@ -628,7 +628,6 @@ class FbRepository {
             .collection('postagens')
             .doc('post${post.id}')
             .update({'comentarios': aux});
-       
       }
     }
 
@@ -831,6 +830,27 @@ class FbRepository {
       'ID do autor da denuncia': autor.id,
       'Apelido do autor da denuncia': autor.apelido
     });
+
+    DocumentSnapshot denunciasDoc =
+        await getConexao().collection('denuncias').doc('denuncias').get();
+
+    List denuns = new List();
+
+    try {
+      denuns = denunciasDoc.data()['ids'];
+    } catch (ex) {
+      print(ex);
+    }
+
+    if(!denuns.contains(idDoPost)) {
+      denuns.add(idDoPost);
+    }
+
+  
+    getConexao()
+        .collection('denuncias')
+        .doc('denuncias')
+        .update({'ids': denuns});
 
     //getConexao().collection('postagens').doc('post$idDoPost').delete();
   }

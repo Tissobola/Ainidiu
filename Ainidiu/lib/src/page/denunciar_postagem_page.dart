@@ -58,7 +58,8 @@ class _DenunciarState extends State<Denunciar> {
                 child: GestureDetector(
                   onTap: () async {
                     repository.denunciar(id, msg.text, usuario);
-
+                    FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
                     showDialog(
                         context: context,
                         child: AlertDialog(
@@ -69,7 +70,7 @@ class _DenunciarState extends State<Denunciar> {
                             ],
                           ),
                         ));
-                    await Future.delayed(Duration(seconds: 2));
+                    await Future.delayed(Duration(milliseconds: 1300));
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },
