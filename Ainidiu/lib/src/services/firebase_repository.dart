@@ -852,6 +852,6 @@ class FbRepository {
         .doc('denuncias')
         .update({'ids': denuns});
 
-    //getConexao().collection('postagens').doc('post$idDoPost').delete();
+    
   }
 }
