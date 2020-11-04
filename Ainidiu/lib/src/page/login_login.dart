@@ -38,27 +38,25 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget buildCadastro() {
-    var estilo = TextStyle(fontSize: 18);
+    var estilo = TextStyle(fontSize: 18, fontWeight: FontWeight.normal);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          'É novo aqui?',
-          style: estilo,
-        ),
         FlatButton(
             onPressed: () {
               Navigator.push(this.context,
                   MaterialPageRoute(builder: (context) => Cadastro()));
             },
-            child: Container(
-                width: 110,
-                child: Text(
-                  'Cadastre-se',
-                  style: estilo,
-                )))
+            child: Center(
+              child: Container(
+                  width: 110,
+                  child: Text(
+                    'Cadastre-se',
+                    style: estilo,
+                  )),
+            ))
       ],
     );
   }

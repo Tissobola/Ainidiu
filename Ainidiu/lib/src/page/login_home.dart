@@ -103,16 +103,13 @@ class _LoginHomeState extends State<LoginHome> {
   }
 
   Widget buildCadastro() {
-    var estilo = TextStyle(fontSize: 18);
+    var estilo = TextStyle(fontSize: 18, fontWeight: FontWeight.normal);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          'É novo aqui?',
-          style: estilo,
-        ),
+  
         FlatButton(
             onPressed: () {
               Navigator.push(this.context,

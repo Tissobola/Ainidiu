@@ -132,7 +132,7 @@ class _ChatState extends State<Chat> {
               Container(
                   alignment: Alignment.bottomCenter,
                   width: MediaQuery.of(context).size.width,
-                  child: digitar())
+                  child: digitar2())
             ],
           ),
         ));
@@ -191,6 +191,81 @@ class _ChatState extends State<Chat> {
         ));
   }
 
+  int linhas = 1;
+  digitar2() {
+    FbRepository repository = new FbRepository();
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Container(
+              width: 320,
+              child: TextFormField(
+                maxLines: linhas,
+                validator: (text) {
+                  if (text.isEmpty) {
+                    setState(() {
+                      podeEnviar = false;
+                    });
+                    return null;
+                  }
+                  setState(() {
+                    podeEnviar = true;
+                  });
+                  return null;
+                },
+                controller: msg,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)))),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: IconButton(
+                      iconSize: 25,
+                      icon: Icon(
+                        Icons.send,
+                        color: Colors.white,
+                      ),
+                      onPressed: () async {
+                        _formKey.currentState.validate();
+                        if (podeEnviar) {
+                          //Vai armazenar a mensagem
+                          String aux = msg.text;
+                          msg.text = '';
+
+                          await repository.mandarMensagem(
+                              aux, id, myId, user, userEu);
+
+                          String textoDaNotificacao = aux;
+
+                          await mandarNotification(
+                              user.token, textoDaNotificacao);
+                        }
+                      }),
+                ),
+                height: 48,
+                width: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   digitar() {
     FbRepository repository = new FbRepository();
 
@@ -203,27 +278,24 @@ class _ChatState extends State<Chat> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
-                child: Container(
-                  width: 300,
-                  child: TextFormField(
-                    validator: (text) {
-                      if (text.isEmpty) {
-                        setState(() {
-                          podeEnviar = false;
-                        });
-                        return null;
-                      }
+              Container(
+                width: 300,
+                child: TextFormField(
+                  validator: (text) {
+                    if (text.isEmpty) {
                       setState(() {
-                        podeEnviar = true;
+                        podeEnviar = false;
                       });
                       return null;
-                    },
-                    controller: msg,
-                    decoration: InputDecoration(
-                        border:
-                            OutlineInputBorder(borderSide: BorderSide.none)),
-                  ),
+                    }
+                    setState(() {
+                      podeEnviar = true;
+                    });
+                    return null;
+                  },
+                  controller: msg,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(borderSide: BorderSide.none)),
                 ),
               ),
               Padding(
@@ -244,10 +316,11 @@ class _ChatState extends State<Chat> {
                             String aux = msg.text;
                             msg.text = '';
 
-                            await repository.mandarMensagem(aux, id, myId, user, userEu);
+                            await repository.mandarMensagem(
+                                aux, id, myId, user, userEu);
 
                             String textoDaNotificacao = aux;
-                            
+
                             await mandarNotification(
                                 user.token, textoDaNotificacao);
                           }
