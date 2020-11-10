@@ -177,6 +177,7 @@ class _ChatState extends State<Chat> {
   digitar2() {
     FbRepository repository = new FbRepository();
 
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Form(
