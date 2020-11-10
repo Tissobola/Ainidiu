@@ -197,70 +197,79 @@ class _ChatState extends State<Chat> {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Container(
-              width: 320,
-              child: TextFormField(
-                maxLines: linhas,
-                validator: (text) {
-                  if (text.isEmpty) {
+      child: Form(
+        key: _formKey,
+        child: Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                width: 320,
+                child: TextFormField(
+                  minLines: 1,
+                  maxLines: 5,
+                  validator: (text) {
+                    if (text.isEmpty) {
+                      if (text.characters.last == "") {
+                        print('ok');
+                        print('text.characters.last');
+                      }
+
+                      setState(() {
+                        podeEnviar = false;
+                      });
+                      return null;
+                    }
                     setState(() {
-                      podeEnviar = false;
+                      podeEnviar = true;
                     });
                     return null;
-                  }
-                  setState(() {
-                    podeEnviar = true;
-                  });
-                  return null;
-                },
-                controller: msg,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)))),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: IconButton(
-                      iconSize: 25,
-                      icon: Icon(
-                        Icons.send,
-                        color: Colors.white,
-                      ),
-                      onPressed: () async {
-                        _formKey.currentState.validate();
-                        if (podeEnviar) {
-                          //Vai armazenar a mensagem
-                          String aux = msg.text;
-                          msg.text = '';
-
-                          await repository.mandarMensagem(
-                              aux, id, myId, user, userEu);
-
-                          String textoDaNotificacao = aux;
-
-                          await mandarNotification(
-                              user.token, textoDaNotificacao);
-                        }
-                      }),
-                ),
-                height: 48,
-                width: 48,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.blue,
+                  },
+                  controller: msg,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30)))),
                 ),
               ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: IconButton(
+                        iconSize: 25,
+                        icon: Icon(
+                          Icons.send,
+                          color: Colors.white,
+                        ),
+                        onPressed: () async {
+                          _formKey.currentState.validate();
+                          if (podeEnviar) {
+                            //Vai armazenar a mensagem
+                            String aux = msg.text;
+                            msg.text = '';
+
+                            await repository.mandarMensagem(
+                                aux, id, myId, user, userEu);
+
+                            String textoDaNotificacao = aux;
+
+                            await mandarNotification(
+                                user.token, textoDaNotificacao);
+                          }
+                        }),
+                  ),
+                  height: 48,
+                  width: 48,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.blue,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

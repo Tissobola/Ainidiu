@@ -244,153 +244,145 @@ class _PostCardState extends State<PostCard> {
                         message: "Comentar",
                         child: FlatButton(
                             onPressed: () {
-                              Scaffold.of(context).hideCurrentSnackBar();
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                          color: Colors.grey, width: 1.0),
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          topRight: Radius.circular(40))),
-                                  elevation: 50.0,
-                                  duration: Duration(minutes: 5),
-                                  backgroundColor: Colors.white,
-                                  content: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height:
-                                          (MediaQuery.of(context).size.height *
-                                                  0.15) +
-                                              14,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey,
-                                            offset: Offset(0.0, 1.0), //(x,y)
-                                            blurRadius: 6.0,
+                              Scaffold.of(context).showBottomSheet((context) {
+                                return Material(
+                                  shadowColor: Colors.blue,
+                                  elevation: 20,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[200],
                                           ),
-                                        ],
-                                      ),
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: Column(
-                                          children: [
-                                            Row(
+                                          // height: MediaQuery.of(context).size.height / 2,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Column(
                                               children: [
-                                                Text(
-                                                  'Em resposta a ',
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 16),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 10.0),
+                                                  child: Row(
+                                                    children: [
+                                                      Text('Em resposta à ',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey)),
+                                                      Text(
+                                                          this
+                                                              .widget
+                                                              .current
+                                                              .postadoPorNome,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.blue))
+                                                    ],
+                                                  ),
                                                 ),
-                                                Text(
-                                                  this
-                                                      .widget
-                                                      .current
-                                                      .postadoPorNome,
-                                                  style: TextStyle(
+                                                Form(
+                                                  key: _formKey,
+                                                  child: TextFormField(
+                                                    controller: msg,
+                                                    validator: (value) {
+                                                      if (value.isEmpty) {
+                                                        return 'Escreva algo';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    decoration: InputDecoration(
+                                                        border: OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        hintText:
+                                                            'Digite seu comentário',
+                                                        hintStyle: TextStyle(
+                                                            color:
+                                                                Colors.grey)),
+                                                    minLines: 5,
+                                                    maxLines: 10,
+                                                    maxLength: 500,
+                                                  ),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    FlatButton(
+                                                        child: Text("Voltar"),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        }),
+                                                    RaisedButton(
                                                       color: Colors.blue,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
-                                                )
-                                              ],
-                                            ),
-                                            Form(
-                                              key: _formKey,
-                                              child: TextFormField(
-                                                minLines: 2,
-                                                maxLines: 3,
-                                                controller: msg,
-                                                validator: (value) {
-                                                  if (value.isEmpty) {
-                                                    return 'Escreva algo';
-                                                  }
-                                                  return null;
-                                                },
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                                decoration: new InputDecoration(
-                                                    labelStyle: TextStyle(
-                                                        color: Colors.black),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colors.blue,
-                                                          width: 2.0),
-                                                    ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colors.blue,
-                                                          width: 2.0),
-                                                    ),
-                                                    hintText:
-                                                        'Digite seu comentário',
-                                                    hintStyle: TextStyle(
-                                                        color: Colors.grey)),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                RaisedButton(
-                                                  child: Text('Comentar'),
-                                                  onPressed: () async {
-                                                    if (podeComentar) {
-                                                      podeComentar = false;
-                                                      if (_formKey.currentState
-                                                          .validate()) {
-                                                        await repository
-                                                            .escreverComentario(
-                                                                current.id,
-                                                                msg.text,
-                                                                this
-                                                                    .widget
-                                                                    .usuario);
+                                                      child: Text(
+                                                        'Comentar',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      onPressed: () async {
+                                                        if (podeComentar) {
+                                                          podeComentar = false;
+                                                          if (_formKey
+                                                              .currentState
+                                                              .validate()) {
+                                                            await Future.delayed(
+                                                                Duration(
+                                                                    milliseconds: 600));
+                                                            Navigator.pop(
+                                                                context);
 
-                                                        QuerySnapshot postPai =
-                                                            await repository
-                                                                .getConexao()
-                                                                .collection(
-                                                                    'postagens')
-                                                                .where('id',
-                                                                    isEqualTo:
-                                                                        current
-                                                                            .id)
-                                                                .get();
+                                                            repository
+                                                                .escreverComentario(
+                                                                    current.id,
+                                                                    msg.text,
+                                                                    this
+                                                                        .widget
+                                                                        .usuario);
 
-                                                        User userPai = await repository
-                                                            .carregarDadosPorId(
-                                                                postPai.docs.last
+                                                            QuerySnapshot
+                                                                postPai =
+                                                                await repository
+                                                                    .getConexao()
+                                                                    .collection(
+                                                                        'postagens')
+                                                                    .where('id',
+                                                                        isEqualTo:
+                                                                            current.id)
+                                                                    .get();
+
+                                                            User userPai = await repository
+                                                                .carregarDadosPorId(postPai
+                                                                        .docs.last
                                                                         .data()[
                                                                     'postadoPorId']);
 
-                                                        await mandarNotification(
-                                                            userPai.token,
-                                                            msg.text);
+                                                            mandarNotification(
+                                                                userPai.token,
+                                                                msg.text);
 
-                                                        msg.clear();
-                                                        podeComentar = true;
-                                                        Scaffold.of(this
-                                                                .widget
-                                                                .context)
-                                                            .hideCurrentSnackBar();
-                                                      }
-                                                    }
-                                                  },
+                                                            msg.clear();
+                                                            podeComentar = true;
+                                                          }
+                                                        }
+                                                      },
+                                                    )
+                                                  ],
                                                 )
                                               ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )));
+                                            ),
+                                          )),
+                                    ],
+                                  ),
+                                );
+                              });
                             },
                             child: Row(
                               children: <Widget>[
