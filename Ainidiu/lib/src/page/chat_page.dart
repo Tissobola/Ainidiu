@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:ainidiu/src/api/user.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:ainidiu/src/components/mensagem.dart';
 import 'package:ainidiu/src/page/login_home.dart';
@@ -31,7 +30,6 @@ class _ChatState extends State<Chat> {
       new ScrollController(initialScrollOffset: 5000);
 
   FbRepository repository = new FbRepository();
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   var serverToken =
       'AAAABtx9LIo:APA91bH6u2CwSsFvSFY0rnreRC6TrQTXMVIuBto8nyxgCdmxefrmhmaIrE-fsw6WtvC_Tk-XitERzgYhupdB9kdUn29PuxgBS-n_anwwjQW1_azNjfzU7AWl7nODEoNPrhAn7srHuAFr';
@@ -50,22 +48,6 @@ class _ChatState extends State<Chat> {
   var configuracaoInit;
 
   String texto;
-
-  void _mostrarNotificacao() async {
-    _simularNovaNotificacao();
-  }
-
-  void _simularNovaNotificacao() {
-    var notificacaoAndroid = AndroidNotificationDetails(
-        'channel_id', 'channel Name', 'channel Description',
-        importance: Importance.Max, priority: Priority.High, ticker: 'Teste');
-
-    var notificacaoIOs = IOSNotificationDetails();
-
-    var notificacao = NotificationDetails(notificacaoAndroid, notificacaoIOs);
-    _flnNotificacao.show(0, 'Ainidiu', texto, notificacao,
-        payload: 'teste onload');
-  }
 
   @override
   void initState() {

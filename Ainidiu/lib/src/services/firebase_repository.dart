@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:ainidiu/src/api/item.dart';
 import 'dart:math';
 import 'package:ainidiu/src/api/user.dart';
@@ -217,7 +215,6 @@ class FbRepository {
     List<Conversas> conversas = new List<Conversas>();
 
     for (var item in dados.docs) {
-      var data = item.data();
 
       if (await teste(myId, item.id) != 1) {
         User outro = await teste(myId, item.id);

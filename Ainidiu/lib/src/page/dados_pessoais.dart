@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_home.dart';
@@ -37,13 +35,10 @@ class _DadosPessoaisState extends State<DadosPessoais> {
   final _formKeyEmail = GlobalKey<FormState>();
   final _formKeyCidade = GlobalKey<FormState>();
   final _formKeyNascimento = GlobalKey<FormState>();
-  final _formKeyGenero = GlobalKey<FormState>();
 
   TextEditingController _cidadeController = new TextEditingController();
 
   TextEditingController _nascimentoController = new TextEditingController();
-
-  TextEditingController _generoController = new TextEditingController();
 
   TextEditingController _senhaAntigaController = new TextEditingController();
   TextEditingController _senhaNovaController = new TextEditingController();
