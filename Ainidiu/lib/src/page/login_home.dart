@@ -15,7 +15,6 @@ class _LoginHomeState extends State<LoginHome> {
   String _connection = "";
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
   @override
   void initState() {
     super.initState();
@@ -43,6 +42,14 @@ class _LoginHomeState extends State<LoginHome> {
     });
   }
 
+  double getScreenHeight(BuildContext context, double divider, double multiplier) {
+    return multiplier*MediaQuery.of(context).size.height/divider;
+  }
+
+  double getScreenWidth(BuildContext context, double divider, double multiplier) {
+    return multiplier*MediaQuery.of(context).size.width/divider;
+  }
+
   @override
   void dispose() {
     _connectivitySubscription.cancel();
@@ -53,7 +60,7 @@ class _LoginHomeState extends State<LoginHome> {
     return Container(
  
       width: 100,
-      height:100,
+      height: getScreenHeight(context, 5, 1),
       child: Image.asset("assets/icon/icon.png",
      
      
@@ -67,11 +74,11 @@ class _LoginHomeState extends State<LoginHome> {
     crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(
-          height: 50,
+          height: getScreenHeight(context, 10, 1),
         ),
         buildLogo(),
         SizedBox(
-          height: 260,
+          height: getScreenHeight(context, 20, 3),
         ),
         Text(
           'SEJA\nBEM-VINDO AO\nAINIDIU',
@@ -92,7 +99,7 @@ class _LoginHomeState extends State<LoginHome> {
         padding:
             const EdgeInsets.only(top: 25, bottom: 25, left: 90, right: 90),
         child: Text(
-          'SIGN IN',
+          'LOGIN',
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       ),
@@ -116,7 +123,6 @@ class _LoginHomeState extends State<LoginHome> {
                   MaterialPageRoute(builder: (context) => Cadastro()));
             },
             child: Container(
-                width: 110,
                 child: Text(
                   'Cadastre-se',
                   style: estilo,

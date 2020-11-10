@@ -34,7 +34,6 @@ class _CadastroState extends State<Cadastro> {
 
   String _avatar =
       'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png';
-  double _tamanhoAlert = 200;
 
   Widget exibirFoto(url) {
     return FlatButton(
@@ -45,7 +44,7 @@ class _CadastroState extends State<Cadastro> {
         Navigator.pop(context);
       },
       child: CircleAvatar(
-        radius: 30,
+        radius: getScreenHeight(context, 100, 3),
         backgroundColor: Colors.white,
         backgroundImage: NetworkImage(url),
       ),
@@ -258,14 +257,16 @@ class _CadastroState extends State<Cadastro> {
 
   Widget buildLogo() {
     return Container(
- 
-      width: 100,
-      height:100,
-      child: Image.asset("assets/icon/icon.png",
-     
+        width: 100,
+        height: getScreenHeight(context, 10, 1),
+        child: Image.asset(
+          "assets/icon/icon.png",
+        ));
+  }
 
-      )
-    );
+  double getScreenHeight(
+      BuildContext context, double divider, double multiplier) {
+    return multiplier * MediaQuery.of(context).size.height / divider;
   }
 
   Widget buildCadastro() {
@@ -276,7 +277,7 @@ class _CadastroState extends State<Cadastro> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          '                Já tem uma conta?',
+          'Já tem uma conta?',
           style: estilo,
         ),
         FlatButton(
@@ -285,11 +286,10 @@ class _CadastroState extends State<Cadastro> {
                   MaterialPageRoute(builder: (context) => LoginPage()));
             },
             child: Container(
-                width: 110,
                 child: Text(
-                  'Login',
-                  style: estilo,
-                )))
+              'Login',
+              style: estilo,
+            )))
       ],
     );
   }
