@@ -14,6 +14,7 @@ class Escrever extends StatefulWidget {
 class _EscreverState extends State<Escrever> {
   User usuario;
   bool temConteudo = true;
+  bool canSend = true;
   _EscreverState({this.usuario});
   TextEditingController msg = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -27,6 +28,7 @@ class _EscreverState extends State<Escrever> {
         margin: EdgeInsets.all(12),
         height: maxLines * 24.0,
         child: TextFormField(
+          maxLength: 500,
           validator: (texto) {
             if (msg.text.isEmpty) {
               return 'Escreva alguma coisa para que possamos te entender :)';
@@ -60,48 +62,48 @@ class _EscreverState extends State<Escrever> {
         appBar: AppBar(title: Text('Escrever')),
         body: Container(
             height: alturaTela,
-            child: Stack(children: <Widget>[
-              _buildTextField(),
-              Positioned(
-                top: 240.0 + 24,
-                left: larguraTela - 70 - 12,
-                child: GestureDetector(
-                  onTap: () async {
-                    
-                    if (_formKey.currentState.validate()) {
-                      bool ehOfensivo = await Filtrar().filtrarTexto(msg.text);
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  _buildTextField(),
+                  RawMaterialButton(
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        bool ehOfensivo =
+                            await Filtrar().filtrarTexto(msg.text);
 
-                      if (ehOfensivo) {
-                        _scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content:
-                              Text('Sua mensagem contém termos ofensivos!'),
-                          backgroundColor: Colors.red,
-                        ));
-                      } else {
-                        
+                        if (ehOfensivo) {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content:
+                                Text('Sua mensagem contém termos ofensivos!'),
+                            backgroundColor: Colors.red,
+                          ));
+                        } else {
+                          if (canSend) {
+                            repository.escreverPostagens(
+                                DateTime.now(),
+                                usuario.imageURL,
+                                0,
+                                usuario.id,
+                                usuario.apelido,
+                                msg.text);
 
-                        repository.escreverPostagens(DateTime.now(),
-                            usuario.imageURL, 0, usuario.id, usuario.apelido, msg.text);
-
-                        Navigator.pop(context);
-                        
+                            Navigator.pop(context);
+                            canSend = false;
+                          }
+                        }
                       }
-                    }
-                  },
-                  child: ClipOval(
-                    child: Container(
-                      color: Colors.blue,
-                      height: 70,
-                      width: 70,
-                      child: Icon(
-                        Icons.create,
-                        size: 50,
-                        color: Colors.white,
-                      ),
+                    },
+                    elevation: 2.0,
+                    fillColor: Colors.blue,
+                    child: Icon(
+                      Icons.create,
+                      size: 35.0,
+                      color: Colors.white,
                     ),
+                    padding: EdgeInsets.all(15.0),
+                    shape: CircleBorder(),
                   ),
-                ),
-              ),
-            ])));
+                ])));
   }
 }

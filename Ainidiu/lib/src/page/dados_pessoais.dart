@@ -896,8 +896,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                   });
                   });
 
-                  
-                  
+                
                 },
                 child: Text(
                   'Editar',

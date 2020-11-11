@@ -186,7 +186,7 @@ class _ChatHomeState extends State<ChatHome> {
                       subtitle: Container(
                         padding: EdgeInsets.only(top: 5.0),
                         child: Text(
-                          snap.docs[index].data()['conversa'],
+                          snap.docs[index].data()['conversa'].toString().replaceAll("\n", " "),
                           style: (snap.docs[index]
                                   .data()['lidaPor']
                                   .contains(usuario.id))

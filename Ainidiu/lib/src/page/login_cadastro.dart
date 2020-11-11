@@ -81,24 +81,28 @@ class _CadastroState extends State<Cadastro> {
 
   Widget escolherFoto() {
     if (_currText == "Feminino") {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              exibirFoto(_urlsWoman[0]),
-              exibirFoto(_urlsWoman[1]),
-              exibirFoto(_urlsWoman[2]),
-            ],
-          ),
-          Row(
-            children: [
-              exibirFoto(_urlsWoman[3]),
-              exibirFoto(_urlsWoman[4]),
-              exibirFoto(_urlsWoman[5]),
-            ],
-          ),
-        ],
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+              child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            Row(
+              children: [
+                exibirFoto(_urlsWoman[0]),
+                exibirFoto(_urlsWoman[1]),
+                exibirFoto(_urlsWoman[2]),
+              ],
+            ),
+            Row(
+              children: [
+                exibirFoto(_urlsWoman[3]),
+                exibirFoto(_urlsWoman[4]),
+                exibirFoto(_urlsWoman[5]),
+              ],
+            ),
+          ],
+        ),
       );
     } else if (_currText == "Masculino") {
       return Column(

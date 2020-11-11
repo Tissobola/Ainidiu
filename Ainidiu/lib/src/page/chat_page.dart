@@ -177,33 +177,31 @@ class _ChatState extends State<Chat> {
   digitar2() {
     FbRepository repository = new FbRepository();
 
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Form(
         key: _formKey,
         child: Container(
+          
+
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
+              
                 width: 320,
                 child: TextFormField(
                   minLines: 1,
                   maxLines: 5,
                   validator: (text) {
                     if (text.isEmpty) {
-                      if (text.characters.last == "") {
-                        print('ok');
-                        print('text.characters.last');
-                      }
-
                       setState(() {
                         podeEnviar = false;
                       });
                       return null;
                     }
+
                     setState(() {
                       podeEnviar = true;
                     });
@@ -232,6 +230,14 @@ class _ChatState extends State<Chat> {
                             //Vai armazenar a mensagem
                             String aux = msg.text;
                             msg.text = '';
+
+
+                            //Removendo "\n" 
+                            do {
+                              if (aux.characters.last == "\n") {
+                                aux = aux.substring(0, aux.length - 1);
+                              }
+                            } while (aux.characters.last == "\n");
 
                             await repository.mandarMensagem(
                                 aux, id, myId, user, userEu);

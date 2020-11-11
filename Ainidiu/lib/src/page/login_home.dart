@@ -131,7 +131,7 @@ class _LoginHomeState extends State<LoginHome> {
     );
   }
 
-  Widget buildTest() {
+  Widget buttons() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[buildButton(), buildCadastro()],
@@ -169,7 +169,7 @@ class _LoginHomeState extends State<LoginHome> {
             children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[buildText(), buildTest()],
+                children: <Widget>[buildText(), buttons()],
               ),
             ],
           )),

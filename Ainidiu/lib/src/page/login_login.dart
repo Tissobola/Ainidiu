@@ -22,8 +22,9 @@ class _LoginPageState extends State<LoginPage> {
 
   FbRepository repository = FbRepository();
 
-  double getScreenHeight(BuildContext context, double divider, double multiplier) {
-    return multiplier*MediaQuery.of(context).size.height/divider;
+  double getScreenHeight(
+      BuildContext context, double divider, double multiplier) {
+    return multiplier * MediaQuery.of(context).size.height / divider;
   }
 
   @override
@@ -31,14 +32,11 @@ class _LoginPageState extends State<LoginPage> {
   // ignore: override_on_non_overriding_member
   Widget buildLogo() {
     return Container(
- 
-      width: 100,
-      height: getScreenHeight(context, 5, 1),
-      child: Image.asset("assets/icon/icon.png",
-     
-     
-      )
-    );
+        width: 100,
+        height: getScreenHeight(context, 5, 1),
+        child: Image.asset(
+          "assets/icon/icon.png",
+        ));
   }
 
   Widget buildCadastro() {
@@ -56,9 +54,9 @@ class _LoginPageState extends State<LoginPage> {
             child: Center(
               child: Container(
                   child: Text(
-                    'Cadastre-se',
-                    style: estilo,
-                  )),
+                'Cadastre-se',
+                style: estilo,
+              )),
             ))
       ],
     );
@@ -81,12 +79,15 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: getScreenHeight(context, 20, 1),),
+                    SizedBox(
+                      height: getScreenHeight(context, 20, 1),
+                    ),
                     buildLogo(),
-                    SizedBox(height: getScreenHeight(context, 25, 2),),
+                    SizedBox(
+                      height: getScreenHeight(context, 25, 2),
+                    ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only( left: 20, right: 20),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         controller: _controladorEmail,
@@ -100,10 +101,11 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       ),
                     ),
-                    SizedBox(height: getScreenHeight(context, 100, 1),),
+                    SizedBox(
+                      height: getScreenHeight(context, 100, 1),
+                    ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only( left: 20, right: 20),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         obscureText: true,
                         controller: _controladorSenha,
@@ -173,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              HomePage(0,usuario: user)),
+                                              HomePage(0, usuario: user)),
                                       (route) => false);
                                 } else if (aux == '1') {
                                   FocusScope.of(context)

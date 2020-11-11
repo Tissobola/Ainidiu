@@ -244,6 +244,7 @@ class _PostCardState extends State<PostCard> {
                         message: "Comentar",
                         child: FlatButton(
                             onPressed: () {
+                              
                               Scaffold.of(context).showBottomSheet((context) {
                                 return Material(
                                   shadowColor: Colors.blue,
@@ -335,7 +336,8 @@ class _PostCardState extends State<PostCard> {
                                                               .validate()) {
                                                             await Future.delayed(
                                                                 Duration(
-                                                                    milliseconds: 600));
+                                                                    milliseconds:
+                                                                        600));
                                                             Navigator.pop(
                                                                 context);
 

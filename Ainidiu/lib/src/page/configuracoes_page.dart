@@ -98,8 +98,6 @@ class _ConfiguracoesState extends State<Configuracoes> {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('user', null);
 
-            
-
             QuerySnapshot userDoc = await repository
                 .getConexao()
                 .collection('usuarios')
@@ -116,6 +114,13 @@ class _ConfiguracoesState extends State<Configuracoes> {
                 context,
                 MaterialPageRoute(builder: (context) => LoginHome()),
                 (route) => false);
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.label_important),
+          title: Text('Denúncias, Sugestões ou Mensagens'),
+          onTap: () {
+            
           },
         ),
         ListTile(
