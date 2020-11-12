@@ -10,6 +10,14 @@ class FbRepository {
     return FirebaseFirestore.instance;
   }
 
+  Future<void> sugestoes(texto, User user) async {
+    getConexao().collection('sugestoes').doc().set({
+      'mensagem': texto,
+      'data': DateTime.now(),
+      'usuario': user.apelido,
+    });
+  }
+
   String formatarHora(DateTime hora) {
     String horaFormatada;
 
@@ -841,7 +849,6 @@ class FbRepository {
 
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
-
     DocumentSnapshot dados =
         await getConexao().collection('postagens').doc('post$idDoPost').get();
 

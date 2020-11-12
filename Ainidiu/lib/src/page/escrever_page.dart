@@ -31,8 +31,8 @@ class _EscreverState extends State<Escrever> {
           maxLength: 500,
           validator: (texto) {
             if (msg.text.isEmpty) {
-              return 'Escreva alguma coisa para que possamos te entender :)';
-            } else {}
+              return 'Texto inválido!';
+            }
             return null;
           },
           maxLines: maxLines,
