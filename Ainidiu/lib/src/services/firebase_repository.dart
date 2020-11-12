@@ -215,7 +215,6 @@ class FbRepository {
     List<Conversas> conversas = new List<Conversas>();
 
     for (var item in dados.docs) {
-
       if (await teste(myId, item.id) != 1) {
         User outro = await teste(myId, item.id);
 
@@ -475,14 +474,23 @@ class FbRepository {
       'postadoPorId': postadoPorId,
       'postadoPorNome': postadoPorNome,
       'texto': texto,
-      'comentarios': []
+      'comentarios': [],
+      'denunciado': 0
     });
   }
 
   Future<List<ItemData>> carregarPostagens() async {
+    /*
     QuerySnapshot dados = await getConexao()
         .collection('postagens')
         .orderBy('id', descending: true)
+        .get();
+    */
+
+    QuerySnapshot dados = await getConexao()
+        .collection('postagens')
+        .where('denunciado', isLessThan: 3)
+        .orderBy('denunciado', descending: true)
         .get();
 
     var postagens = new List<ItemData>();
@@ -511,7 +519,13 @@ class FbRepository {
   }
 
   carregarMinhasPostagens(authorId) async {
-    QuerySnapshot dados = await getConexao().collection('postagens').get();
+    //QuerySnapshot dados = await getConexao().collection('postagens').get();
+
+    QuerySnapshot dados = await getConexao()
+        .collection('postagens')
+        .where('denunciado', isLessThan: 3)
+        .orderBy('denunciado', descending: true)
+        .get();
 
     var postagens = new List<ItemData>();
 
@@ -573,7 +587,10 @@ class FbRepository {
   }
 
   carregarComentario(id) async {
-    QuerySnapshot dados = await getConexao().collection('postagens').get();
+    QuerySnapshot dados = await getConexao()
+        .collection('postagens')
+        .where('id', isLessThan: 3)
+        .get();
 
     ItemData comentario;
     List<ItemData> aux = new List<ItemData>();
@@ -654,7 +671,8 @@ class FbRepository {
       'postadoPorId': user.id,
       'postadoPorNome': user.apelido,
       'texto': msg,
-      'comentarios': []
+      'comentarios': [],
+      'denunciado': 0
     });
 
     dados = await getConexao().collection('postagens').get();
@@ -669,7 +687,14 @@ class FbRepository {
         for (int i = 0; i < aux.length; i++) {
           comentarios.add(aux[i]);
         }
+
         comentarios.add(lastId);
+
+        getConexao()
+            .collection('postagens')
+            .doc('post$idPost')
+            .update({'comentarios': comentarios});
+/*
         getConexao().collection('postagens').doc('post$idPost').set({
           'dataHora': item.data()['dataHora'],
           'id': item.data()['id'],
@@ -680,6 +705,7 @@ class FbRepository {
           'texto': item.data()['texto'],
           'comentarios': comentarios
         });
+        */
       }
     }
   }
@@ -815,6 +841,18 @@ class FbRepository {
 
   void enviarDenuncia(
       int idDoPost, Map<String, dynamic> data, texto, User autor) async {
+
+    DocumentSnapshot dados =
+        await getConexao().collection('postagens').doc('post$idDoPost').get();
+
+    int numDenuncias = dados.data()['denunciado'];
+    numDenuncias = numDenuncias + 1;
+
+    getConexao()
+        .collection('postagens')
+        .doc(dados.id)
+        .update({'denunciado': numDenuncias});
+
     getConexao()
         .collection('denuncias')
         .doc('denuncia$idDoPost-${autor.id}')
@@ -839,16 +877,13 @@ class FbRepository {
       print(ex);
     }
 
-    if(!denuns.contains(idDoPost)) {
+    if (!denuns.contains(idDoPost)) {
       denuns.add(idDoPost);
     }
 
-  
     getConexao()
         .collection('denuncias')
         .doc('denuncias')
         .update({'ids': denuns});
-
-    
   }
 }
