@@ -106,7 +106,7 @@ class _MyAppState extends State<MyApp> {
                 return LoginHome();
               } else {
                 return HomePage(
-                  0,
+                  1,
                   usuario: snapshot.data,
                 );
               }

@@ -1,6 +1,7 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
+import 'package:ainidiu/src/components/listview_with_pagination.dart';
 import 'package:ainidiu/src/page/configuracoes_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
@@ -154,10 +155,8 @@ class _PerfilPageState extends State<PerfilPage> {
                       ),
                     ),
                     Container(
-                      child: ListViewMeusPostCards(
-                        usuario: apelido,
-                        handleGetDataSoource: getFuruteDados(),
-                      ),
+                      height: 500,
+                      child: ListiviewPagination(),
                     )
                   ],
                 ),

@@ -45,7 +45,7 @@ class _DenunciarState extends State<Denunciar> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Denunciar'),
+          title: Text(id.toString()),
           backgroundColor: Colors.red,
         ),
         body: Container(
@@ -70,7 +70,7 @@ class _DenunciarState extends State<Denunciar> {
                             ],
                           ),
                         ));
-                    await Future.delayed(Duration(milliseconds: 1300));
+                    await Future.delayed(Duration(milliseconds: 1000));
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },

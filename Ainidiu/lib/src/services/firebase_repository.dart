@@ -488,17 +488,9 @@ class FbRepository {
   }
 
   Future<List<ItemData>> carregarPostagens() async {
-    /*
     QuerySnapshot dados = await getConexao()
         .collection('postagens')
         .orderBy('id', descending: true)
-        .get();
-    */
-
-    QuerySnapshot dados = await getConexao()
-        .collection('postagens')
-        .where('denunciado', isLessThan: 3)
-        .orderBy('denunciado', descending: true)
         .get();
 
     var postagens = new List<ItemData>();
@@ -527,13 +519,7 @@ class FbRepository {
   }
 
   carregarMinhasPostagens(authorId) async {
-    //QuerySnapshot dados = await getConexao().collection('postagens').get();
-
-    QuerySnapshot dados = await getConexao()
-        .collection('postagens')
-        .where('denunciado', isLessThan: 3)
-        .orderBy('denunciado', descending: true)
-        .get();
+    QuerySnapshot dados = await getConexao().collection('postagens').get();
 
     var postagens = new List<ItemData>();
 
@@ -595,10 +581,7 @@ class FbRepository {
   }
 
   carregarComentario(id) async {
-    QuerySnapshot dados = await getConexao()
-        .collection('postagens')
-        .where('id', isLessThan: 3)
-        .get();
+    QuerySnapshot dados = await getConexao().collection('postagens').get();
 
     ItemData comentario;
     List<ItemData> aux = new List<ItemData>();
@@ -819,7 +802,10 @@ class FbRepository {
     for (var item in dados.docs) {
       var data = item.data();
       if (data['id'] == idDoPost) {
-        enviarDenuncia(idDoPost, data, texto, autor);
+
+      
+enviarDenuncia(idDoPost, data, texto, autor);
+       
 
         if (data['parentId'] != 0) {
           var pai = await getConexao()

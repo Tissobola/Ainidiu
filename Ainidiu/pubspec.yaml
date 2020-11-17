@@ -23,6 +23,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   
+  paginate_firestore: ^0.2.2
   connectivity: ^0.4.8+1
   email_validator: '^1.0.0'
   cupertino_icons: ^0.1.2
@@ -31,8 +32,7 @@ dependencies:
   firebase_auth: ^0.18.0+1
   firebase_storage: ^4.0.0
   google_sign_in: ^4.1.1
-  string_similarity: ^1.1.0
-  path_provider: ^1.6.16
+  # path_provider: ^1.6.16
   flutter_local_notifications: ^1.4.4+4
   firebase_messaging: ^7.0.0
   cloud_functions: ^0.6.0

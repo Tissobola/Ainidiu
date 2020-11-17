@@ -1,6 +1,7 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/liste_view_post_card.dart';
+import 'package:ainidiu/src/components/listview_with_pagination.dart';
 import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
@@ -45,14 +46,10 @@ class _PrincipalPageState extends State<PrincipalPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       ///Usando o componente ListViewPostCard, passando como parâmetro a fonte de dados
-      body: RefreshIndicator(
-        onRefresh: _reload,
-        child: Container(
-          color: Colors.white,
-          height: MediaQuery.of(context).size.height,
-          child: ListViewPostCard(
-              usuario: usuario, handleGetDataSoource: postagens),
-        ),
+      body: Container(
+        color: Colors.white,
+        height: MediaQuery.of(context).size.height,
+        child: ListiviewPagination(usuario: usuario,)
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

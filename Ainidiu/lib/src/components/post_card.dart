@@ -146,7 +146,7 @@ class _PostCardState extends State<PostCard> {
         },
         child: Container(
           decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(width: 1, color: Colors.grey))),
+              ),
           child: Card(
             shape: exibeTarjaAzul(),
             elevation: 0,
@@ -237,197 +237,208 @@ class _PostCardState extends State<PostCard> {
                   ),
 
                   //Botoes
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Tooltip(
-                        message: "Comentar",
-                        child: FlatButton(
-                            onPressed: () {
-                              
-                              Scaffold.of(context).showBottomSheet((context) {
-                                return Material(
-                                  shadowColor: Colors.blue,
-                                  elevation: 20,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[200],
-                                          ),
-                                          // height: MediaQuery.of(context).size.height / 2,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10.0),
-                                            child: Column(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 10.0),
-                                                  child: Row(
-                                                    children: [
-                                                      Text('Em resposta à ',
-                                                          style: TextStyle(
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                          width: 0.5,
+                          color: Colors.grey
+                        )
+                      )
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        
+                        Tooltip(
+                          message: "Comentar",
+                          child: FlatButton(
+                              onPressed: () {
+                                
+                                Scaffold.of(context).showBottomSheet((context) {
+                                  return Material(
+                                    shadowColor: Colors.blue,
+                                    elevation: 20,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[200],
+                                            ),
+                                            // height: MediaQuery.of(context).size.height / 2,
+                                            width:
+                                                MediaQuery.of(context).size.width,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(10.0),
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10.0),
+                                                    child: Row(
+                                                      children: [
+                                                        Text('Em resposta à ',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.grey)),
+                                                        Text(
+                                                            this
+                                                                .widget
+                                                                .current
+                                                                .postadoPorNome,
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.blue))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Form(
+                                                    key: _formKey,
+                                                    child: TextFormField(
+                                                      controller: msg,
+                                                      validator: (value) {
+                                                        if (value.isEmpty) {
+                                                          return 'Escreva algo';
+                                                        }
+                                                        return null;
+                                                      },
+                                                      decoration: InputDecoration(
+                                                          border: OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10)),
+                                                          hintText:
+                                                              'Digite seu comentário',
+                                                          hintStyle: TextStyle(
                                                               color:
                                                                   Colors.grey)),
-                                                      Text(
-                                                          this
-                                                              .widget
-                                                              .current
-                                                              .postadoPorNome,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.blue))
-                                                    ],
+                                                      minLines: 5,
+                                                      maxLines: 10,
+                                                      maxLength: 500,
+                                                    ),
                                                   ),
-                                                ),
-                                                Form(
-                                                  key: _formKey,
-                                                  child: TextFormField(
-                                                    controller: msg,
-                                                    validator: (value) {
-                                                      if (value.isEmpty) {
-                                                        return 'Escreva algo';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    decoration: InputDecoration(
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        hintText:
-                                                            'Digite seu comentário',
-                                                        hintStyle: TextStyle(
-                                                            color:
-                                                                Colors.grey)),
-                                                    minLines: 5,
-                                                    maxLines: 10,
-                                                    maxLength: 500,
-                                                  ),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    FlatButton(
-                                                        child: Text("Voltar"),
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        }),
-                                                    RaisedButton(
-                                                      color: Colors.blue,
-                                                      child: Text(
-                                                        'Comentar',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                      onPressed: () async {
-                                                        if (podeComentar) {
-                                                          podeComentar = false;
-                                                          if (_formKey
-                                                              .currentState
-                                                              .validate()) {
-                                                            await Future.delayed(
-                                                                Duration(
-                                                                    milliseconds:
-                                                                        600));
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      FlatButton(
+                                                          child: Text("Voltar"),
+                                                          onPressed: () {
                                                             Navigator.pop(
                                                                 context);
+                                                          }),
+                                                      RaisedButton(
+                                                        color: Colors.blue,
+                                                        child: Text(
+                                                          'Comentar',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                        onPressed: () async {
+                                                          if (podeComentar) {
+                                                            podeComentar = false;
+                                                            if (_formKey
+                                                                .currentState
+                                                                .validate()) {
+                                                              await Future.delayed(
+                                                                  Duration(
+                                                                      milliseconds:
+                                                                          600));
+                                                              Navigator.pop(
+                                                                  context);
 
-                                                            repository
-                                                                .escreverComentario(
-                                                                    current.id,
-                                                                    msg.text,
-                                                                    this
-                                                                        .widget
-                                                                        .usuario);
+                                                              repository
+                                                                  .escreverComentario(
+                                                                      current.id,
+                                                                      msg.text,
+                                                                      this
+                                                                          .widget
+                                                                          .usuario);
 
-                                                            QuerySnapshot
-                                                                postPai =
-                                                                await repository
-                                                                    .getConexao()
-                                                                    .collection(
-                                                                        'postagens')
-                                                                    .where('id',
-                                                                        isEqualTo:
-                                                                            current.id)
-                                                                    .get();
+                                                              QuerySnapshot
+                                                                  postPai =
+                                                                  await repository
+                                                                      .getConexao()
+                                                                      .collection(
+                                                                          'postagens')
+                                                                      .where('id',
+                                                                          isEqualTo:
+                                                                              current.id)
+                                                                      .get();
 
-                                                            User userPai = await repository
-                                                                .carregarDadosPorId(postPai
-                                                                        .docs.last
-                                                                        .data()[
-                                                                    'postadoPorId']);
+                                                              User userPai = await repository
+                                                                  .carregarDadosPorId(postPai
+                                                                          .docs.last
+                                                                          .data()[
+                                                                      'postadoPorId']);
 
-                                                            mandarNotification(
-                                                                userPai.token,
-                                                                msg.text);
+                                                              mandarNotification(
+                                                                  userPai.token,
+                                                                  msg.text);
 
-                                                            msg.clear();
-                                                            podeComentar = true;
+                                                              msg.clear();
+                                                              podeComentar = true;
+                                                            }
                                                           }
-                                                        }
-                                                      },
-                                                    )
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          )),
-                                    ],
+                                                        },
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            )),
+                                      ],
+                                    ),
+                                  );
+                                });
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.chat_bubble_outline,
                                   ),
-                                );
-                              });
-                            },
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.chat_bubble_outline,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                getTotalComentarios()
-                              ],
-                            )),
-                      ),
-                      Tooltip(
-                        message: "Novo Chat",
-                        child: FlatButton(
-                            onPressed: () async {
-                              if (usuario.id == this.current.postadoPorId) {
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text(
-                                        'Você não pode falar com você mesmo ;-;')));
-                              } else {
-                                await repository.criarChat(
-                                    usuario.id, this.current.postadoPorId);
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  getTotalComentarios()
+                                ],
+                              )),
+                        ),
+                        Tooltip(
+                          message: "Novo Chat",
+                          child: FlatButton(
+                              onPressed: () async {
+                                if (usuario.id == this.current.postadoPorId) {
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text(
+                                          'Você não pode falar com você mesmo ;-;')));
+                                } else {
+                                  await repository.criarChat(
+                                      usuario.id, this.current.postadoPorId);
 
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            HomePage(0, usuario: usuario)),
-                                    (route) => false);
-                              }
-                            },
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.label_outline,
-                                  //textDirection: TextDirection.rtl,
-                                )
-                              ],
-                            )),
-                      )
-                    ],
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              HomePage(0, usuario: usuario)),
+                                      (route) => false);
+                                }
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.label_outline,
+                                    //textDirection: TextDirection.rtl,
+                                  )
+                                ],
+                              )),
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),

@@ -1,9 +1,16 @@
+import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/components/listview_with_pagination.dart';
+import 'package:ainidiu/src/components/post_card.dart';
 import 'package:ainidiu/src/page/chat_home.dart';
+import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/page/perfil_page2.dart';
 import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:paginate_firestore/bloc/pagination_listeners.dart';
+import 'package:paginate_firestore/paginate_firestore.dart';
 
 class HomePage extends StatefulWidget {
   int inicio;
@@ -23,6 +30,8 @@ class _HomePageState extends State<HomePage> {
   String apelido;
 
   FbRepository repository = new FbRepository();
+  PaginateRefreshedChangeListener refreshChangeListener =
+      PaginateRefreshedChangeListener();
 
   _HomePageState({this.usuario, this.apelido});
 
@@ -41,7 +50,12 @@ class _HomePageState extends State<HomePage> {
 
   PageController pageController;
 
-  @override
+  getQuery() {
+    return FirebaseFirestore.instance
+        .collection('postagens')
+        .orderBy('id', descending: true);
+  }
+
   @override
   void initState() {
     bottomSelectedIndex = this.widget.inicio;
@@ -61,9 +75,7 @@ class _HomePageState extends State<HomePage> {
         ChatHome(
           usuario: usuario,
         ),
-        PrincipalPage(
-          usuario: usuario,
-        ),
+        ListiviewPagination(usuario: usuario,),
         PerfilPage(
           usuario: usuario,
         ),
@@ -88,6 +100,21 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: (bottomSelectedIndex == 1)
+            ? FloatingActionButton(
+                child: Icon(
+                  Icons.add_comment,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Escrever(
+                                usuario: usuario,
+                              )));
+                })
+            : null,
         appBar: AppBar(
             title: Text(
           namePage(bottomSelectedIndex),
@@ -109,6 +136,7 @@ class _HomePageState extends State<HomePage> {
         ),
         body: buildPageView());
   }
+
 }
 
 class Home extends StatefulWidget {
