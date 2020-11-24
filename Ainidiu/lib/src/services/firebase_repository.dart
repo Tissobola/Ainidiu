@@ -150,7 +150,7 @@ class FbRepository {
       for (var item in dados.docs) {
         if (item.id == '${myId}_$outroId' || item.id == '${outroId}_$myId') {
           ok = false;
-        } else {}
+        } 
       }
       if (ok) {
         Map<String, String> apelido = new Map<String, String>();
@@ -640,13 +640,14 @@ class FbRepository {
   }
 
   escreverComentario(idPost, msg, User user) async {
+    QuerySnapshot dadosComentarios;
     QuerySnapshot dados;
 
-    dados = await getConexao().collection('postagens').get();
+    dadosComentarios = await getConexao().collection('comentarios').get();
 
     int lastId = 0;
 
-    for (var item in dados.docs) {
+    for (var item in dadosComentarios.docs) {
       if (item.data()['id'] > lastId) {
         lastId = item.data()['id'];
       }
@@ -654,7 +655,7 @@ class FbRepository {
 
     lastId++;
 
-    getConexao().collection('postagens').doc('post$lastId').set({
+    getConexao().collection('comentarios').doc('post$lastId').set({
       'dataHora': formatarHora(DateTime.now()),
       'id': lastId,
       'imagemURL': user.imageURL,
@@ -685,18 +686,7 @@ class FbRepository {
             .collection('postagens')
             .doc('post$idPost')
             .update({'comentarios': comentarios});
-/*
-        getConexao().collection('postagens').doc('post$idPost').set({
-          'dataHora': item.data()['dataHora'],
-          'id': item.data()['id'],
-          'imagemURL': item.data()['imagemURL'],
-          'parentId': item.data()['parentId'],
-          'postadoPorId': item.data()['postadoPorId'],
-          'postadoPorNome': item.data()['postadoPorNome'],
-          'texto': item.data()['texto'],
-          'comentarios': comentarios
-        });
-        */
+
       }
     }
   }
@@ -802,10 +792,7 @@ class FbRepository {
     for (var item in dados.docs) {
       var data = item.data();
       if (data['id'] == idDoPost) {
-
-      
-enviarDenuncia(idDoPost, data, texto, autor);
-       
+        enviarDenuncia(idDoPost, data, texto, autor);
 
         if (data['parentId'] != 0) {
           var pai = await getConexao()

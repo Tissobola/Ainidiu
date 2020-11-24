@@ -123,25 +123,14 @@ class _PostCardState extends State<PostCard> {
         onTap: () async {
           ///Verifica se tem comentários para exibir os detalhes
           ///Métod executado sempre que clicar no card
-          if (this.getCurrent().getComentarios().length > 0) {
-            final result = await Navigator.push(
+          if (this.getCurrent().getComentarios().length > 0) { 
+             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => DetalhePostagemPage(
                         usuario: usuario, postagem: this.getCurrent())));
 
-            try {
-              if (result) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomePage(
-                              1,
-                              usuario: usuario,
-                              apelido: usuario.apelido,
-                            )));
-              }
-            } catch (ex) {}
+           
           }
         },
         child: Container(
@@ -351,7 +340,7 @@ class _PostCardState extends State<PostCard> {
                                                               Navigator.pop(
                                                                   context);
 
-                                                              repository
+                                                              await repository
                                                                   .escreverComentario(
                                                                       current.id,
                                                                       msg.text,
@@ -382,6 +371,7 @@ class _PostCardState extends State<PostCard> {
 
                                                               msg.clear();
                                                               podeComentar = true;
+                                                              
                                                             }
                                                           }
                                                         },

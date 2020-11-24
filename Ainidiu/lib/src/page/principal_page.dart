@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 class PrincipalPage extends StatefulWidget {
   User usuario;
+  
   PrincipalPage({Key key, this.usuario}) : super(key: key);
 
   @override
@@ -49,7 +50,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
       body: Container(
         color: Colors.white,
         height: MediaQuery.of(context).size.height,
-        child: ListiviewPagination(usuario: usuario,)
+        child: ListiviewPagination(usuario: usuario, collection: 'postagens',)
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

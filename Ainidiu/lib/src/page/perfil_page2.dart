@@ -156,7 +156,7 @@ class _PerfilPageState extends State<PerfilPage> {
                     ),
                     Container(
                       height: 500,
-                      child: ListiviewPagination(),
+                      child: ListviewMinhasPostagens(usuario: apelido, collection: 'minhas postagens',),
                     )
                   ],
                 ),

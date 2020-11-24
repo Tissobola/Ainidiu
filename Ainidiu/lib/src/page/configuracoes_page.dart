@@ -1,4 +1,5 @@
 import 'package:ainidiu/src/api/user.dart';
+import 'package:ainidiu/src/page/confimar_reset.dart';
 import 'package:ainidiu/src/page/dados_pessoais.dart';
 import 'package:ainidiu/src/page/denuncias_sugestoes_mensagens.dart';
 import 'package:ainidiu/src/page/login_home.dart';
@@ -18,16 +19,20 @@ class Configuracoes extends StatefulWidget {
 
 class _ConfiguracoesState extends State<Configuracoes> {
   FbRepository repository = new FbRepository();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  bool _loading = false;
 
   User usuario;
   _ConfiguracoesState({this.usuario});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text('Configurações'),
         ),
-        body: opcoesListView());
+        body: opcoesListView(context));
   }
 
   Future<void> _showMyDialog() async {
@@ -52,29 +57,35 @@ class _ConfiguracoesState extends State<Configuracoes> {
                 Navigator.of(context).pop();
               },
             ),
-            FlatButton(
-              child: Text(
-                'Confirmar',
-                style: TextStyle(color: Colors.red),
-              ),
-              onPressed: () async {
-                await repository.resetPosts(usuario);
+            (_loading)
+                ? Center(child: CircularProgressIndicator())
+                : FlatButton(
+                    child: Text(
+                      'Confirmar',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    onPressed: () async {
+                      setState(() {
+                        _loading = true;
+                      });
 
-                Navigator.of(context).pop();
+                      //await repository.resetPosts(usuario);
 
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginHome()),
-                    (route) => false);
-              },
-            ),
+// Navigator.of(context).pop();
+
+                      // Navigator.pushAndRemoveUntil(
+                      //     context,
+                      //    MaterialPageRoute(builder: (context) => LoginHome()),
+                      //    (route) => false);
+                    },
+                  ),
           ],
         );
       },
     );
   }
 
-  opcoesListView() {
+  opcoesListView(BuildContext context) {
     return ListView(
       children: <Widget>[
         ListTile(
@@ -125,8 +136,12 @@ class _ConfiguracoesState extends State<Configuracoes> {
           leading: Icon(Icons.label_important),
           title: Text('Denúncias, Sugestões ou Mensagens'),
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => OpinionPage(usuario: usuario,)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => OpinionPage(
+                          usuario: usuario,
+                        )));
           },
         ),
         ListTile(
@@ -137,7 +152,10 @@ class _ConfiguracoesState extends State<Configuracoes> {
           ),
           onTap: () async {
             //await repository.resetPosts(usuario);
-            _showMyDialog();
+            //  _showMyDialog();
+
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ConfirmarReset(usuario: usuario,)));
           },
         )
       ],
