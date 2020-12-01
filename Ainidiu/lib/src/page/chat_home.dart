@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatHome extends StatefulWidget {
-  User usuario;
+  final User usuario;
   ChatHome({Key key, this.usuario}) : super(key: key);
   @override
   _ChatHomeState createState() => _ChatHomeState(usuario: usuario);
@@ -42,16 +42,18 @@ class _ChatHomeState extends State<ChatHome> {
       child: StreamBuilder(
         stream: repository.carregarConversas(usuario.id),
         builder: (context, snapshot) {
+          
           QuerySnapshot snap = snapshot.data;
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (!snapshot.hasData) {
+          } else if (snapshot.data.docs.length == 0) {
             return Center(
               child: Text('Você ainda não tem nenhuma conversa :('),
             );
           } else {
+       
             return Container(
               color: Colors.white,
               child: ListView.builder(
@@ -61,9 +63,10 @@ class _ChatHomeState extends State<ChatHome> {
                       (snap.docs[index].data()['ids'][0] == usuario.id)
                           ? snap.docs[index].data()['ids'][1]
                           : snap.docs[index].data()['ids'][0];
-                          
-                  
+
                   DateTime date = snap.docs[index].data()['data'].toDate();
+
+                  
 
                   return Container(
                     decoration: BoxDecoration(
@@ -175,8 +178,10 @@ class _ChatHomeState extends State<ChatHome> {
                         child: CircleAvatar(
                           foregroundColor: Colors.blue,
                           backgroundColor: Colors.white,
-                          backgroundImage: NetworkImage(snap.docs[index].data()['foto'][outroId.toString()],),
-                          radius: 25,   
+                          backgroundImage: NetworkImage(
+                            snap.docs[index].data()['foto'][outroId.toString()],
+                          ),
+                          radius: 25,
                         ),
                       ),
                       title: Text(
@@ -186,7 +191,10 @@ class _ChatHomeState extends State<ChatHome> {
                       subtitle: Container(
                         padding: EdgeInsets.only(top: 5.0),
                         child: Text(
-                          snap.docs[index].data()['conversa'].toString().replaceAll("\n", " "),
+                          snap.docs[index]
+                              .data()['conversa']
+                              .toString()
+                              .replaceAll("\n", " "),
                           style: (snap.docs[index]
                                   .data()['lidaPor']
                                   .contains(usuario.id))

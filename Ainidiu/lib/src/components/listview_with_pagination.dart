@@ -3,7 +3,6 @@ import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/post_card.dart';
 import 'package:ainidiu/src/page/denunciar_postagem_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
@@ -11,10 +10,10 @@ import 'package:paginate_firestore/paginate_firestore.dart';
 class ListiviewPagination extends StatefulWidget {
   ListiviewPagination({this.usuario, this.collection, this.postPai});
 
-  User usuario;
-  String collection;
+  final User usuario;
+  final String collection;
 
-  ItemData postPai;
+  final ItemData postPai;
  
   @override
   _ListiviewPaginationState createState() => _ListiviewPaginationState();
@@ -116,10 +115,10 @@ class _ListiviewPaginationState extends State<ListiviewPagination> {
 class ListviewMinhasPostagens extends StatefulWidget {
   ListviewMinhasPostagens({this.usuario, this.collection, this.postPai});
 
-  User usuario;
-  String collection;
+  final User usuario;
+  final String collection;
 
-  ItemData postPai;
+  final ItemData postPai;
  
   @override
   _ListviewMinhasPostagensState createState() => _ListviewMinhasPostagensState();

@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 ///Compoente de ira listar todas as postagem
 ///Com rolagem
 class ListViewPostCard extends StatefulWidget {
-  Future<List<ItemData>> handleGetDataSoource;
-  User usuario;
+  final Future<List<ItemData>> handleGetDataSoource;
+  final User usuario;
 
   ListViewPostCard({Key key, this.usuario, this.handleGetDataSoource})
       : super(key: key);
@@ -111,8 +111,8 @@ class _ListViewPostCardState extends State<ListViewPostCard> {
 }
 
 class ListViewMeusPostCards extends StatefulWidget {
-  Future<List<ItemData>> handleGetDataSoource;
-  User usuario;
+  final Future<List<ItemData>> handleGetDataSoource;
+  final User usuario;
 
   ListViewMeusPostCards({Key key, this.usuario, this.handleGetDataSoource})
       : super(key: key);

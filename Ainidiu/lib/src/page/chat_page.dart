@@ -10,10 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Chat extends StatefulWidget {
-  User user;
-  User userEu;
-  int id;
-  int myId;
+  final User user;
+  final User userEu;
+  final int id;
+  final int myId;
   Chat({this.user, this.userEu, this.id, this.myId});
   @override
   _ChatState createState() =>

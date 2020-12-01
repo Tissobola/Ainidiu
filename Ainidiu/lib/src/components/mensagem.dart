@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Mensagem extends StatelessWidget {
-  String texto;
-  int env;
-  int myId;
+  final String texto;
+  final int env;
+  final int myId;
 
   Mensagem(this.texto, this.env, this.myId);
 

@@ -1,10 +1,39 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/post_card.dart';
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
+
+class Alarm extends StatefulWidget {
+  @override
+  _AlarmState createState() => _AlarmState();
+}
+
+class _AlarmState extends State<Alarm> {
+  AndroidAlarmManager alarmManager = new AndroidAlarmManager();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Alarm'),
+      ),
+      body: Center(
+        child: RaisedButton(
+          child: Text('Alarme'),
+          onPressed: () {
+            AndroidAlarmManager.periodic(Duration(seconds: 4), 0, () {
+              print('ok');
+            });
+          },
+        ),
+      ),
+    );
+  }
+}
 
 class TestPagination extends StatefulWidget {
   @override

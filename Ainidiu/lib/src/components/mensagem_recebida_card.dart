@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MensagemRecebidaCard extends StatefulWidget {
-  String nomeDoUsuario;
-  String msg;
+  final String nomeDoUsuario;
+  final String msg;
   MensagemRecebidaCard(this.nomeDoUsuario, this.msg);
   @override
   _MensagemRecebidaCardState createState() =>

@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Configuracoes extends StatefulWidget {
-  User usuario;
+  final User usuario;
 
   Configuracoes({this.usuario});
   @override
@@ -20,8 +20,6 @@ class Configuracoes extends StatefulWidget {
 class _ConfiguracoesState extends State<Configuracoes> {
   FbRepository repository = new FbRepository();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  bool _loading = false;
 
   User usuario;
   _ConfiguracoesState({this.usuario});
@@ -33,56 +31,6 @@ class _ConfiguracoesState extends State<Configuracoes> {
           title: Text('Configurações'),
         ),
         body: opcoesListView(context));
-  }
-
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Você tem certeza?'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(
-                    'Isso irá apagar todas as suas postagens, conversas e mudará seu ID de perfil.')
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Voltar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            (_loading)
-                ? Center(child: CircularProgressIndicator())
-                : FlatButton(
-                    child: Text(
-                      'Confirmar',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    onPressed: () async {
-                      setState(() {
-                        _loading = true;
-                      });
-
-                      //await repository.resetPosts(usuario);
-
-// Navigator.of(context).pop();
-
-                      // Navigator.pushAndRemoveUntil(
-                      //     context,
-                      //    MaterialPageRoute(builder: (context) => LoginHome()),
-                      //    (route) => false);
-                    },
-                  ),
-          ],
-        );
-      },
-    );
   }
 
   opcoesListView(BuildContext context) {

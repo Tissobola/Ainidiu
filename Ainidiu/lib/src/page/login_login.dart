@@ -80,11 +80,11 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
-                      height: getScreenHeight(context, 20, 1),
+                      height: getScreenHeight(context, 30, 1),
                     ),
                     buildLogo(),
                     SizedBox(
-                      height: getScreenHeight(context, 25, 2),
+                      height: getScreenHeight(context, 90, 2),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 20, right: 20),

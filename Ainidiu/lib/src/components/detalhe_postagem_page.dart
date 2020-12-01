@@ -1,9 +1,7 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/components/liste_view_post_card.dart';
 import 'package:ainidiu/src/components/listview_with_pagination.dart';
 import 'package:ainidiu/src/components/post_card.dart';
-import 'package:ainidiu/src/page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 
@@ -11,7 +9,7 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 ///onde é apresentando os comentarios
 class DetalhePostagemPage extends StatefulWidget {
   final ItemData postagem;
-  User usuario;
+  final User usuario;
   DetalhePostagemPage({Key key, this.usuario, this.postagem}) : super(key: key);
 
   @override

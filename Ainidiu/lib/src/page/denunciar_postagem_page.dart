@@ -1,3 +1,4 @@
+import 'package:ainidiu/src/page/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
@@ -24,9 +25,11 @@ class _DenunciarState extends State<Denunciar> {
     return Container(
       margin: EdgeInsets.all(12),
       height: maxLines * 24.0,
+      
       child: TextField(
         controller: msg,
         maxLines: maxLines,
+        maxLength: 500,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           hintText: "Insira o motivo da denuncia...",
@@ -42,10 +45,11 @@ class _DenunciarState extends State<Denunciar> {
   Widget build(BuildContext context) {
     var alturaTela = MediaQuery.of(context).size.height;
     var larguraTela = MediaQuery.of(context).size.width;
+    var loading = true;
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(id.toString()),
+          title: Text('Denunciar'),
           backgroundColor: Colors.red,
         ),
         body: Container(
@@ -57,22 +61,43 @@ class _DenunciarState extends State<Denunciar> {
                 left: larguraTela - 70 - 12,
                 child: GestureDetector(
                   onTap: () async {
-                    repository.denunciar(id, msg.text, usuario);
-                    FocusScope.of(context)
-                                    .requestFocus(new FocusNode());
                     showDialog(
                         context: context,
                         child: AlertDialog(
+                          title: Text('Sua denúncia foi enviada para análise!'),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text('Sua denúncia foi enviada para análise!')
+                              RaisedButton(
+                                onPressed: () {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomePage(
+                                                1,
+                                                usuario: usuario,
+                                              )),
+                                      (route) => false);
+                                },
+                                child: Text(
+                                  "Confirmar",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                color: Colors.blue,
+                              )
                             ],
                           ),
                         ));
+
+                    FocusScope.of(context).requestFocus(new FocusNode());
+
+                    repository.denunciar(id, msg.text, usuario);
+
                     await Future.delayed(Duration(milliseconds: 1000));
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+
+                    setState(() {
+                      loading = false;
+                    });
                   },
                   child: ClipOval(
                     child: Container(

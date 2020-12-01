@@ -11,9 +11,9 @@ import 'detalhe_postagem_page.dart';
 
 ///Componente de Card, compoente que monta e apresenta a postagem
 class PostCard extends StatefulWidget {
-  BuildContext context;
-  ItemData current;
-  User usuario;
+  final BuildContext context;
+  final ItemData current;
+  final User usuario;
 
   PostCard(this.context, this.current, this.usuario);
 

@@ -10,7 +10,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class DadosPessoais extends StatefulWidget {
-  User usuario;
+  final User usuario;
   DadosPessoais({this.usuario});
   @override
   _DadosPessoaisState createState() => _DadosPessoaisState(usuario: usuario);
@@ -53,16 +53,6 @@ class _DadosPessoaisState extends State<DadosPessoais> {
 
   String _currText = 'Selecionar';
   List<String> generos = ["Masculino", "Feminino", "Outro", "Selecionar"];
-
-  String senha(String senha) {
-    String password = '';
-
-    for (int i = 0; i < senha.length; i++) {
-      password += '*';
-    }
-
-    return senha;
-  }
 
   List<String> _urls = new List<String>();
   List<String> _urlsMan = new List<String>();
@@ -827,6 +817,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               trailing: FlatButton(
                 onPressed: () async {
                   DateTime date = await showDatePicker(
+                    
                       initialEntryMode: DatePickerEntryMode.input,
                       context: context,
                       initialDate: DateTime.now(),

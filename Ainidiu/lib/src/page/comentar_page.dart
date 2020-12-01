@@ -4,8 +4,8 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class Comentar extends StatefulWidget {
-  String usuario;
-  ItemData current;
+  final String usuario;
+  final ItemData current;
   Comentar({Key key, this.usuario, this.current}) : super(key: key);
 
   @override

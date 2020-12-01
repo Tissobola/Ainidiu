@@ -44,7 +44,7 @@ class _OpinionPageState extends State<OpinionPage> {
           controller: msg,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
-            hintText: mensagem,
+            hintText: 'Digite aqui...',
             hintStyle: TextStyle(color: Colors.grey[300]),
             fillColor: Colors.white,
             filled: true,
@@ -54,7 +54,7 @@ class _OpinionPageState extends State<OpinionPage> {
     );
   }
 
-  Widget button() {
+  Widget _buildButton() {
     return RawMaterialButton(
       onPressed: () async {
         if (_formKey.currentState.validate()) {
@@ -87,8 +87,29 @@ class _OpinionPageState extends State<OpinionPage> {
     );
   }
 
+  _buildCard() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Card(
+        child: Center(
+          child: Container(
+              height: 200,
+              width: MediaQuery.of(context).size.width - 30,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                    child: Text(
+                  mensagem,
+                  textAlign: TextAlign.justify,
+                )),
+              )),
+        ),
+      ),
+    );
+  }
+
   String mensagem =
-      "Use este espaço para escrever algo que você deseje nos comunicar.\nAqui você denunciar algo que aconteceu dentro do aplicativo. Seja um bug (erro) ou algo que aconteceu com outro usuário.\nAlém disso, você pode mandar um mensagem para nossa equipe.";
+      "Use este espaço para escrever algo que você deseje nos comunicar. Aqui você denunciar algo que aconteceu dentro do aplicativo. Seja um bug (erro) ou algo que aconteceu com outro usuário. Além disso, você pode mandar um mensagem para nossa equipe.";
 
   @override
   Widget build(BuildContext context) {
@@ -98,13 +119,18 @@ class _OpinionPageState extends State<OpinionPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(title: Text('Contato')),
-      body: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            _buildTextField(),
-            button(),
-          ]),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              _buildTextField(),
+              _buildButton(),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2,),
+              _buildCard()
+            ]),
+      ),
     );
   }
 }
