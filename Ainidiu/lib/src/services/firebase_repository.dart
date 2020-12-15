@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/conversas.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FbRepository {
@@ -13,7 +14,7 @@ class FbRepository {
   Future<void> sugestoes(texto, User user) async {
     getConexao().collection('sugestoes').doc().set({
       'mensagem': texto,
-      'data': DateTime.now(),
+      'data': new DateFormat.yMd().add_jm().format(new DateTime.now()).toString(),
       'usuario': user.apelido,
     });
   }
