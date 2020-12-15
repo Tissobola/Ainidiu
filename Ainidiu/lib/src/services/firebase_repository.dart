@@ -150,7 +150,7 @@ class FbRepository {
       for (var item in dados.docs) {
         if (item.id == '${myId}_$outroId' || item.id == '${outroId}_$myId') {
           ok = false;
-        } 
+        }
       }
       if (ok) {
         Map<String, String> apelido = new Map<String, String>();
@@ -686,7 +686,6 @@ class FbRepository {
             .collection('postagens')
             .doc('post$idPost')
             .update({'comentarios': comentarios});
-
       }
     }
   }
@@ -818,6 +817,17 @@ class FbRepository {
         }
       }
     }
+  }
+
+  void denunciarChat(int idDaConversa, String motivo, User autor) async {
+    getConexao()
+        .collection('denuncias')
+        .doc('denunciaChat-$idDaConversa')
+        .set({
+      'id': idDaConversa,
+      'motivoDaDenuncia': motivo,
+      'ID do autor da denuncia': autor.id,
+    });
   }
 
   void enviarDenuncia(

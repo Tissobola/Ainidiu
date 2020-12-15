@@ -1,16 +1,12 @@
-import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/listview_with_pagination.dart';
-import 'package:ainidiu/src/components/post_card.dart';
 import 'package:ainidiu/src/page/chat_home.dart';
 import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/page/perfil_page2.dart';
-import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
-import 'package:paginate_firestore/paginate_firestore.dart';
 
 class HomePage extends StatefulWidget {
   int inicio;

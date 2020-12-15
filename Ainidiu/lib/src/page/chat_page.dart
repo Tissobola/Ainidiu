@@ -7,6 +7,7 @@ import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'denunciar_chat_page.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Chat extends StatefulWidget {
@@ -106,7 +107,7 @@ class _ChatState extends State<Chat> {
     }
 
     return Scaffold(
-        appBar: AppBar(title: Text(user.apelido)),
+        appBar: AppBar(title: Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text(user.apelido), Container(width: 140), IconButton(icon: Icon(Icons.report), onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => DenunciarChat(usuario: userEu, id:myId,)));})],),),
         body: Container(
           child: Column(
             children: [
