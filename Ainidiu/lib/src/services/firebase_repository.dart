@@ -2,6 +2,7 @@ import 'package:ainidiu/src/api/item.dart';
 import 'dart:math';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FbRepository {
@@ -12,7 +13,7 @@ class FbRepository {
   Future<void> sugestoes(texto, User user) async {
     getConexao().collection('sugestoes').doc().set({
       'mensagem': texto,
-      'data': DateTime.now(),
+      'data': new DateFormat.yMd().add_jm().format(new DateTime.now()).toString(),
       'usuario': user.apelido,
     });
   }
@@ -766,6 +767,17 @@ class FbRepository {
         }
       }
     }
+  }
+
+  void denunciarChat(int idDaConversa, String motivo, User autor) async {
+    getConexao()
+        .collection('denuncias')
+        .doc('denunciaChat-$idDaConversa')
+        .set({
+      'id': idDaConversa,
+      'motivoDaDenuncia': motivo,
+      'ID do autor da denuncia': autor.id,
+    });
   }
 
   void enviarDenuncia(
