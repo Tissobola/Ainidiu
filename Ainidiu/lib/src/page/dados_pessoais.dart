@@ -346,8 +346,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                       color: Colors.blue,
                       onPressed: () async {
                         if (_formKeyCidade.currentState.validate()) {
-                          var res = await repository.updateDados(
-                              usuario, 'cidade',
+                          await repository.updateDados(usuario, 'cidade',
                               cidade: _cidadeController.text);
 
                           _cidadeController.clear();
@@ -423,8 +422,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                       color: Colors.blue,
                       onPressed: () async {
                         if (_formKeyNascimento.currentState.validate()) {
-                          var res = await repository.updateDados(
-                              usuario, 'nascimento',
+                          await repository.updateDados(usuario, 'nascimento',
                               nascimento: _nascimentoController.text);
 
                           _nascimentoController.clear();
@@ -485,6 +483,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                     } else {
                       return 'Email Inválido';
                     }
+                    return null;
                   },
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -817,7 +816,6 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               trailing: FlatButton(
                 onPressed: () async {
                   DateTime date = await showDatePicker(
-                    
                       initialEntryMode: DatePickerEntryMode.input,
                       context: context,
                       initialDate: DateTime.now(),
@@ -829,7 +827,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                         DateFormat('dd/MM/yyyy').format(date);
                   });
 
-                  var res = await repository.updateDados(usuario, 'nascimento',
+                  await repository.updateDados(usuario, 'nascimento',
                       nascimento: _nascimentoController.text);
 
                   _nascimentoController.clear();
@@ -881,13 +879,12 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                           content: buildCheck(),
                         );
                       }).then((value) async {
-                    await repository.updateDados(usuario, 'genero', genero: _currText);
+                    await repository.updateDados(usuario, 'genero',
+                        genero: _currText);
                     setState(() {
-                    usuario.genero = _currText;
+                      usuario.genero = _currText;
+                    });
                   });
-                  });
-
-                
                 },
                 child: Text(
                   'Editar',

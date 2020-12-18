@@ -1,21 +1,17 @@
-import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/components/listview_with_pagination.dart';
-import 'package:ainidiu/src/components/post_card.dart';
 import 'package:ainidiu/src/page/chat_home.dart';
 import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/page/perfil_page2.dart';
-import 'package:ainidiu/src/page/principal_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
-import 'package:paginate_firestore/paginate_firestore.dart';
 
 class HomePage extends StatefulWidget {
-  int inicio;
-  User usuario;
-  String apelido;
+  final int inicio;
+  final User usuario;
+  final String apelido;
   HomePage(this.inicio, {Key key, this.usuario, this.apelido})
       : super(key: key);
 
@@ -124,11 +120,11 @@ class _HomePageState extends State<HomePage> {
           currentIndex: bottomSelectedIndex,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.message), title: Text('Chat')),
+                icon: Icon(Icons.message),  label: 'Chat'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.home), title: Text('Home')),
+                icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.person), title: Text('Perfil'))
+                icon: Icon(Icons.person), label:'Perfil')
           ],
           onTap: (index) {
             bottomTapped(index);
@@ -137,42 +133,4 @@ class _HomePageState extends State<HomePage> {
         body: buildPageView());
   }
 
-}
-
-class Home extends StatefulWidget {
-  String apelido;
-
-  Home({this.apelido});
-
-  @override
-  _HomeState createState() => _HomeState(apelido: apelido);
-}
-
-class _HomeState extends State<Home> {
-  String apelido;
-
-  _HomeState({this.apelido});
-
-  FbRepository repository = new FbRepository();
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: repository.carregarDadosDoUsuario(apelido),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-
-        return HomePage(
-          0,
-          usuario: snapshot.data,
-        );
-      },
-    );
-  }
 }

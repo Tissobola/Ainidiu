@@ -1,7 +1,6 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'dart:math';
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/components/conversas.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -123,6 +122,8 @@ class FbRepository {
       default:
         return 1;
     }
+
+    return 1;
   }
 
   Future<User> loginAuto() async {
@@ -150,7 +151,7 @@ class FbRepository {
       for (var item in dados.docs) {
         if (item.id == '${myId}_$outroId' || item.id == '${outroId}_$myId') {
           ok = false;
-        } 
+        }
       }
       if (ok) {
         Map<String, String> apelido = new Map<String, String>();
@@ -218,59 +219,7 @@ class FbRepository {
     return col;
   }
 
-  minhasConversas(myId) async {
-    QuerySnapshot dados = await getConexao().collection('chat').get();
-    List<Conversas> conversas = new List<Conversas>();
-
-    for (var item in dados.docs) {
-      if (await teste(myId, item.id) != 1) {
-        User outro = await teste(myId, item.id);
-
-        try {
-          DocumentSnapshot t = await getConexao()
-              .collection('chat')
-              .doc('${myId}_${outro.id}')
-              .get();
-
-          DateTime hora = t.data()['data'].toDate();
-
-          Conversas aux = new Conversas(
-              outro.apelido,
-              t.data()['conversa'],
-              outro.imageURL,
-              '${hora.hour}:${hora.minute}',
-              t.data()['ids'],
-              t.data()['ultimaMensagemId'],
-              t.data()['lidaPor']);
-          conversas.add(aux);
-        } catch (ex) {
-          try {
-            DocumentSnapshot t = await getConexao()
-                .collection('chat')
-                .doc('${outro.id}_$myId')
-                .get();
-
-            DateTime hora = t.data()['data'].toDate();
-
-            Conversas aux = new Conversas(
-                outro.apelido,
-                t.data()['conversa'],
-                outro.imageURL,
-                formatarHora(hora),
-                t.data()['ids'],
-                t.data()['ultimaMensagemId'],
-                t.data()['lidaPor']);
-
-            conversas.add(aux);
-          } catch (ex) {
-            print(ex);
-          }
-        }
-      }
-    }
-
-    return conversas;
-  }
+  
 
   mandarMensagem(texto, userid, myId, userOutro, userMy) async {
     int primeiro = userid;
@@ -686,7 +635,6 @@ class FbRepository {
             .collection('postagens')
             .doc('post$idPost')
             .update({'comentarios': comentarios});
-
       }
     }
   }

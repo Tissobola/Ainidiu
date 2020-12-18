@@ -25,9 +25,10 @@ class _ChatState extends State<Chat> {
 
   TextEditingController msg = new TextEditingController();
   final _formKey = new GlobalKey<FormState>();
-  bool podeEnviar = true;
   ScrollController scrollController =
       new ScrollController(initialScrollOffset: 5000);
+
+  bool podeEnviar = true;
 
   FbRepository repository = new FbRepository();
 
@@ -182,14 +183,11 @@ class _ChatState extends State<Chat> {
       child: Form(
         key: _formKey,
         child: Container(
-          
-
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-              
                 width: 320,
                 child: TextFormField(
                   minLines: 1,
@@ -231,8 +229,7 @@ class _ChatState extends State<Chat> {
                             String aux = msg.text;
                             msg.text = '';
 
-
-                            //Removendo "\n" 
+                            //Removendo "\n"
                             do {
                               if (aux.characters.last == "\n") {
                                 aux = aux.substring(0, aux.length - 1);
@@ -260,88 +257,6 @@ class _ChatState extends State<Chat> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  digitar() {
-    FbRepository repository = new FbRepository();
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        child: Form(
-          key: _formKey,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: 300,
-                child: TextFormField(
-                  validator: (text) {
-                    if (text.isEmpty) {
-                      setState(() {
-                        podeEnviar = false;
-                      });
-                      return null;
-                    }
-                    setState(() {
-                      podeEnviar = true;
-                    });
-                    return null;
-                  },
-                  controller: msg,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(borderSide: BorderSide.none)),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 5),
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: IconButton(
-                        icon: Icon(
-                          Icons.send,
-                          size: 25,
-                          color: Colors.white,
-                        ),
-                        onPressed: () async {
-                          _formKey.currentState.validate();
-                          if (podeEnviar) {
-                            //Vai armazenar a mensagem
-                            String aux = msg.text;
-                            msg.text = '';
-
-                            await repository.mandarMensagem(
-                                aux, id, myId, user, userEu);
-
-                            String textoDaNotificacao = aux;
-
-                            await mandarNotification(
-                                user.token, textoDaNotificacao);
-                          }
-                        }),
-                  ),
-                  height: 48,
-                  width: 48,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blue,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        width: MediaQuery.of(context).size.width - 20,
-        height: 60,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(40)),
-            border: Border.all(
-                width: 1, color: Colors.grey, style: BorderStyle.solid)),
       ),
     );
   }

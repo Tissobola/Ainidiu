@@ -15,9 +15,10 @@ class Comentar extends StatefulWidget {
 class _ComentarState extends State<Comentar> {
   String usuario;
   ItemData current;
-  _ComentarState({this.usuario, this.current});
   TextEditingController msg = TextEditingController();
   FbRepository repository = FbRepository();
+
+  _ComentarState({this.usuario, this.current});
 
   ItemData getCurrent() {
     return this.widget.current;

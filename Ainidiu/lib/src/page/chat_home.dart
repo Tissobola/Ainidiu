@@ -15,6 +15,10 @@ class _ChatHomeState extends State<ChatHome> {
   User usuario;
   bool canTap = true;
 
+  FbRepository repository = new FbRepository();
+
+  _ChatHomeState({this.usuario});
+
   String formatarHora(DateTime hora) {
     String horaFormatada;
 
@@ -33,16 +37,12 @@ class _ChatHomeState extends State<ChatHome> {
     return horaFormatada;
   }
 
-  FbRepository repository = new FbRepository();
-  _ChatHomeState({this.usuario});
-
   @override
   Widget build(BuildContext context) {
     return Container(
       child: StreamBuilder(
         stream: repository.carregarConversas(usuario.id),
         builder: (context, snapshot) {
-          
           QuerySnapshot snap = snapshot.data;
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -53,7 +53,6 @@ class _ChatHomeState extends State<ChatHome> {
               child: Text('Você ainda não tem nenhuma conversa :('),
             );
           } else {
-       
             return Container(
               color: Colors.white,
               child: ListView.builder(
@@ -65,8 +64,6 @@ class _ChatHomeState extends State<ChatHome> {
                           : snap.docs[index].data()['ids'][0];
 
                   DateTime date = snap.docs[index].data()['data'].toDate();
-
-                  
 
                   return Container(
                     decoration: BoxDecoration(
@@ -80,6 +77,20 @@ class _ChatHomeState extends State<ChatHome> {
                           User user =
                               await repository.carregarDadosPorId(outroId);
 
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Chat(
+                                        user: user,
+                                        userEu: usuario,
+                                        myId: usuario.id,
+                                        id: outroId,
+                                      ))).then((value) {
+                            setState(() {
+                              canTap = true;
+                            });
+                          });
+
                           try {
                             DocumentSnapshot userDoc = await repository
                                 .getConexao()
@@ -90,7 +101,7 @@ class _ChatHomeState extends State<ChatHome> {
                             List lidoPor = await userDoc.data()['lidaPor'];
 
                             if (!(lidoPor.contains(usuario.id))) {
-                              await repository
+                              repository
                                   .getConexao()
                                   .collection('chatHome')
                                   .doc(userDoc.id)
@@ -117,20 +128,6 @@ class _ChatHomeState extends State<ChatHome> {
                               });
                             }
                           }
-
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Chat(
-                                        user: user,
-                                        userEu: usuario,
-                                        myId: usuario.id,
-                                        id: outroId,
-                                      ))).then((value) {
-                            setState(() {
-                              canTap = true;
-                            });
-                          });
                         }
                       },
                       trailing: Column(
@@ -216,9 +213,5 @@ class _ChatHomeState extends State<ChatHome> {
     );
   }
 
-  Future<String> profilePicture(String apelido) async {
-    FbRepository repository = new FbRepository();
-    User user = await repository.carregarDadosDoUsuario(apelido);
-    return user.imageURL;
-  }
+  
 }

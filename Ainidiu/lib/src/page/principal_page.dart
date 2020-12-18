@@ -1,13 +1,12 @@
 import 'package:ainidiu/src/api/item.dart';
 import 'package:ainidiu/src/api/user.dart';
-import 'package:ainidiu/src/components/liste_view_post_card.dart';
 import 'package:ainidiu/src/components/listview_with_pagination.dart';
 import 'package:ainidiu/src/page/escrever_page.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class PrincipalPage extends StatefulWidget {
-  User usuario;
+  final User usuario;
   
   PrincipalPage({Key key, this.usuario}) : super(key: key);
 
@@ -33,14 +32,6 @@ class _PrincipalPageState extends State<PrincipalPage> {
   void initState() {
     postagens = getFutureDados();
     super.initState();
-  }
-
-  Future<void> _reload() async {
-    Future<List<ItemData>> aux =
-        await Future.delayed(Duration(seconds: 1), () => getFutureDados());
-    setState(() {
-      postagens = aux;
-    });
   }
 
   @override

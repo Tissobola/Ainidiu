@@ -73,25 +73,17 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     
-      localizationsDelegates: [
+        localizationsDelegates: [
           GlobalMaterialLocalizations.delegate
-      ],
-      supportedLocales: [
-        const Locale("pt", "BR"),
-      ],
+        ],
+        supportedLocales: [
+          const Locale("pt", "BR"),
+        ],
         debugShowCheckedModeBanner: false,
         title: 'Ainidiu',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        //HomePage() para o app
-        //IntroPage() para a introdução
-        //LoginHome para login
-
-        //home: HomePage()
-        //home: IntroPage(),
-        //home: LoginHome(),
         home: FutureBuilder(
           future: repository.loginAuto(),
           builder: (context, snapshot) {

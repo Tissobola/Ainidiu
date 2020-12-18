@@ -4,7 +4,7 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class Escrever extends StatefulWidget {
-  User usuario;
+  final User usuario;
   Escrever({Key key, this.usuario}) : super(key: key);
 
   @override
@@ -52,7 +52,6 @@ class _EscreverState extends State<Escrever> {
   @override
   Widget build(BuildContext context) {
     var alturaTela = MediaQuery.of(context).size.height;
-    var larguraTela = MediaQuery.of(context).size.width;
 
     final GlobalKey<ScaffoldState> _scaffoldKey =
         new GlobalKey<ScaffoldState>();

@@ -22,7 +22,9 @@ class _ConfiguracoesState extends State<Configuracoes> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   User usuario;
+
   _ConfiguracoesState({this.usuario});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,11 +101,12 @@ class _ConfiguracoesState extends State<Configuracoes> {
             style: TextStyle(color: Colors.red),
           ),
           onTap: () async {
-            //await repository.resetPosts(usuario);
-            //  _showMyDialog();
-
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ConfirmarReset(usuario: usuario,)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ConfirmarReset(
+                          usuario: usuario,
+                        )));
           },
         )
       ],

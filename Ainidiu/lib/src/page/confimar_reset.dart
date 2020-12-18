@@ -64,13 +64,12 @@ class _ConfirmarResetState extends State<ConfirmarReset> {
 
                         await repository.resetPosts(widget.usuario);
 
-                        
+                        Navigator.of(context).pop();
 
-                         Navigator.of(context).pop();
-
-                         Navigator.pushAndRemoveUntil(
-                             context,
-                            MaterialPageRoute(builder: (context) => LoginHome()),
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginHome()),
                             (route) => false);
                       },
                     ),

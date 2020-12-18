@@ -5,7 +5,7 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class MeusPosts extends StatefulWidget {
-  User usuario;
+  final User usuario;
   MeusPosts({Key key, this.usuario}) : super(key: key);
 
   @override

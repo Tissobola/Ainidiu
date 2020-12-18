@@ -4,7 +4,7 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:flutter/material.dart';
 
 class OpinionPage extends StatefulWidget {
-  User usuario;
+  final User usuario;
   OpinionPage({Key key, this.usuario}) : super(key: key);
 
   @override
@@ -113,8 +113,6 @@ class _OpinionPageState extends State<OpinionPage> {
 
   @override
   Widget build(BuildContext context) {
-    var alturaTela = MediaQuery.of(context).size.height;
-    var larguraTela = MediaQuery.of(context).size.width;
 
     return Scaffold(
       key: _scaffoldKey,
