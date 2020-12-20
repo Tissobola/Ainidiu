@@ -24,6 +24,9 @@ class User {
   //Cidade do usuário
   String cidade;
 
+  //Estado do usuário
+  String estado;
+
   //Data de nascimento (DIA/MES/ANO)
   String nascimento;
   

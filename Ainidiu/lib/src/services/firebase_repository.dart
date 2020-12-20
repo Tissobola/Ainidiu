@@ -659,7 +659,7 @@ class FbRepository {
   }
 
   Future<int> cadastro(
-      token, email, senha, genero, imageURL, cidade, nascimento) async {
+      token, email, senha, genero, imageURL, estado, cidade, nascimento) async {
     QuerySnapshot dados = await getConexao().collection('usuarios').get();
 
     QuerySnapshot test;
@@ -688,6 +688,7 @@ class FbRepository {
       'id': id,
       'ImageURL': imageURL,
       'token': token,
+      'estado': estado,
       'cidade': cidade,
       'nascimento': nascimento
     });

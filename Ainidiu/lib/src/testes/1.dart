@@ -6,7 +6,72 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 
+class Drop extends StatefulWidget {
+  @override
+  _DropState createState() => _DropState();
+}
+
+class _DropState extends State<Drop> {
+  String atual = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Drop"),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          RaisedButton(onPressed: () {
+            showDialog(context: context, child: SearchableDropdown.single(
+              items: [
+              DropdownMenuItem(
+                child: Text('data1'),
+                onTap: () {
+                  print('object');
+                },
+              ),
+              DropdownMenuItem(child: Text('data2')),
+              DropdownMenuItem(child: Text('data3')),
+              DropdownMenuItem(child: Text('data4')),
+              DropdownMenuItem(child: Text('data5')),
+              DropdownMenuItem(child: Text('data6'))
+            ], onChanged: () {}));
+          }),
+          DropdownButton(
+            hint: Text(
+              'Hint'
+            ),
+            onChanged: (value) {
+              print(value);
+              setState(() {
+                //atual = value;
+              });
+            },
+            items: [
+              DropdownMenuItem(
+                child: Text('data1'),
+                onTap: () {
+                  print('object');
+                },
+              ),
+              DropdownMenuItem(child: Text('data2')),
+              DropdownMenuItem(child: Text('data3')),
+              DropdownMenuItem(child: Text('data4')),
+              DropdownMenuItem(child: Text('data5')),
+              DropdownMenuItem(child: Text('data6'))
+            ],
+          ),
+          Text(atual)
+        ],
+      ),
+    );
+  }
+}
 
 class Alarm extends StatefulWidget {
   @override

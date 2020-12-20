@@ -5,8 +5,8 @@ import 'package:ainidiu/src/services/firebase_repository.dart';
 import 'package:ainidiu/src/api/user.dart';
 
 class DenunciarChat extends StatefulWidget {
-  User usuario;
-  int id;
+  final User usuario;
+  final int id;
   DenunciarChat({Key key, this.usuario, this.id}) : super(key: key);
   @override
   _DenunciarChatState createState() => _DenunciarChatState(usuario: usuario, id: id);
@@ -45,7 +45,6 @@ class _DenunciarChatState extends State<DenunciarChat> {
   Widget build(BuildContext context) {
     var alturaTela = MediaQuery.of(context).size.height;
     var larguraTela = MediaQuery.of(context).size.width;
-    var loading = true;
 
     return Scaffold(
         appBar: AppBar(
@@ -95,9 +94,7 @@ class _DenunciarChatState extends State<DenunciarChat> {
 
                     await Future.delayed(Duration(milliseconds: 1000));
 
-                    setState(() {
-                      loading = false;
-                    });
+                    
                   },
                   child: ClipOval(
                     child: Container(

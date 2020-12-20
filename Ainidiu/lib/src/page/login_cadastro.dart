@@ -1,11 +1,15 @@
 import 'package:ainidiu/src/page/login_login.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:ainidiu/src/api/localidades.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Cadastro extends StatefulWidget {
   @override
@@ -31,6 +35,57 @@ class _CadastroState extends State<Cadastro> {
 
   String _currText = 'Selecionar';
   List<String> generos = ["Masculino", "Feminino", "Outro", "Selecionar"];
+
+  Future<List<String>> getEstados() async {
+    List<UF> estados = new List<UF>();
+    List<String> estadosString = new List<String>();
+
+    final response = await http
+        .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
+
+    if (response.statusCode == 200) {
+      List jsons = json.decode(response.body);
+
+      jsons.forEach((element) {
+        estados.add(UF.fromJson(element));
+      });
+
+      estados.forEach((element) {
+        estadosString.add(element.sigla);
+      });
+
+      return estadosString;
+    } else {
+      throw Exception('Erro ao carregar os estados');
+    }
+  }
+
+  String _currEstado = 'Selecionar';
+  String _currCidade = 'Selecionar';
+
+  Future<List<String>> getCidades() async {
+    List<Cidade> cidades = new List<Cidade>();
+    List<String> cidadesString = new List<String>();
+
+    var response = await http.get(
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/$_currEstado/municipios');
+
+    if (response.statusCode == 200) {
+      List jsons = json.decode(response.body);
+
+      jsons.forEach((element) {
+        cidades.add(Cidade.fromJson(element));
+      });
+
+      cidades.forEach((element) {
+        cidadesString.add(element.nome);
+      });
+
+      return cidadesString;
+    } else {
+      throw Exception('Erro ao carregar as cidades');
+    }
+  }
 
   String _avatar =
       'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png';
@@ -83,10 +138,9 @@ class _CadastroState extends State<Cadastro> {
     if (_currText == "Feminino") {
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-              child: Column(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-
             Row(
               children: [
                 exibirFoto(_urlsWoman[0]),
@@ -357,22 +411,111 @@ class _CadastroState extends State<Cadastro> {
                       validator: validaSenha,
                     ),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10.0, left: 20, right: 20),
-                    child: TextFormField(
-                      controller: _controladorCidade,
-                      decoration: InputDecoration(
-                          labelText: 'Cidade', border: OutlineInputBorder()),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Campo obrigatório';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
+
+                  //Estado
+
+                  FutureBuilder(
+                    future: getEstados(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10.0, left: 20, right: 20),
+                          child: Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0))),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    'Aguarde...',
+                                    style: TextStyle(
+                                        color: Colors.black54, fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10.0, left: 20, right: 20),
+                          child: DropdownSearch(
+                              mode: Mode.BOTTOM_SHEET,
+                              showSelectedItem: true,
+                              items: snapshot.data,
+                              label: "Estado",
+                              hint: "Selecionar estado",
+                              //popupItemDisabled: (String s) => s.startsWith('I'),
+                              onChanged: (value) {
+                                setState(() {
+                                  _currEstado = value;
+                                });
+                              },
+                              selectedItem: _currEstado),
+                        );
+                      }
+                    },
                   ),
+
+                  //Cidade
+
+                  FutureBuilder(
+                    future: getCidades(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10.0, left: 20, right: 20),
+                          child: Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0))),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    'Aguarde...',
+                                    style: TextStyle(
+                                        color: Colors.black54, fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10.0, left: 20, right: 20),
+                          child: DropdownSearch(
+                              mode: Mode.BOTTOM_SHEET,
+                              enabled: _currEstado.contains('Selecionar') ? false : true,
+                              showSelectedItem: true,
+                              items: snapshot.data,
+                              label: "Cidade",
+                              hint: "Selecionar cidade",
+                              //popupItemDisabled: (String s) => s.startsWith('I'),
+                              onChanged: (value) {
+                                setState(() {
+                                  _currCidade = value;
+                                });
+                              },
+                              selectedItem: _currCidade),
+                        );
+                      }
+                    },
+                  ),
+                  //Data de Nascimento
+
                   Padding(
                     padding:
                         const EdgeInsets.only(top: 10.0, left: 20, right: 20),
@@ -506,7 +649,9 @@ class _CadastroState extends State<Cadastro> {
                               side: BorderSide(color: Colors.blue)),
                           color: Colors.blue,
                           onPressed: () async {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState.validate() &&
+                                _currEstado != 'Selecionar' &&
+                                _currCidade != 'Selecionar') {
                               setState(() {
                                 _loading = true;
                               });
@@ -519,6 +664,7 @@ class _CadastroState extends State<Cadastro> {
 
                               final FirebaseMessaging _firebaseMessaging =
                                   FirebaseMessaging();
+
                               var token = await _firebaseMessaging.getToken();
 
                               int aux = await repository.cadastro(
@@ -527,7 +673,8 @@ class _CadastroState extends State<Cadastro> {
                                   _controladorSenha.text,
                                   _currText,
                                   _avatar,
-                                  _controladorCidade.text,
+                                  _currEstado,
+                                  _currCidade,
                                   _controladorNascimento.text);
                               if (aux == 0) {
                                 FocusScope.of(context)
