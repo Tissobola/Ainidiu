@@ -138,7 +138,7 @@ class _TestPaginationState extends State<TestPagination> {
                 context,
                 ItemData(0, 1, 'postadoPorNome', item['imagemURL'],
                     item['texto'], 'data', 1, []),
-                User('', 'imageURL', 'apelido', 'email', 'genero', 1, 'senha',
+                User('', 'imageURL', 'apelido', 'email', 'genero', 1, 'senha', 'ad',
                     'cidade', 'nascimento'));
           },
           query: FirebaseFirestore.instance

@@ -36,56 +36,8 @@ class _CadastroState extends State<Cadastro> {
   String _currText = 'Selecionar';
   List<String> generos = ["Masculino", "Feminino", "Outro", "Selecionar"];
 
-  Future<List<String>> getEstados() async {
-    List<UF> estados = new List<UF>();
-    List<String> estadosString = new List<String>();
-
-    final response = await http
-        .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-
-    if (response.statusCode == 200) {
-      List jsons = json.decode(response.body);
-
-      jsons.forEach((element) {
-        estados.add(UF.fromJson(element));
-      });
-
-      estados.forEach((element) {
-        estadosString.add(element.sigla);
-      });
-
-      return estadosString;
-    } else {
-      throw Exception('Erro ao carregar os estados');
-    }
-  }
-
   String _currEstado = 'Selecionar';
   String _currCidade = 'Selecionar';
-
-  Future<List<String>> getCidades() async {
-    List<Cidade> cidades = new List<Cidade>();
-    List<String> cidadesString = new List<String>();
-
-    var response = await http.get(
-        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/$_currEstado/municipios');
-
-    if (response.statusCode == 200) {
-      List jsons = json.decode(response.body);
-
-      jsons.forEach((element) {
-        cidades.add(Cidade.fromJson(element));
-      });
-
-      cidades.forEach((element) {
-        cidadesString.add(element.nome);
-      });
-
-      return cidadesString;
-    } else {
-      throw Exception('Erro ao carregar as cidades');
-    }
-  }
 
   String _avatar =
       'https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_960_720.png';
@@ -415,7 +367,7 @@ class _CadastroState extends State<Cadastro> {
                   //Estado
 
                   FutureBuilder(
-                    future: getEstados(),
+                    future: Localidades().getEstado(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Padding(
@@ -448,6 +400,9 @@ class _CadastroState extends State<Cadastro> {
                           child: DropdownSearch(
                               mode: Mode.BOTTOM_SHEET,
                               showSelectedItem: true,
+                              searchBoxDecoration: InputDecoration(
+                                  hintText: 'Pesquisar um estado...'),
+                              showSearchBox: true,
                               items: snapshot.data,
                               label: "Estado",
                               hint: "Selecionar estado",
@@ -466,7 +421,7 @@ class _CadastroState extends State<Cadastro> {
                   //Cidade
 
                   FutureBuilder(
-                    future: getCidades(),
+                    future: Localidades().getCidades(_currEstado),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Padding(
@@ -498,7 +453,12 @@ class _CadastroState extends State<Cadastro> {
                               top: 10.0, left: 20, right: 20),
                           child: DropdownSearch(
                               mode: Mode.BOTTOM_SHEET,
-                              enabled: _currEstado.contains('Selecionar') ? false : true,
+                              showSearchBox: true,
+                              searchBoxDecoration: InputDecoration(
+                                  hintText: 'Pesquisar uma cidade...'),
+                              enabled: _currEstado.contains('Selecionar')
+                                  ? false
+                                  : true,
                               showSelectedItem: true,
                               items: snapshot.data,
                               label: "Cidade",

@@ -13,7 +13,8 @@ class FbRepository {
   Future<void> sugestoes(texto, User user) async {
     getConexao().collection('sugestoes').doc().set({
       'mensagem': texto,
-      'data': new DateFormat.yMd().add_jm().format(new DateTime.now()).toString(),
+      'data':
+          new DateFormat.yMd().add_jm().format(new DateTime.now()).toString(),
       'usuario': user.apelido,
     });
   }
@@ -40,6 +41,7 @@ class FbRepository {
       {String senhaAntiga,
       String senhaNova,
       String email,
+      String estado,
       String cidade,
       String nascimento,
       String genero,
@@ -59,6 +61,13 @@ class FbRepository {
         return 0;
 
         break;
+
+      case 'estado':
+        getConexao().collection('usuarios').doc(userDoc.docs.last.id).update({
+          'estado': estado
+        });
+
+        return 0;
 
       case 'nascimento':
         getConexao()
@@ -220,8 +229,6 @@ class FbRepository {
     return col;
   }
 
-  
-
   mandarMensagem(texto, userid, myId, userOutro, userMy) async {
     int primeiro = userid;
     int segundo = myId;
@@ -348,6 +355,7 @@ class FbRepository {
         usuario.genero,
         usuario.id,
         usuario.senha,
+        usuario.estado,
         usuario.cidade,
         usuario.nascimento);
 
@@ -382,6 +390,7 @@ class FbRepository {
             data['genero'],
             data['id'],
             data['senha'],
+            data['estado'],
             data['cidade'],
             data['nascimento']);
         return usuario;
@@ -406,6 +415,7 @@ class FbRepository {
         dados['genero'],
         dados['id'],
         dados['senha'],
+        dados['estado'],
         dados['cidade'],
         dados['nascimento']);
 
@@ -771,10 +781,7 @@ class FbRepository {
   }
 
   void denunciarChat(int idDaConversa, String motivo, User autor) async {
-    getConexao()
-        .collection('denuncias')
-        .doc('denunciaChat-$idDaConversa')
-        .set({
+    getConexao().collection('denuncias').doc('denunciaChat-$idDaConversa').set({
       'id': idDaConversa,
       'motivoDaDenuncia': motivo,
       'ID do autor da denuncia': autor.id,

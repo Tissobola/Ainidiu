@@ -32,5 +32,5 @@ class User {
   
   //Construtor
   User(this.token ,this.imageURL, this.apelido, this.email, this.genero, this.id,
-      this.senha, this.cidade, this.nascimento);
+      this.senha,this.estado, this.cidade, this.nascimento);
 }

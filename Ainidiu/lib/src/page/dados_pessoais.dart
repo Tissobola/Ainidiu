@@ -1,7 +1,9 @@
+import 'package:ainidiu/src/api/localidades.dart';
 import 'package:ainidiu/src/api/user.dart';
 import 'package:ainidiu/src/page/home_page.dart';
 import 'package:ainidiu/src/page/login_home.dart';
 import 'package:ainidiu/src/services/firebase_repository.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -310,79 +312,82 @@ class _DadosPessoaisState extends State<DadosPessoais> {
     );
   }
 
-  cidadeDialog() {
+  cidadeDialog(String estadoAtual) {
     return AlertDialog(
-      title: Text('Redefinir Cidade'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Form(
-            key: _formKeyCidade,
-            child: Column(
-              children: [
-                TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Campo obrigatório';
-                    } else {
-                      return null;
-                    }
-                  },
-                  controller: _cidadeController,
-                  decoration: InputDecoration(
-                      labelText: 'Nova Cidade',
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white))),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Center(
-                  child: RaisedButton(
-                      child: Text(
-                        'Confirmar',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.blue,
-                      onPressed: () async {
-                        if (_formKeyCidade.currentState.validate()) {
+        title: Text('Redefinir Cidade'),
+        content: FutureBuilder(
+          future: Localidades().getCidades(estadoAtual),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text("Aguarde...");
+            } else {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DropdownSearch(
+                      mode: Mode.DIALOG,
+                      showSelectedItem: true,
+                      searchBoxDecoration:
+                          InputDecoration(hintText: 'Pesquisar uma cidade...'),
+                      showSearchBox: true,
+                      items: snapshot.data,
+                      label: "Cidade",
+                      hint: "Selecionar cidade",
+                      //popupItemDisabled: (String s) => s.startsWith('I'),
+                      onChanged: (value) async {
+                        if (value != usuario.estado) {
                           await repository.updateDados(usuario, 'cidade',
-                              cidade: _cidadeController.text);
+                              cidade: value);
 
-                          _cidadeController.clear();
-
-                          showDialog(
-                              context: context,
-                              child: AlertDialog(
-                                content: Container(
-                                  height: 400,
-                                  width: 300,
-                                  color: Colors.white,
-                                  child: Center(
-                                      child: Text(
-                                    'Cidade alterada com sucesso',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 21),
-                                  )),
-                                ),
-                              ));
-
-                          await Future.delayed(Duration(seconds: 2));
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      LoginHome()),
-                              (route) => false);
+                          Navigator.pop(context);
+                          setState(() {});
                         }
-                      }),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+                      },
+                      selectedItem: usuario.estado),
+                ],
+              );
+            }
+          },
+        ));
+  }
+
+  estadoDialog() {
+    return AlertDialog(
+        title: Text('Redefinir Estado'),
+        content: FutureBuilder(
+          future: Localidades().getEstado(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text("Aguarde...");
+            } else {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DropdownSearch(
+                      mode: Mode.DIALOG,
+                      showSelectedItem: true,
+                      searchBoxDecoration:
+                          InputDecoration(hintText: 'Pesquisar um estado...'),
+                      showSearchBox: true,
+                      items: snapshot.data,
+                      label: "Estado",
+                      hint: "Selecionar estado",
+                      //popupItemDisabled: (String s) => s.startsWith('I'),
+                      onChanged: (value) async {
+                        if (value != usuario.estado) {
+                          await repository.updateDados(usuario, 'estado',
+                              estado: value);
+
+                          Navigator.pop(context);
+                          setState(() {});
+                        }
+                      },
+                      selectedItem: usuario.estado),
+                ],
+              );
+            }
+          },
+        ));
   }
 
   nascimentoDialog() {
@@ -672,6 +677,8 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                             senhaAntiga: _senhaAntigaController.text,
                             senhaNova: _senhaNovaController.text);
 
+                        exibirSenhaController.text = _senhaNovaController.text;
+                        
                         if (res == 0) {
                           _senhaAntigaController.clear();
                           _senhaConfirmarController.clear();
@@ -731,7 +738,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
 
   @override
   void initState() {
-    exibirSenhaController.text = usuario.senha;
+    exibirSenhaController.text = usuario.senha ?? 'null';
 
     super.initState();
   }
@@ -743,227 +750,266 @@ class _DadosPessoaisState extends State<DadosPessoais> {
       appBar: AppBar(
         title: Text('Dados Pessoais'),
       ),
-      body: Container(
-        child: ListView(
-          children: [
-            //Foto de Perfil
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ListTile(
-                title: Text('Foto de Perfil'),
-                leading: CircleAvatar(
-                  radius: 27,
-                  backgroundColor: Colors.black,
-                  child: CircleAvatar(
-                    radius: 25,
-                    backgroundImage: NetworkImage(usuario.imageURL),
-                    backgroundColor: Colors.white,
-                  ),
-                ),
-                trailing: RaisedButton(
-                    color: Colors.blue,
-                    child: Text(
-                      'Editar',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () async {
-                      showDialog(context: context, child: fotoDialog());
-                    }),
+      body: FutureBuilder<User>(
+        future: repository.carregarDadosDoUsuario(usuario.apelido),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  CircularProgressIndicator(),
+                  Divider(),
+                  Text("Carregando seus dados...")
+                ],
               ),
-            ),
+            );
+          } else {
+            return Container(
+              child: ListView(
+                children: [
+                  //Foto de Perfil
 
-            //Apelido
-
-            ListTile(
-              title: Text('Apelido'),
-              subtitle: Text(usuario.apelido),
-            ),
-
-            //ID
-
-            ListTile(
-              title: Text('Seu ID'),
-              subtitle: Text(usuario.id.toString()),
-            ),
-
-            //Cidade
-
-            ListTile(
-              title: Text('Cidade'),
-              subtitle: Text(usuario.cidade),
-              focusColor: Colors.red,
-              hoverColor: Colors.red,
-              trailing: FlatButton(
-                onPressed: () async {
-                  showDialog(context: context, child: cidadeDialog());
-                },
-                child: Text(
-                  'Editar',
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.blue,
-              ),
-            ),
-
-            //Nascimento
-
-            ListTile(
-              title: Text('Data de Nascimento'),
-              subtitle: Text(usuario.nascimento),
-              focusColor: Colors.red,
-              hoverColor: Colors.red,
-              trailing: FlatButton(
-                onPressed: () async {
-                  DateTime date = await showDatePicker(
-                      initialEntryMode: DatePickerEntryMode.input,
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime.now());
-                  initializeDateFormatting();
-                  setState(() {
-                    _nascimentoController.text =
-                        DateFormat('dd/MM/yyyy').format(date);
-                  });
-
-                  await repository.updateDados(usuario, 'nascimento',
-                      nascimento: _nascimentoController.text);
-
-                  _nascimentoController.clear();
-
-                  showDialog(
-                      context: context,
-                      child: AlertDialog(
-                        content: Container(
-                          height: 400,
-                          width: 300,
-                          color: Colors.white,
-                          child: Center(
-                              child: Text(
-                            'Data de nascimento alterada com sucesso',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 21),
-                          )),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ListTile(
+                      title: Text('Foto de Perfil'),
+                      leading: CircleAvatar(
+                        radius: 27,
+                        backgroundColor: Colors.black,
+                        child: CircleAvatar(
+                          radius: 25,
+                          backgroundImage: NetworkImage(snapshot.data.imageURL),
+                          backgroundColor: Colors.white,
                         ),
-                      ));
-
-                  await Future.delayed(Duration(seconds: 3));
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => LoginHome()),
-                      (route) => false);
-                },
-                child: Text(
-                  'Editar',
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.blue,
-              ),
-            ),
-
-            //Gênero
-
-            ListTile(
-              title: Text('Gênero'),
-              subtitle: Text(usuario.genero),
-              focusColor: Colors.red,
-              hoverColor: Colors.red,
-              trailing: FlatButton(
-                onPressed: () async {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          content: buildCheck(),
-                        );
-                      }).then((value) async {
-                    await repository.updateDados(usuario, 'genero',
-                        genero: _currText);
-                    setState(() {
-                      usuario.genero = _currText;
-                    });
-                  });
-                },
-                child: Text(
-                  'Editar',
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.blue,
-              ),
-            ),
-
-            //Email
-
-            ListTile(
-              title: Text('Email'),
-              subtitle: Text(usuario.email),
-              focusColor: Colors.red,
-              hoverColor: Colors.red,
-              trailing: FlatButton(
-                onPressed: () async {
-                  showDialog(context: context, child: emailDialog());
-                },
-                child: Text(
-                  'Editar',
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.blue,
-              ),
-            ),
-
-            //Senha
-
-            Stack(
-              children: [
-                ListTile(
-                  title: Text('Senha'),
-                  subtitle: TextField(
-                    controller: exibirSenhaController,
-                    readOnly: true,
-                    obscureText: senhaVisivel,
-                    decoration: null,
-                  ),
-                  focusColor: Colors.red,
-                  hoverColor: Colors.red,
-                  trailing: FlatButton(
-                    onPressed: () async {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return senhaDialog();
-                        },
-                      );
-                    },
-                    child: Text(
-                      'Editar',
-                      style: TextStyle(color: Colors.white),
+                      ),
+                      trailing: RaisedButton(
+                          color: Colors.blue,
+                          child: Text(
+                            'Editar',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            showDialog(context: context, child: fotoDialog());
+                          }),
                     ),
-                    color: Colors.blue,
                   ),
-                ),
-                Positioned(
-                  child: IconButton(
-                      icon: senhaVisivelIcon,
-                      onPressed: () {
+
+                  //Apelido
+
+                  ListTile(
+                    title: Text('Apelido'),
+                    subtitle: Text(snapshot.data.apelido),
+                  ),
+
+                  //ID
+
+                  ListTile(
+                    title: Text('Seu ID'),
+                    subtitle: Text(snapshot.data.id.toString()),
+                  ),
+
+                  //Estado
+
+                  ListTile(
+                    title: Text('Estado'),
+                    subtitle: Text(snapshot.data.estado ?? "null"),
+                    focusColor: Colors.red,
+                    hoverColor: Colors.red,
+                    trailing: FlatButton(
+                      onPressed: () async {
+                        showDialog(context: context, child: estadoDialog());
+                      },
+                      child: Text(
+                        'Editar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.blue,
+                    ),
+                  ),
+
+                  //Cidade
+
+                  ListTile(
+                    title: Text('Cidade'),
+                    subtitle: Text(snapshot.data.cidade),
+                    focusColor: Colors.red,
+                    hoverColor: Colors.red,
+                    trailing: FlatButton(
+                      onPressed: () async {
+                        showDialog(
+                            context: context,
+                            child: cidadeDialog(snapshot.data.estado));
+                      },
+                      child: Text(
+                        'Editar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.blue,
+                    ),
+                  ),
+
+                  //Nascimento
+
+                  ListTile(
+                    title: Text('Data de Nascimento'),
+                    subtitle: Text(snapshot.data.nascimento),
+                    focusColor: Colors.red,
+                    hoverColor: Colors.red,
+                    trailing: FlatButton(
+                      onPressed: () async {
+                        DateTime date = await showDatePicker(
+                            initialEntryMode: DatePickerEntryMode.input,
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now());
+                        initializeDateFormatting();
+
                         setState(() {
-                          if (senhaVisivel) {
-                            senhaVisivel = false;
-                            senhaVisivelIcon = Icon(Icons.visibility);
-                          } else {
-                            senhaVisivel = true;
-                            senhaVisivelIcon = Icon(Icons.visibility_off);
-                          }
+                          _nascimentoController.text =
+                              DateFormat('dd/MM/yyyy').format(date);
                         });
-                      }),
-                  right: 120,
-                  top: 12,
-                ),
-              ],
-            ),
-          ],
-        ),
+
+                        await repository.updateDados(usuario, 'nascimento',
+                            nascimento: _nascimentoController.text);
+
+                        _nascimentoController.clear();
+
+                        showDialog(
+                            context: context,
+                            child: AlertDialog(
+                              content: Container(
+                                height: 400,
+                                width: 300,
+                                color: Colors.white,
+                                child: Center(
+                                    child: Text(
+                                  'Data de nascimento alterada com sucesso',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 21),
+                                )),
+                              ),
+                            ));
+
+                        await Future.delayed(Duration(seconds: 3));
+                        Navigator.pop(context);
+                        setState(() {});
+                      },
+                      child: Text(
+                        'Editar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.blue,
+                    ),
+                  ),
+
+                  //Gênero
+
+                  ListTile(
+                    title: Text('Gênero'),
+                    subtitle: Text(snapshot.data.genero),
+                    focusColor: Colors.red,
+                    hoverColor: Colors.red,
+                    trailing: FlatButton(
+                      onPressed: () async {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: buildCheck(),
+                              );
+                            }).then((value) async {
+                          await repository.updateDados(usuario, 'genero',
+                              genero: _currText);
+                          setState(() {
+                            usuario.genero = _currText;
+                          });
+                        });
+                      },
+                      child: Text(
+                        'Editar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.blue,
+                    ),
+                  ),
+
+                  //Email
+
+                  ListTile(
+                    title: Text('Email'),
+                    subtitle: Text(snapshot.data.email),
+                    focusColor: Colors.red,
+                    hoverColor: Colors.red,
+                    trailing: FlatButton(
+                      onPressed: () async {
+                        showDialog(context: context, child: emailDialog());
+                      },
+                      child: Text(
+                        'Editar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.blue,
+                    ),
+                  ),
+
+                  //Senha
+
+                  Stack(
+                    children: [
+                      ListTile(
+                        title: Text('Senha'),
+                        subtitle: TextField(
+                          controller: exibirSenhaController,
+                          readOnly: true,
+                          obscureText: senhaVisivel,
+                          decoration: null,
+                        ),
+                        focusColor: Colors.red,
+                        hoverColor: Colors.red,
+                        trailing: FlatButton(
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return senhaDialog();
+                              },
+                            );
+                          },
+                          child: Text(
+                            'Editar',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.blue,
+                        ),
+                      ),
+                      Positioned(
+                        child: IconButton(
+                            icon: senhaVisivelIcon,
+                            onPressed: () {
+                              setState(() {
+                                if (senhaVisivel) {
+                                  senhaVisivel = false;
+                                  senhaVisivelIcon = Icon(Icons.visibility);
+                                } else {
+                                  senhaVisivel = true;
+                                  senhaVisivelIcon = Icon(Icons.visibility_off);
+                                }
+                              });
+                            }),
+                        right: 120,
+                        top: 12,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }
+        },
       ),
     );
   }
