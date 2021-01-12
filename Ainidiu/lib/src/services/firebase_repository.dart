@@ -10,6 +10,18 @@ class FbRepository {
     return FirebaseFirestore.instance;
   }
 
+/*
+  Future<void> test() async {
+    QuerySnapshot data = await getConexao()
+        .collection('usuarios')
+        .limit(1)
+        
+        .get();
+
+    return data.docs.last.id;
+  }
+  */
+
   Future<void> sugestoes(texto, User user) async {
     getConexao().collection('sugestoes').doc().set({
       'mensagem': texto,
@@ -63,9 +75,10 @@ class FbRepository {
         break;
 
       case 'estado':
-        getConexao().collection('usuarios').doc(userDoc.docs.last.id).update({
-          'estado': estado
-        });
+        getConexao()
+            .collection('usuarios')
+            .doc(userDoc.docs.last.id)
+            .update({'estado': estado, 'cidade': ""});
 
         return 0;
 

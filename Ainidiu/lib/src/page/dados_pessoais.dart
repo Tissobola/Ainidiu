@@ -35,10 +35,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
 
   final _formKeySenha = GlobalKey<FormState>();
   final _formKeyEmail = GlobalKey<FormState>();
-  final _formKeyCidade = GlobalKey<FormState>();
   final _formKeyNascimento = GlobalKey<FormState>();
-
-  TextEditingController _cidadeController = new TextEditingController();
 
   TextEditingController _nascimentoController = new TextEditingController();
 
@@ -343,7 +340,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                           setState(() {});
                         }
                       },
-                      selectedItem: usuario.estado),
+                      ),
                 ],
               );
             }
@@ -365,7 +362,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                 children: [
                   DropdownSearch(
                       mode: Mode.DIALOG,
-                      showSelectedItem: true,
+                      showSelectedItem: false,
                       searchBoxDecoration:
                           InputDecoration(hintText: 'Pesquisar um estado...'),
                       showSearchBox: true,
@@ -382,7 +379,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                           setState(() {});
                         }
                       },
-                      selectedItem: usuario.estado),
+                      ),
                 ],
               );
             }

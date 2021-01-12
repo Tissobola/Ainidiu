@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:ainidiu/src/api/localidades.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class Cadastro extends StatefulWidget {
   @override
@@ -26,7 +24,6 @@ class _CadastroState extends State<Cadastro> {
   final TextEditingController _controladorSenha = TextEditingController();
   final TextEditingController _controladorConfirmarSenha =
       TextEditingController();
-  final TextEditingController _controladorCidade = TextEditingController();
   final TextEditingController _controladorNascimento = TextEditingController();
 
   bool mas = false;
