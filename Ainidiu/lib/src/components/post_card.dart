@@ -123,19 +123,16 @@ class _PostCardState extends State<PostCard> {
         onTap: () async {
           ///Verifica se tem comentários para exibir os detalhes
           ///Métod executado sempre que clicar no card
-          if (this.getCurrent().getComentarios().length > 0) { 
-             Navigator.push(
+          if (this.getCurrent().getComentarios().length > 0) {
+            Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => DetalhePostagemPage(
                         usuario: usuario, postagem: this.getCurrent())));
-
-           
           }
         },
         child: Container(
-          decoration: BoxDecoration(
-              ),
+          decoration: BoxDecoration(),
           child: Card(
             shape: exibeTarjaAzul(),
             elevation: 0,
@@ -228,22 +225,15 @@ class _PostCardState extends State<PostCard> {
                   //Botoes
                   Container(
                     decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          width: 0.5,
-                          color: Colors.grey
-                        )
-                      )
-                    ),
+                        border: Border(
+                            top: BorderSide(width: 0.5, color: Colors.grey))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        
                         Tooltip(
                           message: "Comentar",
                           child: FlatButton(
                               onPressed: () {
-                                
                                 Scaffold.of(context).showBottomSheet((context) {
                                   return Material(
                                     shadowColor: Colors.blue,
@@ -256,8 +246,9 @@ class _PostCardState extends State<PostCard> {
                                               color: Colors.grey[200],
                                             ),
                                             // height: MediaQuery.of(context).size.height / 2,
-                                            width:
-                                                MediaQuery.of(context).size.width,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             child: Padding(
                                               padding: EdgeInsets.all(10.0),
                                               child: Column(
@@ -270,16 +261,16 @@ class _PostCardState extends State<PostCard> {
                                                       children: [
                                                         Text('Em resposta à ',
                                                             style: TextStyle(
-                                                                color:
-                                                                    Colors.grey)),
+                                                                color: Colors
+                                                                    .grey)),
                                                         Text(
                                                             this
                                                                 .widget
                                                                 .current
                                                                 .postadoPorNome,
                                                             style: TextStyle(
-                                                                color:
-                                                                    Colors.blue))
+                                                                color: Colors
+                                                                    .blue))
                                                       ],
                                                     ),
                                                   ),
@@ -316,6 +307,7 @@ class _PostCardState extends State<PostCard> {
                                                       FlatButton(
                                                           child: Text("Voltar"),
                                                           onPressed: () {
+                                                            
                                                             Navigator.pop(
                                                                 context);
                                                           }),
@@ -329,7 +321,8 @@ class _PostCardState extends State<PostCard> {
                                                         ),
                                                         onPressed: () async {
                                                           if (podeComentar) {
-                                                            podeComentar = false;
+                                                            podeComentar =
+                                                                false;
                                                             if (_formKey
                                                                 .currentState
                                                                 .validate()) {
@@ -342,7 +335,8 @@ class _PostCardState extends State<PostCard> {
 
                                                               await repository
                                                                   .escreverComentario(
-                                                                      current.id,
+                                                                      current
+                                                                          .id,
                                                                       msg.text,
                                                                       this
                                                                           .widget
@@ -354,24 +348,26 @@ class _PostCardState extends State<PostCard> {
                                                                       .getConexao()
                                                                       .collection(
                                                                           'postagens')
-                                                                      .where('id',
+                                                                      .where(
+                                                                          'id',
                                                                           isEqualTo:
                                                                               current.id)
                                                                       .get();
 
                                                               User userPai = await repository
-                                                                  .carregarDadosPorId(postPai
-                                                                          .docs.last
-                                                                          .data()[
-                                                                      'postadoPorId']);
+                                                                  .carregarDadosPorId(
+                                                                      postPai
+                                                                          .docs
+                                                                          .last
+                                                                          .data()['postadoPorId']);
 
                                                               mandarNotification(
                                                                   userPai.token,
                                                                   msg.text);
 
                                                               msg.clear();
-                                                              podeComentar = true;
-                                                              
+                                                              podeComentar =
+                                                                  true;
                                                             }
                                                           }
                                                         },

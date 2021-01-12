@@ -323,7 +323,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                 children: [
                   DropdownSearch(
                       mode: Mode.DIALOG,
-                      showSelectedItem: true,
+                      //showSelectedItem: true,
                       searchBoxDecoration:
                           InputDecoration(hintText: 'Pesquisar uma cidade...'),
                       showSearchBox: true,
