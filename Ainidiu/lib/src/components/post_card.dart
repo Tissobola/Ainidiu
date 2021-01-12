@@ -234,6 +234,10 @@ class _PostCardState extends State<PostCard> {
                           message: "Comentar",
                           child: FlatButton(
                               onPressed: () {
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
+
                                 Scaffold.of(context).showBottomSheet((context) {
                                   return Material(
                                     shadowColor: Colors.blue,
@@ -307,7 +311,6 @@ class _PostCardState extends State<PostCard> {
                                                       FlatButton(
                                                           child: Text("Voltar"),
                                                           onPressed: () {
-                                                            
                                                             Navigator.pop(
                                                                 context);
                                                           }),
