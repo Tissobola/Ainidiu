@@ -45,6 +45,8 @@ class _LoginPageState extends State<LoginPage> {
                       height: loginController.screen
                           .getScreenHeight(context, 90, 2),
                     ),
+
+                    //Email
                     TextFormFieldExt1(
                       obscureText: false,
                       labelText: 'Email',
@@ -53,10 +55,8 @@ class _LoginPageState extends State<LoginPage> {
                       keyboardType: TextInputType.emailAddress,
                       validator: loginController.emailValidator,
                     ),
-                    SizedBox(
-                      height: loginController.screen
-                          .getScreenHeight(context, 100, 1),
-                    ),
+                    
+                    //Senha
                     TextFormFieldExt1(
                       obscureText: true,
                       labelText: 'Senha',

@@ -10,7 +10,6 @@ class LoginFirebaseProvider {
   FirebaseFirestore getConexao() {
     return FirebaseFirestore.instance;
   }
-  
 
   Future<String> getUserToken() async {
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -20,20 +19,16 @@ class LoginFirebaseProvider {
   }
 
   Future<void> registrarToken(String token, int userId) async {
+    QuerySnapshot userDoc = await getConexao()
+        .collection('usuarios')
+        .where('id', isEqualTo: userId)
+        .get();
 
-    QuerySnapshot userDoc = await 
-          getConexao()
-          .collection('usuarios')
-          .where('id', isEqualTo: userId)
-          .get();
-
-      await getConexao()
-          .collection('usuarios')
-          .doc(userDoc.docs[0].id)
-          .update({'token': token});
-
+    await getConexao()
+        .collection('usuarios')
+        .doc(userDoc.docs[0].id)
+        .update({'token': token});
   }
-
 
   Future<User> loginAuto() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

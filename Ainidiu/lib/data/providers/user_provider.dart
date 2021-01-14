@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ainidiu/data/models/user.dart';
+
 class UserProvider {
   getConexao() {
     return FirebaseFirestore.instance;
