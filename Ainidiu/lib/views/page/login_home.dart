@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:ainidiu/controllers/login_home_controller.dart';
+import 'package:ainidiu/views/components/flat_button_ext/flat_button_ext1.dart';
+import 'package:ainidiu/views/components/logo/logo.dart';
+import 'package:ainidiu/views/components/raisedbutton_ext/raisedbutton_ext1.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +16,9 @@ class LoginHome extends StatefulWidget {
 }
 
 class _LoginHomeState extends State<LoginHome> {
+  final _controller = LoginHomeController();
+  Logo logo = Logo();
+
   String _connection = "";
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -42,50 +49,20 @@ class _LoginHomeState extends State<LoginHome> {
     });
   }
 
-  double getScreenHeight(BuildContext context, double divider, double multiplier) {
-    return multiplier*MediaQuery.of(context).size.height/divider;
+  double getScreenHeight(
+      BuildContext context, double divider, double multiplier) {
+    return multiplier * MediaQuery.of(context).size.height / divider;
   }
 
-  double getScreenWidth(BuildContext context, double divider, double multiplier) {
-    return multiplier*MediaQuery.of(context).size.width/divider;
+  double getScreenWidth(
+      BuildContext context, double divider, double multiplier) {
+    return multiplier * MediaQuery.of(context).size.width / divider;
   }
 
   @override
   void dispose() {
     _connectivitySubscription.cancel();
     super.dispose();
-  }
-
-  Widget buildLogo() {
-    return Container(
- 
-      width: 100,
-      height: getScreenHeight(context, 5, 1),
-      child: Image.asset("assets/icon/icon.png",
-     
-     
-      )
-    );
-  }
-
-  Widget buildText() {
-    return Column(
-  
-    crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(
-          height: getScreenHeight(context, 10, 1),
-        ),
-        buildLogo(),
-        SizedBox(
-          height: getScreenHeight(context, 20, 3),
-        ),
-        Text(
-          'SEJA\nBEM-VINDO AO\nAINIDIU',
-          style: TextStyle(fontSize: 35, fontFamily: 'Montserrat'),
-        )
-      ],
-    );
   }
 
   Widget buildButton() {
@@ -116,7 +93,6 @@ class _LoginHomeState extends State<LoginHome> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-  
         FlatButton(
             onPressed: () {
               Navigator.push(this.context,
@@ -124,52 +100,55 @@ class _LoginHomeState extends State<LoginHome> {
             },
             child: Container(
                 child: Text(
-                  'Cadastre-se',
-                  style: estilo,
-                )))
+              'Cadastre-se',
+              style: estilo,
+            )))
       ],
     );
   }
 
-  Widget buttons() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[buildButton(), buildCadastro()],
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {
-
     if (_connection == "Não Conectado!") {
       return Scaffold(
         body: Container(
-          
           width: double.infinity,
           height: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.signal_wifi_off, size: 40,),
-              SizedBox(height: 20,),
+              Icon(
+                Icons.signal_wifi_off,
+                size: 40,
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Text('Sem conexão com a internet')
             ],
           ),
         ),
       );
-    } 
+    }
 
     return Scaffold(
       body: Container(
           color: Colors.white,
           child: Row(
-  
-    mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[buildText(), buttons()],
+                children: <Widget>[
+                  //Logo e mensagem inicial
+                  _controller.buildText(context),
+
+                  //Botões
+                  _controller.buttons(context)
+                ],
               ),
             ],
           )),
