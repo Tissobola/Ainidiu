@@ -91,7 +91,6 @@ class CadastroController {
   }
 
   Future<void> cadastro(BuildContext context) async {
-
     int response;
     String token;
 
@@ -128,5 +127,10 @@ class CadastroController {
         return null;
       }
     }
+  }
+
+  void login(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 }

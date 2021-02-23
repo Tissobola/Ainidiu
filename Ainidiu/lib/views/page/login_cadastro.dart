@@ -188,7 +188,7 @@ class _CadastroState extends State<Cadastro> {
 
                   //Botão de login
                   FlatButtonExt1(
-                      texto: 'Já tem uma conta? Login', onPressed: () {})
+                      texto: 'Já tem uma conta? Login', onPressed: () => _controller.login(context))
                 ],
               ),
             ),
