@@ -63,31 +63,34 @@ class _DenunciarState extends State<Denunciar> {
                   onTap: () async {
                     showDialog(
                         context: context,
-                        child: AlertDialog(
-                          title: Text('Sua denúncia foi enviada para análise!'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              RaisedButton(
-                                onPressed: () {
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomePage(
-                                                1,
-                                                usuario: usuario,
-                                              )),
-                                      (route) => false);
-                                },
-                                child: Text(
-                                  "Confirmar",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                color: Colors.blue,
-                              )
-                            ],
-                          ),
-                        ));
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title:
+                                Text('Sua denúncia foi enviada para análise!'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RaisedButton(
+                                  onPressed: () {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => HomePage(
+                                                  1,
+                                                  usuario: usuario,
+                                                )),
+                                        (route) => false);
+                                  },
+                                  child: Text(
+                                    "Confirmar",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  color: Colors.blue,
+                                )
+                              ],
+                            ),
+                          );
+                        });
 
                     FocusScope.of(context).requestFocus(new FocusNode());
 

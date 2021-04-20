@@ -91,8 +91,9 @@ class _DadosPessoaisState extends State<DadosPessoais> {
         });
 
         showDialog(
-            context: context,
-            child: AlertDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
               content: Container(
                 height: 400,
                 width: 300,
@@ -104,7 +105,9 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                   style: TextStyle(fontSize: 21),
                 )),
               ),
-            ));
+            );
+          },
+        );
 
         await Future.delayed(Duration(seconds: 3));
         Navigator.pushAndRemoveUntil(
@@ -276,8 +279,9 @@ class _DadosPessoaisState extends State<DadosPessoais> {
               _currText = generos[2];
 
               showDialog(
-                  context: context,
-                  child: AlertDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -300,7 +304,9 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                         )
                       ],
                     ),
-                  ));
+                  );
+                },
+              );
               //Navigator.pop(context);
             });
           },
@@ -430,8 +436,9 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                           _nascimentoController.clear();
 
                           showDialog(
-                              context: context,
-                              child: AlertDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
                                 content: Container(
                                   height: 400,
                                   width: 300,
@@ -443,7 +450,9 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                                     style: TextStyle(fontSize: 21),
                                   )),
                                 ),
-                              ));
+                              );
+                            },
+                          );
 
                           await Future.delayed(Duration(seconds: 3));
                           Navigator.pushAndRemoveUntil(
@@ -534,19 +543,21 @@ class _DadosPessoaisState extends State<DadosPessoais> {
 
                             showDialog(
                                 context: context,
-                                child: AlertDialog(
-                                  content: Container(
-                                    height: 400,
-                                    width: 300,
-                                    color: Colors.white,
-                                    child: Center(
-                                        child: Text(
-                                      'Email alterado com sucesso',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 21),
-                                    )),
-                                  ),
-                                ));
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Container(
+                                      height: 400,
+                                      width: 300,
+                                      color: Colors.white,
+                                      child: Center(
+                                          child: Text(
+                                        'Email alterado com sucesso',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontSize: 21),
+                                      )),
+                                    ),
+                                  );
+                                });
 
                             await Future.delayed(Duration(seconds: 3));
                             Navigator.pushAndRemoveUntil(
@@ -558,26 +569,28 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                           } else {
                             showDialog(
                                 context: context,
-                                child: AlertDialog(
-                                  title: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: IconButton(
-                                        icon: Icon(Icons.arrow_back),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        }),
-                                  ),
-                                  content: Container(
-                                    height: 100,
-                                    width: 300,
-                                    color: Colors.white,
-                                    child: Text(
-                                      'Email não disponível',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 21),
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: IconButton(
+                                          icon: Icon(Icons.arrow_back),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          }),
                                     ),
-                                  ),
-                                ));
+                                    content: Container(
+                                      height: 100,
+                                      width: 300,
+                                      color: Colors.white,
+                                      child: Text(
+                                        'Email não disponível',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontSize: 21),
+                                      ),
+                                    ),
+                                  );
+                                });
                           }
                         }
                       }),
@@ -684,42 +697,46 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                           Navigator.pop(context);
                           showDialog(
                               context: context,
-                              child: AlertDialog(
-                                content: Container(
-                                  height: 400,
-                                  width: 300,
-                                  color: Colors.white,
-                                  child: Center(
-                                      child: Text(
-                                    'Senha alterada com sucesso',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 21),
-                                  )),
-                                ),
-                              ));
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: Container(
+                                    height: 400,
+                                    width: 300,
+                                    color: Colors.white,
+                                    child: Center(
+                                        child: Text(
+                                      'Senha alterada com sucesso',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 21),
+                                    )),
+                                  ),
+                                );
+                              });
                         } else if (res == 1) {
                           showDialog(
                               context: context,
-                              child: AlertDialog(
-                                title: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: IconButton(
-                                      icon: Icon(Icons.arrow_back),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      }),
-                                ),
-                                content: Container(
-                                  height: 100,
-                                  width: 300,
-                                  color: Colors.white,
-                                  child: Text(
-                                    'Senha antiga não corresponde',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 21),
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: IconButton(
+                                        icon: Icon(Icons.arrow_back),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        }),
                                   ),
-                                ),
-                              ));
+                                  content: Container(
+                                    height: 100,
+                                    width: 300,
+                                    color: Colors.white,
+                                    child: Text(
+                                      'Senha antiga não corresponde',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 21),
+                                    ),
+                                  ),
+                                );
+                              });
                         }
                       }
                     },
@@ -789,7 +806,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
-                            showDialog(context: context, child: fotoDialog());
+                            showDialog(context: context, builder: fotoDialog());
                           }),
                     ),
                   ),
@@ -817,7 +834,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                     hoverColor: Colors.red,
                     trailing: FlatButton(
                       onPressed: () async {
-                        showDialog(context: context, child: estadoDialog());
+                        showDialog(context: context, builder: estadoDialog());
                       },
                       child: Text(
                         'Editar',
@@ -838,7 +855,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                       onPressed: () async {
                         showDialog(
                             context: context,
-                            child: cidadeDialog(snapshot.data.estado));
+                            builder: cidadeDialog(snapshot.data.estado));
                       },
                       child: Text(
                         'Editar',
@@ -877,19 +894,21 @@ class _DadosPessoaisState extends State<DadosPessoais> {
 
                         showDialog(
                             context: context,
-                            child: AlertDialog(
-                              content: Container(
-                                height: 400,
-                                width: 300,
-                                color: Colors.white,
-                                child: Center(
-                                    child: Text(
-                                  'Data de nascimento alterada com sucesso',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 21),
-                                )),
-                              ),
-                            ));
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Container(
+                                  height: 400,
+                                  width: 300,
+                                  color: Colors.white,
+                                  child: Center(
+                                      child: Text(
+                                    'Data de nascimento alterada com sucesso',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 21),
+                                  )),
+                                ),
+                              );
+                            });
 
                         await Future.delayed(Duration(seconds: 3));
                         Navigator.pop(context);
@@ -943,7 +962,7 @@ class _DadosPessoaisState extends State<DadosPessoais> {
                     hoverColor: Colors.red,
                     trailing: FlatButton(
                       onPressed: () async {
-                        showDialog(context: context, child: emailDialog());
+                        showDialog(context: context, builder: emailDialog());
                       },
                       child: Text(
                         'Editar',
